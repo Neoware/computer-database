@@ -1,21 +1,20 @@
 package com.excilys.formation.main;
 
-import java.sql.Connection;
-import java.sql.Timestamp;
+import java.util.Scanner;
 
-import com.excilys.formation.persistence.Computer;
-import com.excilys.formation.persistence.ConnectionManager;
-import com.excilys.formation.service.ComputerService;
+import com.excilys.formation.dispatcher.CommandDispatcher;
 
 public class App {
 
 	public static void main(String[] args) {
-		System.out.println("Bienvenue dans computer database");
-		ComputerService computerService = new ComputerService();
-		computerService.showComputerDetails(5);
-		Timestamp timestamp = new Timestamp(1463478577);
-		Computer toCreate = new Computer("test", timestamp, timestamp, 5);
-		computerService.createComputer(toCreate);
+		System.out.println("Welcome in the computer database CLI client !");
+		Scanner scanner = new Scanner(System.in);
+		CommandDispatcher commandDispatcher = new CommandDispatcher();
+		while (true){
+			System.out.print("computer-database>");
+			String input = scanner.nextLine();
+			commandDispatcher.Dispatch(input);
+		}
 	}
 
 }

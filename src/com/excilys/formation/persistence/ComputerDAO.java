@@ -2,6 +2,7 @@ package com.excilys.formation.persistence;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -71,6 +72,17 @@ public class ComputerDAO extends DAO<Computer> {
 			statement = connection.createStatement();
 			String sql = "SELECT * from computer";
 			ResultSet result = statement.executeQuery(sql);
+			List <Computer> computers = new ArrayList<>();
+			while(result.next()) {
+				Computer temp = new Computer();
+				temp.setId(result.getInt("id"));
+				temp.setName(result.getString("name"));
+				temp.setIntroduced(result.getTimestamp("introduced"));
+				temp.setDiscontinued(result.getTimestamp("discontinued"));
+				temp.setCompany_id(result.getInt("id"));
+				computers.add(temp);
+			} 
+		return computers;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

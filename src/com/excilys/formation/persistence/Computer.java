@@ -3,7 +3,7 @@ package com.excilys.formation.persistence;
 import java.sql.Timestamp;
 
 public class Computer {
-
+	
 	private int id;
 	private String name;
 	private Timestamp introduced;
@@ -40,6 +40,8 @@ public class Computer {
 		this.name = name;
 	}
 	public Timestamp getIntroduced() {
+		if (introduced == null)
+			introduced = new Timestamp(0);
 		return introduced;
 	}
 	public void setIntroduced(Timestamp introduced) {
