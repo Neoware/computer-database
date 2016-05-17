@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import com.excilys.formation.persistence.CompanyDAO;
 import com.excilys.formation.persistence.Computer;
 import com.excilys.formation.persistence.ComputerDAO;
+import com.sun.javafx.beans.IDProperty;
 
 public class ComputerServiceCLI implements ComputerService{
 
@@ -54,7 +55,13 @@ public class ComputerServiceCLI implements ComputerService{
 
 	public void updateComputer(){
 		System.out.print("What is the id of the computer you want to update ?");
-		int id = scanner.nextInt();
+		while (!scanner.hasNextInt()){
+			System.out.println("Need an int");
+			scanner.next();
+//			int id = scanner.nextInt();
+		}
+			
+		int id = Integer.parseInt(scanner.nextLine());
 			Computer toUpdate = computerDAO.find(id);
 			if (toUpdate != null)
 			{
@@ -131,7 +138,6 @@ public class ComputerServiceCLI implements ComputerService{
 			java.util.Date date = format.parse(inputString);
 			Timestamp timestamp = new Timestamp(date.getTime());
 			return timestamp;
-
 		}
 		catch(ParseException e)
 		{
