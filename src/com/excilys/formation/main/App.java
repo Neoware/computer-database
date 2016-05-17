@@ -15,6 +15,7 @@ public class App {
 			String input = scanner.nextLine();
 			commandDispatcher.Dispatch(input);
 		}
+		
 	}
 
 }

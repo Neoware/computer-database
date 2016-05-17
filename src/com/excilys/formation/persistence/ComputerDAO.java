@@ -32,7 +32,7 @@ public class ComputerDAO extends DAO<Computer> {
 	public Computer create(Computer toCreate) {
 		try {
 			statement = connection.createStatement();
-			String sql = "INSERT INTO computer VALUES (NULL, \""+ toCreate.getName() + "\",\"" + toCreate.getIntroduced()+ "\", \""+ toCreate.getDiscontinued() +"\","+ " \"" + toCreate.getCompany_id()+ "\")"; 
+			String sql = "INSERT INTO computer VALUES (NULL, \""+ toCreate.getName() + "\",\"" + toCreate.getIntroduced()+ "\", \""+ toCreate.getDiscontinued() +"\","+ " \"" + toCreate.getCompanyId()+ "\")"; 
 			System.out.println(sql);
 			statement.executeUpdate(sql);
 		} catch (Exception e) {
@@ -45,7 +45,7 @@ public class ComputerDAO extends DAO<Computer> {
 	public Computer update(Computer toUpdate) {
 		try {
 			statement = connection.createStatement();
-			String sql = "UPDATE computer SET name=\""+ toUpdate.getName() + "\", introduced=\"" +toUpdate.getIntroduced() + "\", discontinued=\""+ toUpdate.getDiscontinued() +"\", company_id=\""+ toUpdate.getCompany_id() +"\" WHERE id =" + toUpdate.getId();
+			String sql = "UPDATE computer SET name=\""+ toUpdate.getName() + "\", introduced=\"" +toUpdate.getIntroduced() + "\", discontinued=\""+ toUpdate.getDiscontinued() +"\", company_id=\""+ toUpdate.getCompanyId() +"\" WHERE id =" + toUpdate.getId();
 			System.out.println(sql);
 			statement.executeUpdate(sql);
 		} catch (Exception e) {
@@ -79,7 +79,7 @@ public class ComputerDAO extends DAO<Computer> {
 				temp.setName(result.getString("name"));
 				temp.setIntroduced(result.getTimestamp("introduced"));
 				temp.setDiscontinued(result.getTimestamp("discontinued"));
-				temp.setCompany_id(result.getInt("id"));
+				temp.setCompanyId(result.getInt("id"));
 				computers.add(temp);
 			} 
 		return computers;
