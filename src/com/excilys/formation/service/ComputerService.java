@@ -1,9 +1,15 @@
 package com.excilys.formation.service;
 
-import com.excilys.formation.persistence.Computer;
-
+/**
+ * 
+ * @author neoware
+ *
+ */
 public interface ComputerService {
 
+	/**
+	 * 
+	 */
 	public void listAllComputers();
 	
 	public void showComputerDetails();

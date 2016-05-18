@@ -1,13 +1,9 @@
 package com.excilys.formation.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.swing.text.NavigationFilter;
 
-import org.apache.catalina.startup.WebAnnotationSet;
-import org.apache.jasper.tagplugins.jstl.core.If;
 
 import com.excilys.formation.model.Page;
 import com.excilys.formation.persistence.Company;

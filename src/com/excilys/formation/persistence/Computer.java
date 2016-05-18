@@ -10,7 +10,8 @@ public class Computer {
 	private Timestamp discontinued;
 	private int companyId;
 	
-	public Computer(){}
+	public Computer(){
+	}
 	
 	public Computer(int id, String name, Timestamp introduced, Timestamp discontinued, int company_id){
 		this.id = id;
@@ -40,8 +41,6 @@ public class Computer {
 		this.name = name;
 	}
 	public Timestamp getIntroduced() {
-		if (introduced == null)
-			introduced = new Timestamp(0);
 		return introduced;
 	}
 	public void setIntroduced(Timestamp introduced) {

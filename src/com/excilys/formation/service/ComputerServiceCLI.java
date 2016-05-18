@@ -1,20 +1,15 @@
 package com.excilys.formation.service;
 
-import java.util.List;
-import java.util.Scanner;
-import java.sql.Date;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Scanner;
 
 import com.excilys.formation.model.Page;
-import com.excilys.formation.persistence.Company;
 import com.excilys.formation.persistence.CompanyDAO;
 import com.excilys.formation.persistence.Computer;
 import com.excilys.formation.persistence.ComputerDAO;
-import com.sun.javafx.beans.IDProperty;
 
 public class ComputerServiceCLI implements ComputerService{
 
@@ -67,6 +62,39 @@ public class ComputerServiceCLI implements ComputerService{
 
 	public void createComputer(){
 		Computer toCreate = new Computer();
+		String name;
+		do
+		{	
+			System.out.println("Choose a name for your computer (mandatory)");
+			name = scanner.nextLine();
+			System.out.println("You have pressed enter");
+		} while (name.equals(""));
+		toCreate.setName(name);
+		System.out.println("Choose a timestamp introduced for your computer (not mandatory)");
+		String introduced = scanner.nextLine();
+		Timestamp introducedTimestamp = getTimestampFromString(introduced);
+		if (introducedTimestamp == null)
+			System.out.println("Bad timestamp format setting to default");
+		else
+			toCreate.setIntroduced(introducedTimestamp);
+		System.out.println("Choose a timestamp discontinued for your computer (not mandatory)");
+		String discontinued = scanner.nextLine();
+		Timestamp discontinuedTimestamp = getTimestampFromString(discontinued);
+		if (discontinuedTimestamp == null)
+			System.out.println("Bad timestamp format setting to default");
+		else
+			toCreate.setDiscontinued(introducedTimestamp);
+		System.out.println("Choose the id of the manufacturer of the computer (not mandatory)");
+		if (scanner.hasNextInt()){
+			int companyId = scanner.nextInt();
+			if (companyDAO.find(companyId) != null)
+				toCreate.setCompanyId(companyId);
+			else{
+				System.out.println("No such company");
+			}
+		}
+		scanner.nextLine();
+		System.out.println(toCreate);
 		computerDAO.create(toCreate);
 	}
 

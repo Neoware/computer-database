@@ -1,20 +1,29 @@
 package com.excilys.formation.persistence;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.crypto.provider.RSACipher;
 
-public class CompanyDAO extends DAO<Company>{
+public class CompanyDAO implements DAO<Company>{
 
+	private Connection connection;
+	
+	public CompanyDAO() {
+		connection = ConnectionManager.getInstance();
+	}
+	
 	@Override
 	public Company find(int id) {
 		try {
-			statement = connection.createStatement();
-			String sql = "SELECT * FROM company WHERE id = " + id;
-			ResultSet result = statement.executeQuery(sql);
+			String sql = "SELECT * FROM company WHERE id = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, id);
+			ResultSet result = preparedStatement.executeQuery();
 			if (result.first()){
 				Company company = new Company(id, result.getString("name"));
 				return company;
@@ -30,11 +39,12 @@ public class CompanyDAO extends DAO<Company>{
 	@Override
 	public Company create(Company toCreate) {
 		try {
-			statement = connection.createStatement();
-			String sql = "INSERT INTO computer VALUES (NULL, \""+ toCreate.getName() + "\")";
-			System.out.println(sql);
-			statement.executeQuery(sql);
-		} catch (Exception e) {
+		
+			String sql = "INSERT INTO computer VALUES (NULL, ?)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, toCreate.getName());
+			preparedStatement.executeQuery();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -43,12 +53,12 @@ public class CompanyDAO extends DAO<Company>{
 	@Override
 	public Company update(Company toUpdate) {
 		try {
-			statement = connection.createStatement();
-			String sql = "UPDATE computer SET name=\""+ toUpdate.getName() + "\" WHERE id=" + toUpdate.getId();
-			System.out.println(sql);
-			statement.executeQuery(sql);
-			
-		} catch (Exception e) {
+			String sql = "UPDATE computer SET name=? WHERE id=?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, toUpdate.getName());
+			preparedStatement.setInt(2, toUpdate.getId());
+			preparedStatement.executeQuery();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -57,11 +67,11 @@ public class CompanyDAO extends DAO<Company>{
 	@Override
 	public Company delete(int id) {
 		try {
-			statement = connection.createStatement();
-			String sql = "DELETE from computer where id=" + id;
-			System.out.println(sql);
-			statement.executeQuery(sql);
-		} catch (Exception e) {
+			String sql = "DELETE from computer where id=?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setInt(1, id);
+			preparedStatement.executeQuery();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -70,7 +80,7 @@ public class CompanyDAO extends DAO<Company>{
 	@Override
 	public List<Company> getAll() {
 		try {
-			statement = connection.createStatement();
+			Statement statement = connection.createStatement();
 			String sql = "SELECT * from company";
 			ResultSet result = statement.executeQuery(sql);
 			List<Company> companies = new ArrayList<>();
@@ -81,7 +91,7 @@ public class CompanyDAO extends DAO<Company>{
 					companies.add(temp);
 				} 
 			return companies;
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;

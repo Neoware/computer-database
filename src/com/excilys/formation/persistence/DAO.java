@@ -1,15 +1,8 @@
 package com.excilys.formation.persistence;
 
-import java.sql.Connection;
-import java.sql.Statement;
 import java.util.List;
 
-
-
-public abstract class DAO<T> {
-
-	protected Connection connection = ConnectionManager.getInstance();
-	protected Statement statement;
+public interface DAO<T> {
 	
 	/**
 	 * 
