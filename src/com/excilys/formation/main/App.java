@@ -12,10 +12,10 @@ public class App {
 		CommandDispatcher commandDispatcher = new CommandDispatcher();
 		while (true){
 			System.out.print("computer-database>");
-			String input = scanner.nextLine();
-			commandDispatcher.Dispatch(input);
+				String input = scanner.nextLine();
+				commandDispatcher.Dispatch(input);
 		}
-		
+
 	}
 
 }

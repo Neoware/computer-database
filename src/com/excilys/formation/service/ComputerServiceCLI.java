@@ -9,6 +9,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 
+import com.excilys.formation.model.Page;
+import com.excilys.formation.persistence.Company;
 import com.excilys.formation.persistence.CompanyDAO;
 import com.excilys.formation.persistence.Computer;
 import com.excilys.formation.persistence.ComputerDAO;
@@ -28,8 +30,23 @@ public class ComputerServiceCLI implements ComputerService{
 
 	public void listAllComputers(){
 		List <Computer> computers = computerDAO.getAll();
-		for (Computer computer : computers){
-			System.out.println(computer);
+
+		Page <Computer> pages = new Page<Computer>(computers);
+
+		String navigation;
+		while (true){
+			pages.printPage();
+			System.out.println("n for next page, p for previous, a to abort and go back to shell");
+			if (scanner.hasNextLine())
+			{
+				navigation = scanner.nextLine();
+				if (navigation.equals("n"))
+					pages.next();
+				else if (navigation.equals("p"))
+					pages.previous();
+				else if (navigation.equals("a"))
+					return;
+			}
 		}
 	}
 
@@ -56,67 +73,68 @@ public class ComputerServiceCLI implements ComputerService{
 	public void updateComputer(){
 		System.out.print("What is the id of the computer you want to update ?");
 		while (!scanner.hasNextInt()){
-			System.out.println("Need an int");
-			scanner.next();
-//			int id = scanner.nextInt();
+			if (scanner.next() != "")
+				System.out.println("You need to provide a correct id");
+			scanner.nextLine();	
 		}
-			
-		int id = Integer.parseInt(scanner.nextLine());
-			Computer toUpdate = computerDAO.find(id);
-			if (toUpdate != null)
+		int id = scanner.nextInt();
+		scanner.nextLine();
+		Computer toUpdate = computerDAO.find(id);
+		if (toUpdate != null)
+		{
+			System.out.println("Change the name of the computer ? (current: " + toUpdate.getName() + ")");
+			if (scanner.hasNext())
+				toUpdate.setName(scanner.nextLine());
+			else
 			{
-				System.out.println("Change the name of the computer ? (current: " + toUpdate.getName() + ")");
-				if (scanner.hasNext())
-					toUpdate.setName(scanner.nextLine());
+				System.out.println("Name is mandatory");
+				return;
+			}
+			System.out.println("Change the introduced date of the computer ? (current: " + toUpdate.getIntroduced() + ")");
+			if (scanner.hasNextLine())
+			{
+				String introduced = scanner.nextLine();
+				Timestamp introducedTimestamp = getTimestampFromString(introduced);
+				if (introducedTimestamp != null)
+					toUpdate.setIntroduced(introducedTimestamp);
+				else
+					System.out.println("Bad timestamp");
+			}
+			System.out.println("Change the discontinued date of the computer ? (current: " + toUpdate.getDiscontinued() + ")");
+			if (scanner.hasNextLine())
+			{
+				String discontinued = scanner.nextLine();
+				Timestamp discontinuedTimestamp = getTimestampFromString(discontinued);
+				if (discontinuedTimestamp != null)
+					toUpdate.setDiscontinued(discontinuedTimestamp);
+				else
+					System.out.println("Bad timestamp");
+			}
+			System.out.println("Change the company id of the computer ? (current: " + toUpdate.getCompanyId() + ")");
+			if (scanner.hasNextInt())
+			{
+				int companyId = scanner.nextInt();
+				System.out.println(companyId);
+				if (companyDAO.find(companyId) != null)
+					toUpdate.setCompanyId(companyId);
 				else
 				{
-					System.out.println("Name is mandatory");
-					return;
+					System.out.println("No such company");
 				}
-				System.out.println("Change the introduced date of the computer ? (current: " + toUpdate.getIntroduced() + ")");
-				if (scanner.hasNextLine())
-				{
-					String introduced = scanner.nextLine();
-					Timestamp introducedTimestamp = getTimestampFromString(introduced);
-					if (introducedTimestamp != null)
-						toUpdate.setIntroduced(introducedTimestamp);
-					else
-						System.out.println("Bad timestamp");
-				}
-				System.out.println("Change the discontinued date of the computer ? (current: " + toUpdate.getDiscontinued() + ")");
-				if (scanner.hasNextLine())
-				{
-					String discontinued = scanner.nextLine();
-					Timestamp discontinuedTimestamp = getTimestampFromString(discontinued);
-					if (discontinuedTimestamp != null)
-						toUpdate.setDiscontinued(discontinuedTimestamp);
-					else
-						System.out.println("Bad timestamp");
-				}
-				System.out.println("Change the company id of the computer ? (current: " + toUpdate.getCompanyId() + ")");
-				if (scanner.hasNextInt())
-				{
-					int companyId = scanner.nextInt();
-					System.out.println(companyId);
-					if (companyDAO.find(companyId) != null)
-						toUpdate.setCompanyId(companyId);
-					else
-					{
-						System.out.println("No such company");
-					}
-				}
-				computerDAO.update(toUpdate);
-				System.out.println("Success");
 			}
-			else
-				System.out.println("Computer with this id doesn\'t exist");
+			computerDAO.update(toUpdate);
+			System.out.println("Success");
 		}
+		else
+			System.out.println("Computer with this id doesn\'t exist");
+	}
 
 	public void deleteComputer(){
 		System.out.print("What is the id of the computer you want to delete ?");
 		if (scanner.hasNextInt())
 		{
 			int id = scanner.nextInt();
+			scanner.nextLine();
 			Computer temp = computerDAO.find(id);
 			if (temp != null)
 			{

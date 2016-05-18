@@ -10,12 +10,12 @@ public class CommandDispatcher {
 
 	private CompanyService companyService;
 	private ComputerService computerService;
-	
+
 	public CommandDispatcher() {
 		companyService = new CompanyServiceCLI();
 		computerService = new ComputerServiceCLI();
 	}
-	
+
 	public void Dispatch(String command){
 		switch (command){
 		case "list-computers":
@@ -39,9 +39,11 @@ public class CommandDispatcher {
 		case "exit":
 			System.out.println("Exiting...");
 			System.exit(0);
+		case "":
+			break;
 		default:
 			System.out.println("No such command");
 		}
 	}
-	
+
 }
