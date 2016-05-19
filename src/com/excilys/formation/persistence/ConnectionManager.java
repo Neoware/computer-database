@@ -2,25 +2,55 @@ package com.excilys.formation.persistence;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+
+import sun.security.jca.GetInstance;
 
 public class ConnectionManager {
 
 	private static final String url = "jdbc:mysql://localhost:3306/computer-database-db?zeroDateTimeBehavior=convertToNull";
 	private static final String user = "admincdb";
 	private static final String password = "qwerty1234";
-	private static Connection connect;
+	private static ConnectionManager manager;
 	
-	public static Connection getInstance() {
-		if(connect == null){
+	private ConnectionManager(){
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		}
+		catch (ClassNotFoundException e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static ConnectionManager getInstance(){
+		if (manager == null)
+			manager = new ConnectionManager();
+		return manager;
+	}
+	
+	public synchronized Connection getConnection(){
+		try {
+			Connection connect = DriverManager.getConnection(url, user, password);
+			return connect;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public void cleanUp(Connection connection, Statement statement, ResultSet resultSet){
+		if (connection != null)
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
-				connect = DriverManager.getConnection(url, user, password);
-			} catch (SQLException | ClassNotFoundException e) {
+				connection.close();
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+			} catch (SQLException e) {
 				e.printStackTrace();
-				return null;
 			}
-		}		
-		return connect;	
 	}
 }

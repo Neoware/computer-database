@@ -8,23 +8,29 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.corba.se.spi.orbutil.fsm.State;
+
 
 
 public class ComputerDAO implements DAO<Computer> {
 
 	private Connection connection;
+	private PreparedStatement preparedStatement;
+	private ResultSet result;
+	private Statement statement;
 
-	public ComputerDAO() {	
-		connection = ConnectionManager.getInstance();
+	public ComputerDAO() {
+		
 	}
 
 	@Override
 	public Computer find(int id) {
 		try {
+			connection =  ConnectionManager.getInstance().getConnection();
 			String sql = "SELECT * FROM computer WHERE id =?";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
-			ResultSet result = preparedStatement.executeQuery();
+			result = preparedStatement.executeQuery();
 			if (result.first()){
 				Computer computer = new Computer(id, result.getString("name"), 
 						result.getTimestamp("introduced"), result.getTimestamp("discontinued"), result.getInt("company_id"));
@@ -35,14 +41,19 @@ public class ComputerDAO implements DAO<Computer> {
 			e.printStackTrace();
 			return null;	
 		}
+		finally {
+			ConnectionManager connectionManager =  ConnectionManager.getInstance();
+			connectionManager.cleanUp(connection, preparedStatement, result);
+		}
 		return null;
 	}
 
 	@Override
 	public Computer create(Computer toCreate) {
 		try {
+			connection =  ConnectionManager.getInstance().getConnection();
 			String sql = "INSERT INTO computer VALUES (NULL, ?, ?, ?, ?)";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, toCreate.getName());
 			preparedStatement.setTimestamp(2, toCreate.getIntroduced());
 			preparedStatement.setTimestamp(3, toCreate.getDiscontinued());
@@ -50,18 +61,24 @@ public class ComputerDAO implements DAO<Computer> {
 			preparedStatement.executeUpdate();
 			ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
 			toCreate.setId(generatedKeys.getInt(1));
+			generatedKeys.close();
 			return toCreate;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
+		}
+		finally {
+			ConnectionManager connectionManager =  ConnectionManager.getInstance();
+			connectionManager.cleanUp(connection, preparedStatement, result);
 		}
 	}
 
 	@Override
 	public Computer update(Computer toUpdate) {
 		try {
+			connection =  ConnectionManager.getInstance().getConnection();
 			String sql = "UPDATE computer SET name= ?, introduced= ?, discontinued=?, company_id= ? WHERE  id = ?";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, toUpdate.getName());
 			preparedStatement.setTimestamp(2, toUpdate.getIntroduced());
 			preparedStatement.setTimestamp(3, toUpdate.getDiscontinued());
@@ -73,19 +90,28 @@ public class ComputerDAO implements DAO<Computer> {
 			e.printStackTrace();
 			return null;
 		}
+		finally {
+			ConnectionManager connectionManager =  ConnectionManager.getInstance();
+			connectionManager.cleanUp(connection, preparedStatement, result);
+		}
 	}
 
 	@Override
 	public Computer delete(int id) {
 		try {
+			connection =  ConnectionManager.getInstance().getConnection();
 			Computer toDelete = this.find(id);
 			String sql = "DELETE from computer where id=?";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, toDelete.getId());
 			preparedStatement.executeUpdate();
 			return toDelete;
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		finally {
+			ConnectionManager connectionManager =  ConnectionManager.getInstance();
+			connectionManager.cleanUp(connection, preparedStatement, result);
 		}
 		return null;
 	}
@@ -93,7 +119,8 @@ public class ComputerDAO implements DAO<Computer> {
 	@Override
 	public List<Computer> getAll() {
 		try {
-			Statement statement = connection.createStatement();
+			connection =  ConnectionManager.getInstance().getConnection();
+			statement = connection.createStatement();
 			String sql = "SELECT * from computer";
 			ResultSet result = statement.executeQuery(sql);
 			List <Computer> computers = new ArrayList<>();
@@ -109,6 +136,11 @@ public class ComputerDAO implements DAO<Computer> {
 			return computers;
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		finally {
+			ConnectionManager connectionManager =  ConnectionManager.getInstance();
+			connectionManager.cleanUp(connection, statement, result);
+			
 		}
 		return null;
 	}

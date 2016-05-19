@@ -12,18 +12,21 @@ import java.util.List;
 public class CompanyDAO implements DAO<Company>{
 
 	private Connection connection;
+	private PreparedStatement preparedStatement;
+	private ResultSet result;
+	private Statement statement;
 	
 	public CompanyDAO() {
-		connection = ConnectionManager.getInstance();
 	}
 	
 	@Override
 	public Company find(int id) {
 		try {
+			connection =  ConnectionManager.getInstance().getConnection();
 			String sql = "SELECT * FROM company WHERE id = ?";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
-			ResultSet result = preparedStatement.executeQuery();
+			result = preparedStatement.executeQuery();
 			if (result.first()){
 				Company company = new Company(id, result.getString("name"));
 				return company;
@@ -33,18 +36,27 @@ public class CompanyDAO implements DAO<Company>{
 			e.printStackTrace();
 			return null;
 		}
+		finally {
+			ConnectionManager connectionManager =  ConnectionManager.getInstance();
+			connectionManager.cleanUp(connection, preparedStatement, result);
+		}
 		return null;
 	}
 
 	@Override
 	public Company create(Company toCreate) {
 		try {
+			connection =  ConnectionManager.getInstance().getConnection();
 			String sql = "INSERT INTO computer VALUES (NULL, ?)";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, toCreate.getName());
 			preparedStatement.executeQuery();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		finally {
+			ConnectionManager connectionManager =  ConnectionManager.getInstance();
+			connectionManager.cleanUp(connection, preparedStatement, result);
 		}
 		return null;
 	}
@@ -52,13 +64,18 @@ public class CompanyDAO implements DAO<Company>{
 	@Override
 	public Company update(Company toUpdate) {
 		try {
+			connection =  ConnectionManager.getInstance().getConnection();
 			String sql = "UPDATE computer SET name=? WHERE id=?";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, toUpdate.getName());
 			preparedStatement.setInt(2, toUpdate.getId());
 			preparedStatement.executeQuery();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		finally {
+			ConnectionManager connectionManager =  ConnectionManager.getInstance();
+			connectionManager.cleanUp(connection, preparedStatement, result);
 		}
 		return null;
 	}
@@ -66,12 +83,17 @@ public class CompanyDAO implements DAO<Company>{
 	@Override
 	public Company delete(int id) {
 		try {
+			connection =  ConnectionManager.getInstance().getConnection();
 			String sql = "DELETE from computer where id=?";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, id);
 			preparedStatement.executeQuery();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		finally {
+			ConnectionManager connectionManager =  ConnectionManager.getInstance();
+			connectionManager.cleanUp(connection, preparedStatement, result);
 		}
 		return null;
 	}
@@ -79,9 +101,10 @@ public class CompanyDAO implements DAO<Company>{
 	@Override
 	public List<Company> getAll() {
 		try {
-			Statement statement = connection.createStatement();
+			connection =  ConnectionManager.getInstance().getConnection();
+			statement = connection.createStatement();
 			String sql = "SELECT * from company";
-			ResultSet result = statement.executeQuery(sql);
+			result = statement.executeQuery(sql);
 			List<Company> companies = new ArrayList<>();
 			while(result.next()) {
 					Company temp = new Company();
@@ -92,6 +115,10 @@ public class CompanyDAO implements DAO<Company>{
 			return companies;
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		finally {
+			ConnectionManager connectionManager =  ConnectionManager.getInstance();
+			connectionManager.cleanUp(connection, statement, result);
 		}
 		return null;
 	}
