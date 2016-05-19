@@ -32,6 +32,11 @@ public interface DAO<T> {
 	 */
 	public abstract T delete (int id);
 	
+	/**
+	 * 
+	 * @return the list of all elements with all informations
+	 */
+	
 	public abstract List <T> getAll();
 	
 }

@@ -12,16 +12,27 @@ public class Page<T> {
 	private List<T> currentPageElements;
 	private int offset;
 
+	public Page() {}
+	
+	/**
+	 * Constructor that should be use to pass the elements to offer page capability
+	 * @param elements The list of elements that need to be paginated
+	 */
 	public Page(List <T> elements){
 		this.elements = new ArrayList<T>(elements);
 		this.offset = 0;
 		this.pageSize = 30;
+		if (elements.size() < pageSize)
+			this.pageSize = elements.size();
 		this.currentPageElements = new ArrayList<T>(elements.subList(offset , offset + pageSize));
 		this.nbPage = elements.size() / pageSize;
 		this.currentPage = 0;
 		this.currentPageElements = elements.subList(offset , offset + pageSize);
 	}
 
+	/**
+	 * Method that move the page instance to the next page if it's possible
+	 */
 	public void next(){
 		if (currentPage < nbPage)
 		{
@@ -36,6 +47,9 @@ public class Page<T> {
 		}
 	}
 
+	/**
+	 * Method that move the page instance to the previous page if it's possible
+	 */
 		public void previous(){
 			if (currentPage > 0)
 			{
@@ -45,6 +59,9 @@ public class Page<T> {
 			}
 		}
 		
+		/**
+		 * Method to print the content of the current position of the page instance
+		 */
 		public void printPage(){
 			for (T current : currentPageElements){
 				System.out.println(current);

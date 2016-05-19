@@ -11,13 +11,13 @@ import java.util.List;
 
 
 public class ComputerDAO implements DAO<Computer> {
-	
+
 	private Connection connection;
-	
+
 	public ComputerDAO() {	
-			connection = ConnectionManager.getInstance();
+		connection = ConnectionManager.getInstance();
 	}
-	
+
 	@Override
 	public Computer find(int id) {
 		try {
@@ -30,28 +30,31 @@ public class ComputerDAO implements DAO<Computer> {
 						result.getTimestamp("introduced"), result.getTimestamp("discontinued"), result.getInt("company_id"));
 				return computer;
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return null;	
 		}
-		return null;		
+		return null;
 	}
 
 	@Override
 	public Computer create(Computer toCreate) {
 		try {
 			String sql = "INSERT INTO computer VALUES (NULL, ?, ?, ?, ?)";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, toCreate.getName());
 			preparedStatement.setTimestamp(2, toCreate.getIntroduced());
 			preparedStatement.setTimestamp(3, toCreate.getDiscontinued());
 			preparedStatement.setInt(4, toCreate.getCompanyId());
-			System.out.println(preparedStatement);
 			preparedStatement.executeUpdate();
+			ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+			toCreate.setId(generatedKeys.getInt(1));
+			return toCreate;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return null;
 		}
-		return null;
 	}
 
 	@Override
@@ -65,19 +68,22 @@ public class ComputerDAO implements DAO<Computer> {
 			preparedStatement.setInt(4, toUpdate.getCompanyId());
 			preparedStatement.setInt(5, toUpdate.getId());
 			preparedStatement.executeUpdate();
+			return toUpdate;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return null;
 		}
-		return null;
 	}
 
 	@Override
 	public Computer delete(int id) {
 		try {
+			Computer toDelete = this.find(id);
 			String sql = "DELETE from computer where id=?";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, id);
+			preparedStatement.setInt(1, toDelete.getId());
 			preparedStatement.executeUpdate();
+			return toDelete;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -100,13 +106,13 @@ public class ComputerDAO implements DAO<Computer> {
 				temp.setCompanyId(result.getInt("id"));
 				computers.add(temp);
 			} 
-		return computers;
+			return computers;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
-	
+
+
 
 }

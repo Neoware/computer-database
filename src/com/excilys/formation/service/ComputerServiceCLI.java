@@ -174,7 +174,10 @@ public class ComputerServiceCLI implements ComputerService{
 				System.out.println("Computer with this id doesn\'t exist");
 		}
 		else
+		{
 			System.out.println("An integer need to be submitted");
+			scanner.nextLine();
+		}
 	}
 
 	public static Timestamp getTimestampFromString(String inputString)

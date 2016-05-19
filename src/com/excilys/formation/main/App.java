@@ -8,6 +8,7 @@ public class App {
 
 	public static void main(String[] args) {
 		System.out.println("Welcome in the computer database CLI client !");
+		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		CommandDispatcher commandDispatcher = new CommandDispatcher();
 		while (true){

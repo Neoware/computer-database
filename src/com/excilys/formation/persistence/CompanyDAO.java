@@ -39,7 +39,6 @@ public class CompanyDAO implements DAO<Company>{
 	@Override
 	public Company create(Company toCreate) {
 		try {
-		
 			String sql = "INSERT INTO computer VALUES (NULL, ?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, toCreate.getName());
