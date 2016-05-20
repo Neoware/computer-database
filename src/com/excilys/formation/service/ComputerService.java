@@ -26,16 +26,18 @@ public class ComputerService {
 		return computer;
 	}
 	
-	public void createComputer(Computer toCreate){
+	public Computer createComputer(Computer toCreate){
 		computerDAO.create(toCreate);
+		return toCreate;
 	}
 	
-	public void updateComputer(Computer toUpdate){
-		
+	public Computer updateComputer(Computer toUpdate){
+		computerDAO.update(toUpdate);
+		return toUpdate;
 	}
 	
-	public void deleteComputer(){
-		
+	public void deleteComputer(Long id){
+		computerDAO.delete(id);
 	}
 	
 	

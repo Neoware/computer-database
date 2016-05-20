@@ -11,6 +11,8 @@ import java.util.List;
 
 import com.excilys.formation.entity.Computer;
 
+import sun.security.jca.GetInstance;
+
 
 public class ComputerDAO implements DAO<Computer> {
 
@@ -19,10 +21,13 @@ public class ComputerDAO implements DAO<Computer> {
 	private ResultSet result;
 	private Statement statement;
 
-	public ComputerDAO() {
+	private ComputerDAO() {
+	}
+	
+	public ComputerDAO getInstance(){
 		
 	}
-
+	
 	@Override
 	public Computer find(Long id) {
 		try {
