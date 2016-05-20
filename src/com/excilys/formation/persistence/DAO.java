@@ -9,34 +9,34 @@ public interface DAO<T> {
 	 * @param id id of the element we want to retrieve
 	 * @return the element if it has been found or null otherwise
 	 */
-	public abstract T find(int id);
+	public T find(Long id);
 	
 	/**
 	 * 
 	 * @param toCreate the element that need to be created
 	 * @return the created element
 	 */
-	public abstract T create (T toCreate);
+	public T create (T toCreate);
 	
 	/**
 	 * 
 	 * @param toUpdate the element that need to be updated
 	 * @return the updated element
 	 */
-	public abstract T update (T toUpdate);
+	public T update (T toUpdate);
 	
 	/**
 	 * 
 	 * @param toDelete the element that need to be deleted
 	 * @return The deleted element
 	 */
-	public abstract T delete (int id);
+	public T delete (Long id);
 	
 	/**
 	 * 
 	 * @return the list of all elements with all informations
 	 */
 	
-	public abstract List <T> getAll();
+	public List <T> getAll();
 	
 }

@@ -1,25 +1,28 @@
-package com.excilys.formation.dispatcher;
+package com.excilys.formation.command;
 
-import com.excilys.formation.service.CompanyService;
-import com.excilys.formation.service.CompanyServiceCLI;
-import com.excilys.formation.service.ComputerService;
-import com.excilys.formation.service.ComputerServiceCLI;
+import com.excilys.formation.service.CompanyServiceOLD;
+import com.excilys.formation.service.ComputerServiceold;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
-public class CommandDispatcher {
+public class Command {
 
-	private CompanyService companyService;
-	private ComputerService computerService;
+	static final Logger LOG = LoggerFactory.getLogger(Command.class);
+	private CompanyServiceOLD companyService;
+	private ComputerServiceold computerService;
 
-	public CommandDispatcher() {
-		companyService = new CompanyServiceCLI();
-		computerService = new ComputerServiceCLI();
+	public Command() {
+		companyService = new CompanyServiceOLD();
+		computerService = new ComputerServiceold();
 	}
 
 	public void Dispatch(String command){
 		switch (command){
 		case "list-computers":
-			computerService.listAllComputers();
+			LOG.info("Launching list-computers command");
+			computerService.listAllComputers();			
 			break;
 		case "list-companies":
 			companyService.listAllCompanies();

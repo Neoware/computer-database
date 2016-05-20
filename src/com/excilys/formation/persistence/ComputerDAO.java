@@ -5,11 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.corba.se.spi.orbutil.fsm.State;
-
+import com.excilys.formation.entity.Computer;
 
 
 public class ComputerDAO implements DAO<Computer> {
@@ -24,16 +24,16 @@ public class ComputerDAO implements DAO<Computer> {
 	}
 
 	@Override
-	public Computer find(int id) {
+	public Computer find(Long id) {
 		try {
 			connection =  ConnectionManager.getInstance().getConnection();
 			String sql = "SELECT * FROM computer WHERE id =?";
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, id);
+			preparedStatement.setLong(1, id);
 			result = preparedStatement.executeQuery();
 			if (result.first()){
 				Computer computer = new Computer(id, result.getString("name"), 
-						result.getTimestamp("introduced"), result.getTimestamp("discontinued"), result.getInt("company_id"));
+						result.getTimestamp("introduced").toLocalDate(), result.getTimestamp("discontinued").toLocalDateTime(), result.getLong("company_id"));
 				return computer;
 			}
 
@@ -42,8 +42,7 @@ public class ComputerDAO implements DAO<Computer> {
 			return null;	
 		}
 		finally {
-			ConnectionManager connectionManager =  ConnectionManager.getInstance();
-			connectionManager.cleanUp(connection, preparedStatement, result);
+			ConnectionManager.getInstance().cleanUp(connection, preparedStatement, result);
 		}
 		return null;
 	}
@@ -55,12 +54,15 @@ public class ComputerDAO implements DAO<Computer> {
 			String sql = "INSERT INTO computer VALUES (NULL, ?, ?, ?, ?)";
 			preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, toCreate.getName());
-			preparedStatement.setTimestamp(2, toCreate.getIntroduced());
-			preparedStatement.setTimestamp(3, toCreate.getDiscontinued());
-			preparedStatement.setInt(4, toCreate.getCompanyId());
+			preparedStatement.setTimestamp(2, Timestamp.valueOf(toCreate.getIntroduced()));
+			preparedStatement.setTimestamp(3, Timestamp.valueOf(toCreate.getDiscontinued()));
+			preparedStatement.setLong(4, toCreate.getCompanyId());
 			preparedStatement.executeUpdate();
-			ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-			toCreate.setId(generatedKeys.getInt(1));
+			ResultSet generatedKeys = preparedStatement.getGeneratedKeys();		
+			if (generatedKeys.next()){
+				toCreate.setId(generatedKeys.getLong(1));
+				System.out.println("test");
+			}
 			generatedKeys.close();
 			return toCreate;
 		} catch (SQLException e) {
@@ -68,8 +70,7 @@ public class ComputerDAO implements DAO<Computer> {
 			return null;
 		}
 		finally {
-			ConnectionManager connectionManager =  ConnectionManager.getInstance();
-			connectionManager.cleanUp(connection, preparedStatement, result);
+			ConnectionManager.getInstance().cleanUp(connection, preparedStatement, result);
 		}
 	}
 
@@ -80,10 +81,10 @@ public class ComputerDAO implements DAO<Computer> {
 			String sql = "UPDATE computer SET name= ?, introduced= ?, discontinued=?, company_id= ? WHERE  id = ?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, toUpdate.getName());
-			preparedStatement.setTimestamp(2, toUpdate.getIntroduced());
-			preparedStatement.setTimestamp(3, toUpdate.getDiscontinued());
-			preparedStatement.setInt(4, toUpdate.getCompanyId());
-			preparedStatement.setInt(5, toUpdate.getId());
+			preparedStatement.setTimestamp(2, Timestamp.valueOf(toUpdate.getIntroduced()));
+			preparedStatement.setTimestamp(3, Timestamp.valueOf(toUpdate.getDiscontinued()));
+			preparedStatement.setLong(4, toUpdate.getCompanyId());
+			preparedStatement.setLong(5, toUpdate.getId());
 			preparedStatement.executeUpdate();
 			return toUpdate;
 		} catch (SQLException e) {
@@ -91,27 +92,25 @@ public class ComputerDAO implements DAO<Computer> {
 			return null;
 		}
 		finally {
-			ConnectionManager connectionManager =  ConnectionManager.getInstance();
-			connectionManager.cleanUp(connection, preparedStatement, result);
+			ConnectionManager.getInstance().cleanUp(connection, preparedStatement, result);
 		}
 	}
 
 	@Override
-	public Computer delete(int id) {
+	public Computer delete(Long id) {
 		try {
 			connection =  ConnectionManager.getInstance().getConnection();
 			Computer toDelete = this.find(id);
 			String sql = "DELETE from computer where id=?";
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setInt(1, toDelete.getId());
+			preparedStatement.setLong(1, toDelete.getId());
 			preparedStatement.executeUpdate();
 			return toDelete;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		finally {
-			ConnectionManager connectionManager =  ConnectionManager.getInstance();
-			connectionManager.cleanUp(connection, preparedStatement, result);
+			ConnectionManager.getInstance().cleanUp(connection, preparedStatement, result);
 		}
 		return null;
 	}
@@ -126,11 +125,11 @@ public class ComputerDAO implements DAO<Computer> {
 			List <Computer> computers = new ArrayList<>();
 			while(result.next()) {
 				Computer temp = new Computer();
-				temp.setId(result.getInt("id"));
+				temp.setId(result.getLong("id"));
 				temp.setName(result.getString("name"));
-				temp.setIntroduced(result.getTimestamp("introduced"));
-				temp.setDiscontinued(result.getTimestamp("discontinued"));
-				temp.setCompanyId(result.getInt("id"));
+				temp.setIntroduced(result.getTimestamp("introduced").toLocalDateTime());
+				temp.setDiscontinued(result.getTimestamp("discontinued").toLocalDateTime());
+				temp.setCompanyId(result.getLong("id"));
 				computers.add(temp);
 			} 
 			return computers;
@@ -138,9 +137,7 @@ public class ComputerDAO implements DAO<Computer> {
 			e.printStackTrace();
 		}
 		finally {
-			ConnectionManager connectionManager =  ConnectionManager.getInstance();
-			connectionManager.cleanUp(connection, statement, result);
-			
+			ConnectionManager.getInstance().cleanUp(connection, statement, result);
 		}
 		return null;
 	}

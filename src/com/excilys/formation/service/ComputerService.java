@@ -1,35 +1,44 @@
 package com.excilys.formation.service;
 
-/**
- * 
- * @author neoware
- * Provide several methods to manipulate or get informations on the computers
- *
- */
-public interface ComputerService {
+import java.util.List;
 
-	/**
-	 * List all computers with all data
-	 */
-	public void listAllComputers();
+import com.excilys.formation.entity.Computer;
+import com.excilys.formation.persistence.CompanyDAO;
+import com.excilys.formation.persistence.ComputerDAO;
+
+public class ComputerService {
+
+	private ComputerDAO computerDAO;
+	private CompanyDAO companyDAO;
+
+	public ComputerService() {
+		computerDAO = new ComputerDAO();
+		companyDAO = new CompanyDAO();
+	}
+
+	public List<Computer> getAllComputers() {
+		List <Computer> computers = computerDAO.getAll();
+		return computers;
+	}
 	
-	/**
-	 * Show all information about a specific computer
-	 */
-	public void showComputerDetails();
+	public Computer getComputerDetails(Long id){
+		Computer computer = computerDAO.find(id);
+		return computer;
+	}
 	
-	/**
-	 * To create a computer by specifying all data
-	 */
-	public void createComputer();
+	public void createComputer(Computer toCreate){
+		computerDAO.create(toCreate);
+	}
 	
-	/**
-	 * To update an already existing computer
-	 */
-	public void updateComputer();
+	public void updateComputer(Computer toUpdate){
+		
+	}
 	
-	/**
-	 * To delete a computer if it exists
-	 */
-	public void deleteComputer();
+	public void deleteComputer(){
+		
+	}
+	
+	
+	
+	
 }

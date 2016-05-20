@@ -3,18 +3,16 @@ package com.excilys.formation.service;
 import java.util.List;
 import java.util.Scanner;
 
-
-
-import com.excilys.formation.model.Page;
-import com.excilys.formation.persistence.Company;
+import com.excilys.formation.command.Page;
+import com.excilys.formation.entity.Company;
 import com.excilys.formation.persistence.CompanyDAO;
 
-public class CompanyServiceCLI implements CompanyService{
+public class CompanyServiceOLD{
 
 	private Scanner scanner;
 	private CompanyDAO companyDAO;
 
-	public CompanyServiceCLI(){
+	public CompanyServiceOLD(){
 		companyDAO = new CompanyDAO();
 		scanner = new Scanner(System.in);
 	}

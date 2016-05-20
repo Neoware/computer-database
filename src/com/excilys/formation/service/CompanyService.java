@@ -1,9 +1,8 @@
 package com.excilys.formation.service;
 
-public interface CompanyService {
+public class CompanyService {
 
-	/**
-	 * List all companies in DB
-	 */
-	public void listAllCompanies();
+	public CompanyService(){
+		
+	}
 }

@@ -1,4 +1,4 @@
-package com.excilys.formation.model;
+package com.excilys.formation.command;
 
 import java.util.ArrayList;
 import java.util.List;
