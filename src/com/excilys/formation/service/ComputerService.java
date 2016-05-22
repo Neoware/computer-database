@@ -2,45 +2,60 @@ package com.excilys.formation.service;
 
 import java.util.List;
 
+import com.excilys.formation.dto.ComputerDTO;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.persistence.CompanyDAO;
 import com.excilys.formation.persistence.ComputerDAO;
 
-public class ComputerService {
+public class ComputerService implements Service{
 
-	private ComputerDAO computerDAO;
-	private CompanyDAO companyDAO;
+	private static ComputerDAO computerDAO;
+	private static ComputerService instance;
 
-	public ComputerService() {
-		computerDAO = new ComputerDAO();
-		companyDAO = new CompanyDAO();
+	private ComputerService() {
+		computerDAO = ComputerDAO.getInstance();
 	}
 
-	public List<Computer> getAllComputers() {
-		List <Computer> computers = computerDAO.getAll();
+	public static ComputerService getInstance() {
+		if (instance == null) {
+			synchronized (ComputerService.class) {
+				if (instance == null) {
+					instance = new ComputerService();
+				}
+			}
+		}
+		return instance;
+	}
+
+	public List<Computer> getAll() {
+		List<Computer> computers = computerDAO.getAll();
+		
 		return computers;
 	}
 	
-	public Computer getComputerDetails(Long id){
+	public List<Computer> getSelection(int offset, int limit){
+		List<Computer> computers = computerDAO.getLimited(offset, limit);
+		//List <ComputerDTO> computerDTOs = 
+		return computers;
+	}
+
+	public Computer getById(Long id) {
 		Computer computer = computerDAO.find(id);
 		return computer;
 	}
-	
-	public Computer createComputer(Computer toCreate){
+
+	public Computer create(Computer toCreate) {
 		computerDAO.create(toCreate);
 		return toCreate;
 	}
-	
-	public Computer updateComputer(Computer toUpdate){
+
+	public Computer update(Computer toUpdate) {
 		computerDAO.update(toUpdate);
 		return toUpdate;
 	}
-	
-	public void deleteComputer(Long id){
+
+	public void delete(Long id) {
 		computerDAO.delete(id);
 	}
-	
-	
-	
-	
+
 }

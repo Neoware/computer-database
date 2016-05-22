@@ -11,7 +11,7 @@ public class ConnectionManager {
 	private static final String url = "jdbc:mysql://localhost:3306/computer-database-db?zeroDateTimeBehavior=convertToNull";
 	private static final String user = "admincdb";
 	private static final String password = "qwerty1234";
-	private static ConnectionManager manager;
+	private static ConnectionManager instance;
 	
 	private ConnectionManager(){
 		try {
@@ -23,9 +23,14 @@ public class ConnectionManager {
 	}
 	
 	public static ConnectionManager getInstance(){
-		if (manager == null)
-			manager = new ConnectionManager();
-		return manager;
+		if (instance == null) {
+			synchronized (ConnectionManager.class) {
+				if (instance == null) {
+					instance = new ConnectionManager();
+				}
+			}
+		}
+		return instance;
 	}
 	
 	public synchronized Connection getConnection(){

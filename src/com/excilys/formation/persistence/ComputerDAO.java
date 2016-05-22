@@ -5,148 +5,178 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
-
-import sun.security.jca.GetInstance;
-
+import com.excilys.formation.utils.DateUtils;
 
 public class ComputerDAO implements DAO<Computer> {
 
 	private Connection connection;
+	private static ConnectionManager connectionManager;
 	private PreparedStatement preparedStatement;
 	private ResultSet result;
 	private Statement statement;
+	private static ComputerDAO instance;
 
 	private ComputerDAO() {
+		connectionManager = ConnectionManager.getInstance();
 	}
-	
-	public ComputerDAO getInstance(){
-		
+
+	public static ComputerDAO getInstance() {
+		if (instance == null) {
+			synchronized (ComputerDAO.class) {
+				if (instance == null) {
+					instance = new ComputerDAO();
+				}
+			}
+		}
+		return instance;
 	}
-	
+
 	@Override
 	public Computer find(Long id) {
+		Computer computer = null;
+		String sql = "SELECT computer.name, computer.introduced, computer.discontinued, "
+				+ "computer.company_id, company.name AS company_name" + "FROM computer " + "INNER JOIN company"
+				+ "ON computer.company_id = company.id" + "WHERE id =? ";
 		try {
-			connection =  ConnectionManager.getInstance().getConnection();
-			String sql = "SELECT * FROM computer WHERE id =?";
+			connection = connectionManager.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, id);
 			result = preparedStatement.executeQuery();
-			if (result.first()){
-				Computer computer = new Computer(id, result.getString("name"), 
-						result.getTimestamp("introduced").toLocalDate(), result.getTimestamp("discontinued").toLocalDateTime(), result.getLong("company_id"));
-				return computer;
+			if (result.first()) {
+				Company company = new Company(result.getLong("company_id"), result.getString("company_name"));
+				computer = new Computer.ComputerBuilder(result.getString("name")).id(id)
+						.introduced(DateUtils.timestampToLocalDate(result.getTimestamp("introduced")))
+						.discontinued(DateUtils.timestampToLocalDate(result.getTimestamp("discontinued")))
+						.computerCompany(company).build();
 			}
-
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;	
+			// LOG.error("");
+			// throw new DAOException(e);
+		} finally {
+			connectionManager.cleanUp(connection, preparedStatement, result);
 		}
-		finally {
-			ConnectionManager.getInstance().cleanUp(connection, preparedStatement, result);
-		}
-		return null;
+		return computer;
 	}
 
 	@Override
 	public Computer create(Computer toCreate) {
 		try {
-			connection =  ConnectionManager.getInstance().getConnection();
+			connection = connectionManager.getConnection();
 			String sql = "INSERT INTO computer VALUES (NULL, ?, ?, ?, ?)";
 			preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, toCreate.getName());
-			preparedStatement.setTimestamp(2, Timestamp.valueOf(toCreate.getIntroduced()));
-			preparedStatement.setTimestamp(3, Timestamp.valueOf(toCreate.getDiscontinued()));
-			preparedStatement.setLong(4, toCreate.getCompanyId());
+			preparedStatement.setTimestamp(2, DateUtils.localDateToTimestamp(toCreate.getIntroduced()));
+			preparedStatement.setTimestamp(3, DateUtils.localDateToTimestamp(toCreate.getDiscontinued()));
+			preparedStatement.setLong(4, toCreate.getComputerCompany().getId());
 			preparedStatement.executeUpdate();
-			ResultSet generatedKeys = preparedStatement.getGeneratedKeys();		
-			if (generatedKeys.next()){
+			ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+			if (generatedKeys.next()) {
 				toCreate.setId(generatedKeys.getLong(1));
-				System.out.println("test");
 			}
 			generatedKeys.close();
-			return toCreate;
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
+			// LOG.error("");
+			// throw new DAOException(e);
+		} finally {
+			connectionManager.cleanUp(connection, preparedStatement, result);
 		}
-		finally {
-			ConnectionManager.getInstance().cleanUp(connection, preparedStatement, result);
-		}
+		return toCreate;
 	}
 
 	@Override
-	public Computer update(Computer toUpdate) {
+	public void update(Computer toUpdate) {
 		try {
-			connection =  ConnectionManager.getInstance().getConnection();
+			connection = connectionManager.getConnection();
 			String sql = "UPDATE computer SET name= ?, introduced= ?, discontinued=?, company_id= ? WHERE  id = ?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, toUpdate.getName());
-			preparedStatement.setTimestamp(2, Timestamp.valueOf(toUpdate.getIntroduced()));
-			preparedStatement.setTimestamp(3, Timestamp.valueOf(toUpdate.getDiscontinued()));
-			preparedStatement.setLong(4, toUpdate.getCompanyId());
+			preparedStatement.setTimestamp(2, DateUtils.localDateToTimestamp(toUpdate.getIntroduced()));
+			preparedStatement.setTimestamp(3, DateUtils.localDateToTimestamp(toUpdate.getDiscontinued()));
+			preparedStatement.setLong(4, toUpdate.getComputerCompany().getId());
 			preparedStatement.setLong(5, toUpdate.getId());
 			preparedStatement.executeUpdate();
-			return toUpdate;
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-		finally {
-			ConnectionManager.getInstance().cleanUp(connection, preparedStatement, result);
+			// LOG.error("");
+			// throw new DAOException(e);
+		} finally {
+			connectionManager.cleanUp(connection, preparedStatement, result);
 		}
 	}
 
 	@Override
-	public Computer delete(Long id) {
+	public void delete(Long id) {
 		try {
-			connection =  ConnectionManager.getInstance().getConnection();
-			Computer toDelete = this.find(id);
+			connection = connectionManager.getConnection();
 			String sql = "DELETE from computer where id=?";
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setLong(1, toDelete.getId());
+			preparedStatement.setLong(1, id);
 			preparedStatement.executeUpdate();
-			return toDelete;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			// LOG.error("");
+			// throw new DAOException(e);
+		} finally {
+			connectionManager.cleanUp(connection, preparedStatement, result);
 		}
-		finally {
-			ConnectionManager.getInstance().cleanUp(connection, preparedStatement, result);
-		}
-		return null;
 	}
 
 	@Override
 	public List<Computer> getAll() {
+		String sql = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, "
+				+ "computer.company_id, company.name AS company_name" + "FROM computer " + "INNER JOIN company"
+				+ "ON computer.company_id = company.id";
+		List<Computer> computers = new ArrayList<>();
 		try {
-			connection =  ConnectionManager.getInstance().getConnection();
+			connection = connectionManager.getConnection();
 			statement = connection.createStatement();
-			String sql = "SELECT * from computer";
 			ResultSet result = statement.executeQuery(sql);
-			List <Computer> computers = new ArrayList<>();
-			while(result.next()) {
-				Computer temp = new Computer();
-				temp.setId(result.getLong("id"));
-				temp.setName(result.getString("name"));
-				temp.setIntroduced(result.getTimestamp("introduced").toLocalDateTime());
-				temp.setDiscontinued(result.getTimestamp("discontinued").toLocalDateTime());
-				temp.setCompanyId(result.getLong("id"));
-				computers.add(temp);
-			} 
-			return computers;
+			while (result.next()) {
+				Company company = new Company(result.getLong("company_id"), result.getString("company_name"));
+				Computer computer = new Computer.ComputerBuilder(result.getString("name")).id(result.getLong("id"))
+						.introduced(DateUtils.timestampToLocalDate(result.getTimestamp("introduced")))
+						.discontinued(DateUtils.timestampToLocalDate(result.getTimestamp("discontinued")))
+						.computerCompany(company).build();
+				computers.add(computer);
+			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			// LOG.error("");
+			// throw new DAOException(e);
+		} finally {
+			connectionManager.cleanUp(connection, statement, result);
 		}
-		finally {
-			ConnectionManager.getInstance().cleanUp(connection, statement, result);
-		}
-		return null;
+		return computers;
 	}
 
+	@Override
+	public List<Computer> getLimited(int offset, int limit) {
+		String sql = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, "
+				+ "computer.company_id, company.name AS company_name" + "FROM computer " + "INNER JOIN company"
+				+ "ON computer.company_id = company.id " + "LIMIT " + limit + " OFFSET " + offset;
 
+		List<Computer> computers = new ArrayList<>();
+		try {
+			connection = connectionManager.getConnection();
+			statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			while (result.next()) {
+				Company company = new Company(result.getLong("company_id"), result.getString("company_name"));
+				Computer computer = new Computer.ComputerBuilder(result.getString("name")).id(result.getLong("id"))
+						.introduced(DateUtils.timestampToLocalDate(result.getTimestamp("introduced")))
+						.discontinued(DateUtils.timestampToLocalDate(result.getTimestamp("discontinued")))
+						.computerCompany(company).build();
+				computers.add(computer);
+			}
+		} catch (SQLException e) {
+			// LOG.error("");
+			// throw new DAOException(e);
+		} finally {
+			connectionManager.cleanUp(connection, statement, result);
+		}
+		return computers;
+	}
 
 }

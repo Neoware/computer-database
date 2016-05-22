@@ -9,63 +9,77 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.excilys.formation.entity.Company;
+import com.excilys.formation.entity.Computer;
 
 
 public class CompanyDAO implements DAO<Company>{
 
 	private Connection connection;
+	private static ConnectionManager connectionManager;
 	private PreparedStatement preparedStatement;
 	private ResultSet result;
 	private Statement statement;
+	private static CompanyDAO instance;
 	
-	public CompanyDAO() {
+	private CompanyDAO() {
+		connectionManager = ConnectionManager.getInstance();
+	}
+	
+	public static CompanyDAO getInstance(){
+		if (instance == null){
+			synchronized (CompanyDAO.class) {
+				if (instance == null){
+					instance = new CompanyDAO();
+				}
+			}
+		}
+		return instance;
 	}
 	
 	@Override
 	public Company find(Long id) {
+		Company company = null;
 		try {
-			connection =  ConnectionManager.getInstance().getConnection();
+			connection =  connectionManager.getConnection();
 			String sql = "SELECT * FROM company WHERE id = ?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, id);
 			result = preparedStatement.executeQuery();
 			if (result.first()){
-				Company company = new Company(id, result.getString("name"));
-				return company;
-			}
-			
+				company = new Company(id, result.getString("name"));
+			}			
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
+			//LOG.error("");
+			//throw new DAOException(e);
 		}
 		finally {
-			ConnectionManager connectionManager =  ConnectionManager.getInstance();
+			connectionManager.cleanUp(connection, preparedStatement, result);
+		}
+		return company;
+	}
+
+	@Override
+	public Company create(Company toCreate) {
+		try {
+			connection =  connectionManager.getConnection();
+			String sql = "INSERT INTO computer VALUES (NULL, ?)";
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, toCreate.getName());
+			preparedStatement.executeQuery();
+		} catch (SQLException e) {
+			//LOG.error("");
+			//throw new DAOException(e);
+		}
+		finally {
 			connectionManager.cleanUp(connection, preparedStatement, result);
 		}
 		return null;
 	}
 
 	@Override
-	public Company create(Company toCreate) {
+	public void update(Company toUpdate) {
 		try {
-			connection =  ConnectionManager.getInstance().getConnection();
-			String sql = "INSERT INTO computer VALUES (NULL, ?)";
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, toCreate.getName());
-			preparedStatement.executeQuery();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		finally {
-			ConnectionManager.getInstance().cleanUp(connection, preparedStatement, result);
-		}
-		return null;
-	}
-
-	@Override
-	public Company update(Company toUpdate) {
-		try {
-			connection =  ConnectionManager.getInstance().getConnection();
+			connection =  connectionManager.getConnection();
 			String sql = "UPDATE computer SET name=? WHERE id=?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, toUpdate.getName());
@@ -75,50 +89,73 @@ public class CompanyDAO implements DAO<Company>{
 			e.printStackTrace();
 		}
 		finally {
-			ConnectionManager.getInstance().cleanUp(connection, preparedStatement, result);
+			connectionManager.cleanUp(connection, preparedStatement, result);
 		}
-		return null;
 	}
 
 	@Override
-	public Company delete(Long id) {
+	public void delete(Long id) {
 		try {
-			connection =  ConnectionManager.getInstance().getConnection();
+			connection =  connectionManager.getConnection();
 			String sql = "DELETE from computer where id=?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, id);
 			preparedStatement.executeQuery();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			//LOG.error("");
+			//throw new DAOException(e);
 		}
 		finally {
-			ConnectionManager.getInstance().cleanUp(connection, preparedStatement, result);
+			connectionManager.cleanUp(connection, preparedStatement, result);
 		}
-		return null;
 	}
 
 	@Override
 	public List<Company> getAll() {
+		List<Company> companies = new ArrayList<>();
+		String sql = "SELECT * from company";
 		try {
-			connection =  ConnectionManager.getInstance().getConnection();
-			statement = connection.createStatement();
-			String sql = "SELECT * from company";
+			connection =  connectionManager.getConnection();
+			statement = connection.createStatement();	
 			result = statement.executeQuery(sql);
-			List<Company> companies = new ArrayList<>();
 			while(result.next()) {
 					Company temp = new Company();
 					temp.setId(result.getLong("id"));
 					temp.setName(result.getString("name"));
 					companies.add(temp);
 				} 
-			return companies;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			//LOG.error("");
+			//throw new DAOException(e);
 		}
 		finally {
-			ConnectionManager.getInstance().cleanUp(connection, statement, result);
+			connectionManager.cleanUp(connection, statement, result);
 		}
-		return null;
+		return companies;
+	}
+
+	@Override
+	public List<Company> getLimited(int offset, int limit) {
+		List<Company> companies = new ArrayList<>();
+		String sql = "SELECT * from company LIMIT " + limit + " OFFSET " + offset;
+		try {
+			connection =  connectionManager.getConnection();
+			statement = connection.createStatement();	
+			result = statement.executeQuery(sql);
+			while(result.next()) {
+					Company temp = new Company();
+					temp.setId(result.getLong("id"));
+					temp.setName(result.getString("name"));
+					companies.add(temp);
+				} 
+		} catch (SQLException e) {
+			//LOG.error("");
+			//throw new DAOException(e);
+		}
+		finally {
+			connectionManager.cleanUp(connection, statement, result);
+		}
+		return companies;
 	}
 	
 	

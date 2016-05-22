@@ -21,7 +21,7 @@ public class Computer {
 			this.name = name;
 		}
 
-		public ComputerBuilder Id(Long id) {
+		public ComputerBuilder id(Long id) {
 			this.id = id;
 			return this;
 		}
@@ -31,12 +31,12 @@ public class Computer {
 			return this;
 		}
 
-		public ComputerBuilder Discontinued(LocalDate discontinued) {
+		public ComputerBuilder discontinued(LocalDate discontinued) {
 			this.discontinued = discontinued;
 			return this;
 		}
 
-		public ComputerBuilder ComputerCompany(Company computerCompany) {
+		public ComputerBuilder computerCompany(Company computerCompany) {
 			this.computerCompany = computerCompany;
 			return this;
 		}

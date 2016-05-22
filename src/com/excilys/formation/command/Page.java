@@ -3,6 +3,9 @@ package com.excilys.formation.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.excilys.formation.service.ComputerService;
+import com.excilys.formation.service.Service;
+
 public class Page<T> {
 
 	private List<T> elements;
@@ -16,26 +19,22 @@ public class Page<T> {
 	
 	/**
 	 * Constructor that should be use to pass the elements to offer page capability
-	 * @param elements The list of elements that need to be paginated
+	 * @param computerService The list of elements that need to be paginated
 	 */
-	public Page(List <T> elements){
-		this.elements = new ArrayList<T>(elements);
+	public Page(Service computerService){
 		this.offset = 0;
 		this.pageSize = 30;
-		if (elements.size() < pageSize)
-			this.pageSize = elements.size();
-		this.currentPageElements = new ArrayList<T>(elements.subList(offset , offset + pageSize));
-		this.nbPage = elements.size() / pageSize;
+		this.currentPageElements = new ArrayList<>(computerService.subList(offset , offset + pageSize));
+		this.nbPage = computerService.size() / pageSize;
 		this.currentPage = 0;
-		this.currentPageElements = elements.subList(offset , offset + pageSize);
+		this.currentPageElements = computerService.subList(offset , offset + pageSize);
 	}
 
 	/**
 	 * Method that move the page instance to the next page if it's possible
 	 */
-	public void next(){
-		if (currentPage < nbPage)
-		{
+	public boolean next(){
+		if (currentPage < nbPage) {
 			currentPage++;
 			offset = currentPage * pageSize;
 			int limit;
@@ -44,18 +43,25 @@ public class Page<T> {
 			else
 				limit = pageSize;
 			currentPageElements = elements.subList(offset, offset + limit);
+			return true;
+		}
+		else {
+			return false;
 		}
 	}
 
 	/**
 	 * Method that move the page instance to the previous page if it's possible
 	 */
-		public void previous(){
-			if (currentPage > 0)
-			{
+		public boolean previous(){
+			if (currentPage > 0) {
 				currentPage--;
 				offset = currentPage * pageSize;
 				currentPageElements = elements.subList(offset, offset + pageSize);
+				return true;
+			}
+			else {
+				return false;
 			}
 		}
 		

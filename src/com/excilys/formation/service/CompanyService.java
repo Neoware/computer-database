@@ -1,6 +1,6 @@
 package com.excilys.formation.service;
 
-public class CompanyService {
+public class CompanyService implements Service{
 
 	public CompanyService(){
 		

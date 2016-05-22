@@ -23,14 +23,14 @@ public interface DAO<T> {
 	 * @param toUpdate the element that need to be updated
 	 * @return the updated element
 	 */
-	public T update (T toUpdate);
+	public void update (T toUpdate);
 	
 	/**
 	 * 
 	 * @param toDelete the element that need to be deleted
 	 * @return The deleted element
 	 */
-	public T delete (Long id);
+	public void delete (Long id);
 	
 	/**
 	 * 
@@ -38,5 +38,7 @@ public interface DAO<T> {
 	 */
 	
 	public List <T> getAll();
+	
+	public List <T> getLimited(int offset, int limit);
 	
 }
