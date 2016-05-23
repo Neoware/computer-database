@@ -17,6 +17,7 @@
 /home/neoware/Work/computer-database/src/main/java/com/excilys/formation/utils/DateUtils.java
 /home/neoware/Work/computer-database/src/main/java/com/excilys/formation/cli/ShowOneComputerCommand.java
 /home/neoware/Work/computer-database/src/main/java/com/excilys/formation/service/Service.java
+/home/neoware/Work/computer-database/src/main/java/com/excilys/formation/servlet/Dashboard.java
 /home/neoware/Work/computer-database/src/main/java/com/excilys/formation/cli/UpdateComputerCommand.java
 /home/neoware/Work/computer-database/src/main/java/com/excilys/formation/cli/Command.java
 /home/neoware/Work/computer-database/src/main/java/com/excilys/formation/cli/ListCompaniesCommand.java
