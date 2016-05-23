@@ -8,12 +8,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.formation.entity.Company;
-import com.excilys.formation.entity.Computer;
 
 
 public class CompanyDAO implements DAO<Company>{
 
+	private static final Logger LOG = LoggerFactory.getLogger(CompanyDAO.class);
 	private Connection connection;
 	private static ConnectionManager connectionManager;
 	private PreparedStatement preparedStatement;
@@ -49,7 +52,7 @@ public class CompanyDAO implements DAO<Company>{
 				company = new Company(id, result.getString("name"));
 			}			
 		} catch (SQLException e) {
-			//LOG.error("");
+			LOG.error("Error while searching for company with id " + id, e);
 			//throw new DAOException(e);
 		}
 		finally {
@@ -67,7 +70,7 @@ public class CompanyDAO implements DAO<Company>{
 			preparedStatement.setString(1, toCreate.getName());
 			preparedStatement.executeQuery();
 		} catch (SQLException e) {
-			//LOG.error("");
+			LOG.error("Error while creating a company", e);
 			//throw new DAOException(e);
 		}
 		finally {
@@ -86,7 +89,7 @@ public class CompanyDAO implements DAO<Company>{
 			preparedStatement.setLong(2, toUpdate.getId());
 			preparedStatement.executeQuery();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOG.error("Error while updating a company", e);
 		}
 		finally {
 			connectionManager.cleanUp(connection, preparedStatement, result);
@@ -102,7 +105,7 @@ public class CompanyDAO implements DAO<Company>{
 			preparedStatement.setLong(1, id);
 			preparedStatement.executeQuery();
 		} catch (SQLException e) {
-			//LOG.error("");
+			LOG.error("Error while deleting a company", e);
 			//throw new DAOException(e);
 		}
 		finally {
@@ -125,7 +128,7 @@ public class CompanyDAO implements DAO<Company>{
 					companies.add(temp);
 				} 
 		} catch (SQLException e) {
-			//LOG.error("");
+			LOG.error("Error while retrieving all companies", e);
 			//throw new DAOException(e);
 		}
 		finally {
@@ -137,7 +140,8 @@ public class CompanyDAO implements DAO<Company>{
 	@Override
 	public List<Company> getLimited(int offset, int limit) {
 		List<Company> companies = new ArrayList<>();
-		String sql = "SELECT * from company LIMIT " + limit + " OFFSET " + offset;
+		String sql = "SELECT * from company LIMIT " + offset + ", " + limit;
+		LOG.debug(sql);
 		try {
 			connection =  connectionManager.getConnection();
 			statement = connection.createStatement();	
@@ -149,7 +153,7 @@ public class CompanyDAO implements DAO<Company>{
 					companies.add(temp);
 				} 
 		} catch (SQLException e) {
-			//LOG.error("");
+			LOG.error("Error when fetching a part of all companies", e);
 			//throw new DAOException(e);
 		}
 		finally {

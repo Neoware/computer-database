@@ -2,15 +2,24 @@ package com.excilys.formation.cli;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CommandManager {
-
+	private static final Logger LOG = LoggerFactory.getLogger(CommandManager.class);
 	private static Map<String, Command> commands;
+	
 
 	public CommandManager() {
 		commands = new HashMap<String, Command>();
-		commands.put("list-computers", new ListComputers());
+		commands.put("list-computers", new ListComputersCommand());
+		commands.put("list-companies", new ListCompaniesCommand());
+		commands.put("computer", new ShowOneComputerCommand());
+		commands.put("create", new CreateComputerCommand());
+		commands.put("update", new UpdateComputerCommand());
+		commands.put("delete", new DeleteComputerCommand());
+		commands.put("exit", new ExitCommand());
 	}
 
 	public void addCommand(String commandName, Command toExecute) {
@@ -29,11 +38,11 @@ public class CommandManager {
 		Command command = commands.get(commandName);
 		boolean shouldContinue = true;
 		if (command != null) {
-			// Log.info("Excecuting command : " + commandName);
+			LOG.info("Excecuting command : " + commandName);
 			shouldContinue = command.execute();
 		} else {
 			System.out.println("The command " + commandName + " doesn't exist.");
-			// Log.info("Invalid command : " + commandName);
+			LOG.info("Invalid command : " + commandName);
 		}
 		return shouldContinue;
 	}

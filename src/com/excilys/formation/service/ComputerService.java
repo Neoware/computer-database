@@ -7,7 +7,7 @@ import com.excilys.formation.entity.Computer;
 import com.excilys.formation.persistence.CompanyDAO;
 import com.excilys.formation.persistence.ComputerDAO;
 
-public class ComputerService implements Service{
+public class ComputerService implements Service<Computer>{
 
 	private static ComputerDAO computerDAO;
 	private static ComputerService instance;

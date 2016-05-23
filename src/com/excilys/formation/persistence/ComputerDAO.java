@@ -8,12 +8,16 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.utils.DateUtils;
 
 public class ComputerDAO implements DAO<Computer> {
-
+	
+	private static final Logger LOG = LoggerFactory.getLogger(ComputerDAO.class);
 	private Connection connection;
 	private static ConnectionManager connectionManager;
 	private PreparedStatement preparedStatement;
@@ -40,12 +44,13 @@ public class ComputerDAO implements DAO<Computer> {
 	public Computer find(Long id) {
 		Computer computer = null;
 		String sql = "SELECT computer.name, computer.introduced, computer.discontinued, "
-				+ "computer.company_id, company.name AS company_name" + "FROM computer " + "INNER JOIN company"
-				+ "ON computer.company_id = company.id" + "WHERE id =? ";
+				+ "computer.company_id, company.name AS company_name" + " FROM computer " + "LEFT JOIN company"
+				+ " ON computer.company_id = company.id" + " WHERE computer.id =? ";
 		try {
 			connection = connectionManager.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, id);
+			LOG.debug(preparedStatement.toString());
 			result = preparedStatement.executeQuery();
 			if (result.first()) {
 				Company company = new Company(result.getLong("company_id"), result.getString("company_name"));
@@ -55,7 +60,7 @@ public class ComputerDAO implements DAO<Computer> {
 						.computerCompany(company).build();
 			}
 		} catch (SQLException e) {
-			// LOG.error("");
+			LOG.error("Error while searching for computer with id " + id, e);
 			// throw new DAOException(e);
 		} finally {
 			connectionManager.cleanUp(connection, preparedStatement, result);
@@ -80,7 +85,7 @@ public class ComputerDAO implements DAO<Computer> {
 			}
 			generatedKeys.close();
 		} catch (SQLException e) {
-			// LOG.error("");
+			 LOG.error("Error while creating computer", e);
 			// throw new DAOException(e);
 		} finally {
 			connectionManager.cleanUp(connection, preparedStatement, result);
@@ -101,7 +106,7 @@ public class ComputerDAO implements DAO<Computer> {
 			preparedStatement.setLong(5, toUpdate.getId());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			// LOG.error("");
+			 LOG.error("Error while updating a computer", e);
 			// throw new DAOException(e);
 		} finally {
 			connectionManager.cleanUp(connection, preparedStatement, result);
@@ -117,7 +122,7 @@ public class ComputerDAO implements DAO<Computer> {
 			preparedStatement.setLong(1, id);
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			// LOG.error("");
+			 LOG.error("Error while deleting a computer", e);
 			// throw new DAOException(e);
 		} finally {
 			connectionManager.cleanUp(connection, preparedStatement, result);
@@ -143,7 +148,7 @@ public class ComputerDAO implements DAO<Computer> {
 				computers.add(computer);
 			}
 		} catch (SQLException e) {
-			// LOG.error("");
+			 LOG.error("Error when retrieving all of the computers", e);
 			// throw new DAOException(e);
 		} finally {
 			connectionManager.cleanUp(connection, statement, result);
@@ -153,10 +158,11 @@ public class ComputerDAO implements DAO<Computer> {
 
 	@Override
 	public List<Computer> getLimited(int offset, int limit) {
-		String sql = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, "
-				+ "computer.company_id, company.name AS company_name" + "FROM computer " + "INNER JOIN company"
-				+ "ON computer.company_id = company.id " + "LIMIT " + limit + " OFFSET " + offset;
-
+		String sql = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, "
+				+ "company.name AS company_name FROM computer "
+				+ "LEFT JOIN company ON computer.company_id = company.id "
+				+ " LIMIT " + offset + ", " +  limit;
+		System.out.println(sql);
 		List<Computer> computers = new ArrayList<>();
 		try {
 			connection = connectionManager.getConnection();
@@ -171,7 +177,7 @@ public class ComputerDAO implements DAO<Computer> {
 				computers.add(computer);
 			}
 		} catch (SQLException e) {
-			// LOG.error("");
+			 LOG.error("Error when fetching a part of all computers", e);
 			// throw new DAOException(e);
 		} finally {
 			connectionManager.cleanUp(connection, statement, result);

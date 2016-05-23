@@ -1,5 +1,8 @@
 package com.excilys.formation.service;
 
-public interface Service {
+import java.util.List;
 
+public interface Service<T> {
+
+	public List<T> getSelection(int offset, int limit);
 }

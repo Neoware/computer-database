@@ -3,122 +3,92 @@ package com.excilys.formation.command;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jdt.internal.compiler.ast.ThisReference;
+import org.omg.CORBA.PRIVATE_MEMBER;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.excilys.formation.cli.CommandManager;
 import com.excilys.formation.service.ComputerService;
 import com.excilys.formation.service.Service;
+import com.mysql.jdbc.log.Log;
+
+import sun.print.resources.serviceui;
 
 public class Page<T> {
 
-	private List<T> elements;
+	private static final Logger LOG = LoggerFactory.getLogger(Page.class);
 	private int pageSize;
-	private int nbPage;
-	private int currentPage;
 	private List<T> currentPageElements;
 	private int offset;
+	private Service<T> service;
 
 	public Page() {}
 	
 	/**
 	 * Constructor that should be use to pass the elements to offer page capability
-	 * @param computerService The list of elements that need to be paginated
+	 * @param service The service that will be use to retrieve the pages.
 	 */
-	public Page(Service computerService){
+	public Page(Service<T> service){
 		this.offset = 0;
 		this.pageSize = 30;
-		this.currentPageElements = new ArrayList<>(computerService.subList(offset , offset + pageSize));
-		this.nbPage = computerService.size() / pageSize;
-		this.currentPage = 0;
-		this.currentPageElements = computerService.subList(offset , offset + pageSize);
+		this.service = service;
+		this.currentPageElements = service.getSelection(offset, pageSize);
 	}
 
 	/**
 	 * Method that move the page instance to the next page if it's possible
 	 */
 	public boolean next(){
-		if (currentPage < nbPage) {
-			currentPage++;
-			offset = currentPage * pageSize;
-			int limit;
-			if (currentPage == nbPage)
-				limit = elements.size() % pageSize;
-			else
-				limit = pageSize;
-			currentPageElements = elements.subList(offset, offset + limit);
+		if (this.currentPageElements.size() == pageSize){
+			this.offset += pageSize;
+			this.currentPageElements = service.getSelection(offset, pageSize);
 			return true;
 		}
-		else {
-			return false;
-		}
+		return false;
+		
 	}
 
 	/**
 	 * Method that move the page instance to the previous page if it's possible
 	 */
 		public boolean previous(){
-			if (currentPage > 0) {
-				currentPage--;
-				offset = currentPage * pageSize;
-				currentPageElements = elements.subList(offset, offset + pageSize);
-				return true;
-			}
-			else {
+			if (offset <= 0){
 				return false;
 			}
-		}
-		
-		/**
-		 * Method to print the content of the current position of the page instance
-		 */
-		public void printPage(){
-			for (T current : currentPageElements){
-				System.out.println(current);
+			else
+			{
+				LOG.debug("trying to go to the previous page");
+				this.offset -= pageSize;
+				this.currentPageElements = service.getSelection(offset, pageSize);
+				return true;
 			}
 		}
 
-		public List<T> getElements() {
-			return elements;
-		}
+	public int getPageSize() {
+		return pageSize;
+	}
 
-		public void setElements(List<T> elements) {
-			this.elements = elements;
-		}
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
 
-		public int getPageSize() {
-			return pageSize;
-		}
+	public List<T> getCurrentPageElements() {
+		return currentPageElements;
+	}
 
-		public void setPageSize(int pageSize) {
-			this.pageSize = pageSize;
-		}
+	public void setCurrentPageElements(List<T> currentPageElements) {
+		this.currentPageElements = currentPageElements;
+	}
 
-		public int getNbPage() {
-			return nbPage;
-		}
+	public int getOffset() {
+		return offset;
+	}
 
-		public void setNbPage(int nbPage) {
-			this.nbPage = nbPage;
-		}
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
 
-		public int getCurrentPage() {
-			return currentPage;
-		}
 
-		public void setCurrentPage(int currentPage) {
-			this.currentPage = currentPage;
-		}
-
-		public List<T> getCurrentPageElements() {
-			return currentPageElements;
-		}
-
-		public void setCurrentPageElements(List<T> currentPageElements) {
-			this.currentPageElements = currentPageElements;
-		}
-
-		public int getOffset() {
-			return offset;
-		}
-
-		public void setOffset(int offset) {
-			this.offset = offset;
-		}
+		
 	}
