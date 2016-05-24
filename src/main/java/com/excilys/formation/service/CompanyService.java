@@ -14,7 +14,6 @@ public class CompanyService implements Service<Company>{
 		companyDAO = CompanyDAO.getInstance();
 	}
 
-
 	public static CompanyService getInstance() {
 		if (instance == null) {
 			synchronized (CompanyService.class) {
@@ -39,5 +38,11 @@ public class CompanyService implements Service<Company>{
 	public List<Company> getSelection(int offset, int limit){
 		List<Company> companies = companyDAO.getLimited(offset, limit);
 		return companies;
+	}
+
+	@Override
+	public int count() {
+		// TODO count company
+		return 0;
 	}
 }

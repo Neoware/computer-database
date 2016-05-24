@@ -57,5 +57,9 @@ public class ComputerService implements Service<Computer>{
 	public void delete(Long id) {
 		computerDAO.delete(id);
 	}
+	
+	public int count(){
+		return computerDAO.count();
+	}
 
 }

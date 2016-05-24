@@ -184,5 +184,24 @@ public class ComputerDAO implements DAO<Computer> {
 		}
 		return computers;
 	}
+	
+	public int count(){
+		String sql = "SELECT COUNT( id )FROM computer";
+		int count = -1;
+		try {
+			connection = connectionManager.getConnection();
+			statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			if (result.next()){
+				count = result.getInt(1);
+			}
+		}
+		catch (SQLException e){
+			LOG.error("Error when getting the count computers", e);
+		} finally {
+			connectionManager.cleanUp(connection, statement, result);
+		}
+		return count;
+	}
 
 }

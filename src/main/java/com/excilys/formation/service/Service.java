@@ -5,4 +5,6 @@ import java.util.List;
 public interface Service<T> {
 
 	public List<T> getSelection(int offset, int limit);
+	
+	public int count();
 }
