@@ -7,14 +7,17 @@
 	<c:if test="${page > 1}" >
 	<li><a href="dashboard?page=${page - 1}" aria-label="Previous"> <span aria-hidden="true">&laquo;</span></a></li>
 	</c:if>
-	<c:forEach begin="${page}" end="${page + 5}" varStatus="loop">
+	<c:set var="endPage" scope="request" value="${page + 5}"/> 
+	<c:if test="${page + 5 > count}">
+		<c:set var="endPage" scope="request" value="${count}"/> 
+	</c:if>
+	<c:forEach begin="${page}" end="${endPage}" varStatus="loop">
 		<c:if test="${loop.index == page}">
-		 <li class="active">
+		 <li class="active"><a href="dashboard?page=${loop.index}">${loop.index}</a></li>
 		</c:if>
 		<c:if test="${loop.index != page}">
-		<li>
-		</c:if>
-		<a href="dashboard?page=${loop.index}">${loop.index}</a></li>
+		<li><a href="dashboard?page=${loop.index}">${loop.index}</a></li>
+		</c:if>	
 	</c:forEach>
 	<c:if test="${page < count}">
 	<li><a href="dashboard?page=${page + 1}" aria-label="Next"> <span aria-hidden="true">&raquo;</span></a></li>
