@@ -25,7 +25,7 @@ public class DateUtils {
 	}
 
 	public static LocalDate stringToLocalDate(String string) {
-		if (string != null) {
+		if (string != null && !string.isEmpty()) {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 			LocalDate date = LocalDate.parse(string, formatter);
 			return date;

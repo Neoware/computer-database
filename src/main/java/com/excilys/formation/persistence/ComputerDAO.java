@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.utils.DateUtils;
+import com.mysql.jdbc.log.Log;
 
 public class ComputerDAO implements DAO<Computer> {
 	
@@ -77,7 +78,8 @@ public class ComputerDAO implements DAO<Computer> {
 			preparedStatement.setString(1, toCreate.getName());
 			preparedStatement.setTimestamp(2, DateUtils.localDateToTimestamp(toCreate.getIntroduced()));
 			preparedStatement.setTimestamp(3, DateUtils.localDateToTimestamp(toCreate.getDiscontinued()));
-			preparedStatement.setLong(4, toCreate.getComputerCompany().getId());
+			preparedStatement.setObject(4, toCreate.getComputerCompany().getId());
+			LOG.info(preparedStatement.toString());
 			preparedStatement.executeUpdate();
 			ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
 			if (generatedKeys.next()) {
@@ -104,6 +106,7 @@ public class ComputerDAO implements DAO<Computer> {
 			preparedStatement.setTimestamp(3, DateUtils.localDateToTimestamp(toUpdate.getDiscontinued()));
 			preparedStatement.setLong(4, toUpdate.getComputerCompany().getId());
 			preparedStatement.setLong(5, toUpdate.getId());
+			LOG.info(preparedStatement.toString());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			 LOG.error("Error while updating a computer", e);
