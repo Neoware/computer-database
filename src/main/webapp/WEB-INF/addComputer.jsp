@@ -12,6 +12,8 @@
 <link href="css/font-awesome.css" rel="stylesheet" media="screen">
 <link href="css/main.css" rel="stylesheet" media="screen">
 <link href="css/jquery-ui.min.css" rel="stylesheet" media="screen">
+<link href="css/jquery-ui.theme.min.css" rel="stylesheet" media="screen">
+<link href="css/jquery-ui.structure.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">

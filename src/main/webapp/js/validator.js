@@ -1,5 +1,4 @@
 $(document).ready(function() {
-	$.datepicker.setDefaults( $.datepicker.regional[ "fr" ] );
 	$(".datepicker").datepicker();
 	$("#submitButton").click(function(event){
 		alert("Start");
@@ -58,4 +57,5 @@ $(document).ready(function() {
   		}
 });
 });
+
 
