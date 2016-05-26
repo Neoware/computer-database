@@ -12,7 +12,7 @@ import com.excilys.formation.utils.DateUtils;
 public class CreateComputerCommand implements Command {
 	private static ComputerService computerService;
 	private static CompanyService companyService;
-	
+
 	public CreateComputerCommand() {
 		computerService = ComputerService.getInstance();
 		companyService = CompanyService.getInstance();
@@ -31,21 +31,23 @@ public class CreateComputerCommand implements Command {
 		System.out.println("Choose a timestamp introduced for your computer (not mandatory)");
 		String introduced = scanner.nextLine();
 		Timestamp introducedTimestamp = DateUtils.getTimestampFromString(introduced);
-		if (introducedTimestamp == null)
+		if (introducedTimestamp == null) {
 			System.out.println("Bad timestamp format setting to default");
-		else
+		} else {
 			builder.introduced(DateUtils.getLocalDateFromTimestamp(introducedTimestamp));
+		}
 		System.out.println("Choose a timestamp discontinued for your computer (not mandatory)");
 		String discontinued = scanner.nextLine();
 		Timestamp discontinuedTimestamp = DateUtils.getTimestampFromString(discontinued);
-		if (discontinuedTimestamp == null)
+		if (discontinuedTimestamp == null) {
 			System.out.println("Bad timestamp format setting to default");
-		else
+		} else {
 			builder.discontinued(DateUtils.getLocalDateFromTimestamp(introducedTimestamp));
+		}
 		System.out.println("Choose the id of the manufacturer of the computer");
 		if (scanner.hasNextLong()) {
 			Long companyId = scanner.nextLong();
-			Company company  = companyService.getById(companyId);
+			Company company = companyService.getById(companyId);
 			if (company != null) {
 				builder.computerCompany(company);
 			} else {

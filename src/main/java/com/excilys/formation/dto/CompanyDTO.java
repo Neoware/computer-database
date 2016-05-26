@@ -4,18 +4,22 @@ public class CompanyDTO {
 
 	private long id;
 	private String name;
-	
-	public CompanyDTO(){}
-	
+
+	public CompanyDTO() {
+	}
+
 	public long getId() {
 		return id;
 	}
+
 	public void setId(long id) {
 		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -36,22 +40,27 @@ public class CompanyDTO {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		CompanyDTO other = (CompanyDTO) obj;
-		if (id != other.id)
+		if (id != other.id) {
 			return false;
+		}
 		if (name == null) {
-			if (other.name != null)
+			if (other.name != null) {
 				return false;
-		} else if (!name.equals(other.name))
+			}
+		} else if (!name.equals(other.name)) {
 			return false;
+		}
 		return true;
 	}
-	
-	
+
 }

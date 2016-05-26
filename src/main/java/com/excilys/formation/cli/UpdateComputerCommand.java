@@ -13,7 +13,7 @@ public class UpdateComputerCommand implements Command {
 
 	private static ComputerService computerService;
 	private static CompanyService companyService;
-	
+
 	public UpdateComputerCommand() {
 		computerService = ComputerService.getInstance();
 		companyService = CompanyService.getInstance();
@@ -24,8 +24,9 @@ public class UpdateComputerCommand implements Command {
 		Scanner scanner = new Scanner(System.in);
 		System.out.print("What is the id of the computer you want to update ?");
 		while (!scanner.hasNextLong()) {
-			if (scanner.next() != "")
+			if (scanner.next() != "") {
 				System.out.println("You need to provide a correct id");
+			}
 			scanner.nextLine();
 		}
 		Long id = scanner.nextLong();
@@ -33,29 +34,33 @@ public class UpdateComputerCommand implements Command {
 		Computer toUpdate = computerService.getById(id);
 		if (toUpdate != null) {
 			System.out.println("Change the name of the computer ? (current: " + toUpdate.getName() + ")");
-			if (scanner.hasNext())
+			if (scanner.hasNext()) {
 				toUpdate.setName(scanner.nextLine());
+			}
 			System.out.println(
 					"Change the introduced date of the computer ? (current: " + toUpdate.getIntroduced() + ")");
 			if (scanner.hasNextLine()) {
 				String introduced = scanner.nextLine();
 				Timestamp introducedTimestamp = DateUtils.getTimestampFromString(introduced);
-				if (introducedTimestamp != null)
+				if (introducedTimestamp != null) {
 					toUpdate.setIntroduced(DateUtils.getLocalDateFromTimestamp(introducedTimestamp));
-				else
+				} else {
 					System.out.println("Bad timestamp");
+				}
 			}
 			System.out.println(
 					"Change the discontinued date of the computer ? (current: " + toUpdate.getDiscontinued() + ")");
 			if (scanner.hasNextLine()) {
 				String discontinued = scanner.nextLine();
 				Timestamp discontinuedTimestamp = DateUtils.getTimestampFromString(discontinued);
-				if (discontinuedTimestamp != null)
+				if (discontinuedTimestamp != null) {
 					toUpdate.setDiscontinued(DateUtils.getLocalDateFromTimestamp(discontinuedTimestamp));
-				else
+				} else {
 					System.out.println("Bad timestamp");
+				}
 			}
-			System.out.println("Change the company id of the computer ? (current: " + toUpdate.getComputerCompany().getId() + ")");
+			System.out.println(
+					"Change the company id of the computer ? (current: " + toUpdate.getComputerCompany().getId() + ")");
 			if (scanner.hasNextLong()) {
 				Long companyId = scanner.nextLong();
 				System.out.println(companyId);
@@ -68,8 +73,9 @@ public class UpdateComputerCommand implements Command {
 			}
 			computerService.update(toUpdate);
 			System.out.println("Success");
-		} else
+		} else {
 			System.out.println("Computer with this id doesn\'t exist");
+		}
 		return true;
 	}
 

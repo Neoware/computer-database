@@ -6,9 +6,9 @@ import com.excilys.formation.entity.Computer;
 import com.excilys.formation.service.ComputerService;
 
 public class ShowOneComputerCommand implements Command {
-	
+
 	private static ComputerService computerService;
-	
+
 	public ShowOneComputerCommand() {
 		computerService = ComputerService.getInstance();
 	}

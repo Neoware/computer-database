@@ -5,12 +5,12 @@ import java.util.List;
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.persistence.CompanyDAO;
 
-public class CompanyService implements Service<Company>{
-	
+public class CompanyService implements Service<Company> {
+
 	private static CompanyDAO companyDAO;
 	private static CompanyService instance;
 
-	private CompanyService(){
+	private CompanyService() {
 		companyDAO = CompanyDAO.getInstance();
 	}
 
@@ -22,20 +22,21 @@ public class CompanyService implements Service<Company>{
 				}
 			}
 		}
-		return instance;	
+		return instance;
 	}
-	
-	public Company getById(Long id){
+
+	public Company getById(Long id) {
 		Company company = companyDAO.find(id);
 		return company;
 	}
-	
+
 	public List<Company> getAll() {
 		List<Company> companies = companyDAO.getAll();
 		return companies;
 	}
-	
-	public List<Company> getSelection(int offset, int limit){
+
+	@Override
+	public List<Company> getSelection(int offset, int limit) {
 		List<Company> companies = companyDAO.getLimited(offset, limit);
 		return companies;
 	}

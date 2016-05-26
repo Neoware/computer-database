@@ -24,7 +24,7 @@ public class ComputerDtoValidator implements Validator<ComputerDTO> {
 	}
 
 	private void validateCompanyName(ReturnInformation returnInformation, ComputerDTO toVerify) {
-		if (toVerify.getCompanyName() != null){
+		if (toVerify.getCompanyName() != null) {
 			if (toVerify.getCompanyName().length() > 255) {
 				returnInformation.getMessage().append("Company name is too big, enter 250 characters or less\n");
 				returnInformation.setSuccess(false);

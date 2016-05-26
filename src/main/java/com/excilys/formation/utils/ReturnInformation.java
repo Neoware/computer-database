@@ -9,8 +9,6 @@ public class ReturnInformation {
 		message = new StringBuffer();
 	}
 
-	
-
 	public boolean isSuccess() {
 		return success;
 	}
@@ -18,7 +16,7 @@ public class ReturnInformation {
 	public void setSuccess(boolean success) {
 		this.success = success;
 	}
-	
+
 	public StringBuffer getMessage() {
 		return message;
 	}

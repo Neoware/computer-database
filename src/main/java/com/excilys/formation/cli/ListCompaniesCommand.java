@@ -11,11 +11,11 @@ import com.excilys.formation.service.CompanyService;
 public class ListCompaniesCommand implements Command {
 
 	CompanyService companyService;
-	
+
 	public ListCompaniesCommand() {
 		companyService = CompanyService.getInstance();
 	}
-	
+
 	@Override
 	public boolean execute() {
 		List<Company> companies = new ArrayList<>();
@@ -27,28 +27,29 @@ public class ListCompaniesCommand implements Command {
 		boolean refresh = true;
 		while (shouldContinue == true) {
 			if (refresh == true) {
-				for (Company company : companies){
+				for (Company company : companies) {
 					System.out.println(company);
 				}
 			}
-				System.out.println("n for next page, p for previous, a to abort and go back to shell");
-				if (scanner.hasNextLine()) {
-					refresh = false;
-				}
-				navigation = scanner.nextLine();
-				if (navigation.equals("n")) {
-					if (pages.next() == true) {
-						companies = pages.getCurrentPageElements();
-						refresh = true;
-					}
-				} else if (navigation.equals("p")) {
-					if (pages.previous() == true) {
-						companies = pages.getCurrentPageElements();
-						refresh = true;
-					}
-				} else if (navigation.equals("a"))
-					shouldContinue = false;
+			System.out.println("n for next page, p for previous, a to abort and go back to shell");
+			if (scanner.hasNextLine()) {
+				refresh = false;
 			}
+			navigation = scanner.nextLine();
+			if (navigation.equals("n")) {
+				if (pages.next() == true) {
+					companies = pages.getCurrentPageElements();
+					refresh = true;
+				}
+			} else if (navigation.equals("p")) {
+				if (pages.previous() == true) {
+					companies = pages.getCurrentPageElements();
+					refresh = true;
+				}
+			} else if (navigation.equals("a")) {
+				shouldContinue = false;
+			}
+		}
 		return true;
 	}
 

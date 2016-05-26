@@ -29,8 +29,9 @@ public class DateUtils {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 			LocalDate date = LocalDate.parse(string, formatter);
 			return date;
-		} else
+		} else {
 			return null;
+		}
 	}
 
 	public static String localDateToString(LocalDate localDate) {
@@ -38,10 +39,11 @@ public class DateUtils {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 			String date = localDate.format(formatter);
 			return date;
-		} else
+		} else {
 			return null;
+		}
 	}
-	
+
 	public static Timestamp getTimestampFromString(String inputString) {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
@@ -52,11 +54,12 @@ public class DateUtils {
 			return null;
 		}
 	}
-	
-	public static LocalDate getLocalDateFromTimestamp(Timestamp timestamp){
-		if (timestamp != null)
+
+	public static LocalDate getLocalDateFromTimestamp(Timestamp timestamp) {
+		if (timestamp != null) {
 			return timestamp.toLocalDateTime().toLocalDate();
-		else
+		} else {
 			return null;
+		}
 	}
 }

@@ -8,21 +8,20 @@ import java.sql.Statement;
 
 public class ConnectionManager {
 
-	private static final String url = "jdbc:mysql://localhost:3306/computer-database-db?zeroDateTimeBehavior=convertToNull";
-	private static final String user = "admincdb";
-	private static final String password = "qwerty1234";
+	private static final String URL = "jdbc:mysql://localhost:3306/computer-database-db?zeroDateTimeBehavior=convertToNull";
+	private static final String USER = "admincdb";
+	private static final String PASSWORD = "qwerty1234";
 	private static ConnectionManager instance;
-	
-	private ConnectionManager(){
+
+	private ConnectionManager() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-		}
-		catch (ClassNotFoundException e){
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public static ConnectionManager getInstance(){
+
+	public static ConnectionManager getInstance() {
 		if (instance == null) {
 			synchronized (ConnectionManager.class) {
 				if (instance == null) {
@@ -32,27 +31,30 @@ public class ConnectionManager {
 		}
 		return instance;
 	}
-	
-	public synchronized Connection getConnection(){
+
+	public synchronized Connection getConnection() {
 		try {
-			Connection connect = DriverManager.getConnection(url, user, password);
+			Connection connect = DriverManager.getConnection(URL, USER, PASSWORD);
 			return connect;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
-	public void cleanUp(Connection connection, Statement statement, ResultSet resultSet){
-		if (connection != null)
+
+	public void cleanUp(Connection connection, Statement statement, ResultSet resultSet) {
+		if (connection != null) {
 			try {
 				connection.close();
-				if (statement != null)
+				if (statement != null) {
 					statement.close();
-				if (resultSet != null)
+				}
+				if (resultSet != null) {
 					resultSet.close();
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		}
 	}
 }

@@ -36,18 +36,21 @@ public class ListComputersCommand implements Command {
 				if (pages.next() == true) {
 					computers = pages.getCurrentPageElements();
 					refresh = true;
-				} else
+				} else {
 					refresh = false;
+				}
 			} else if (navigation.equals("p")) {
 				if (pages.previous() == true) {
 					computers = pages.getCurrentPageElements();
 					refresh = true;
-				} else
+				} else {
 					refresh = false;
-			} else if (navigation.equals("a"))
+				}
+			} else if (navigation.equals("a")) {
 				shouldContinue = false;
+			}
 		}
-		//scanner.close();
+		// scanner.close();
 		return true;
 	}
 

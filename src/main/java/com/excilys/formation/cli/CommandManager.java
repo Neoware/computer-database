@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 public class CommandManager {
 	private static final Logger LOG = LoggerFactory.getLogger(CommandManager.class);
 	private static Map<String, Command> commands;
-	
 
 	public CommandManager() {
 		commands = new HashMap<String, Command>();

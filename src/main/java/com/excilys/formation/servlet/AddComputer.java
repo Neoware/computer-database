@@ -33,18 +33,20 @@ public class AddComputer extends HttpServlet {
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		CompanyService companyService = CompanyService.getInstance();
-		List <Company> companies = companyService.getAll();
+		List<Company> companies = companyService.getAll();
 		request.setAttribute("companies", companies);
-		request.getRequestDispatcher("addComputer.jsp").forward(request, response);
+		request.getRequestDispatcher("WEB-INF/addComputer.jsp").forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("Post");
@@ -62,26 +64,23 @@ public class AddComputer extends HttpServlet {
 			if (request.getParameterMap().containsKey("companyId")) {
 				computer.setCompanyId(Integer.parseInt(request.getParameter("companyId")));
 			}
-				ComputerDtoValidator computerDtoValidator = new ComputerDtoValidator();
-				returnInformation = computerDtoValidator.isValid(computer);
-				if (returnInformation.isSuccess() == true){
-					Computer toAdd = ComputerMapper.FromDtoToEntity(computer);
-					System.out.println(computer);
-					System.out.println(toAdd);
-					ComputerService computerService = ComputerService.getInstance();
-					computerService.create(toAdd);
-					returnInformation.getMessage().append("Successfully added computer " + computer.getName());
-					returnInformation.setSuccess(true);
-				}
+			ComputerDtoValidator computerDtoValidator = new ComputerDtoValidator();
+			returnInformation = computerDtoValidator.isValid(computer);
+			if (returnInformation.isSuccess() == true) {
+				Computer toAdd = ComputerMapper.FromDtoToEntity(computer);
+				ComputerService computerService = ComputerService.getInstance();
+				computerService.create(toAdd);
+				returnInformation.getMessage().append("Successfully added computer " + computer.getName());
+				returnInformation.setSuccess(true);
+			}
 		} else {
 			returnInformation.getMessage().append("Impossible to add computer without name");
 			returnInformation.setSuccess(false);
-		System.out.println("wtf");
 		}
 		request.setAttribute("successMessage", returnInformation.getMessage().toString());
 		request.setAttribute("success", returnInformation.isSuccess());
 		request.setAttribute("display", true);
-		request.getRequestDispatcher("addComputer.jsp").forward(request, response);
+		doGet(request, response);
 	}
 
 }

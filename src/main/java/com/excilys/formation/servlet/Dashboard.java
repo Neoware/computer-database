@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.excilys.formation.command.Page;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.service.ComputerService;
-import com.mysql.jdbc.log.Log;
 
 /**
  * Servlet implementation class Dashboard
@@ -26,13 +25,13 @@ public class Dashboard extends HttpServlet {
 	 * Default constructor.
 	 */
 	public Dashboard() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		int pageRequest = 1;
@@ -54,17 +53,16 @@ public class Dashboard extends HttpServlet {
 		request.setAttribute("count", pageCount);
 		request.setAttribute("numberElements", numberElements);
 		request.setAttribute("limit", limit);
-		request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+		request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-
 }
