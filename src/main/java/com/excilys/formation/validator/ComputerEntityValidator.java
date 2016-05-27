@@ -12,7 +12,6 @@ public class ComputerEntityValidator implements Validator<Computer> {
 		validateDate(returnInformation, toVerify);
 		validateCompanyName(returnInformation, toVerify);
 		validateCompany(returnInformation, toVerify);
-		System.out.println(returnInformation.getMessage());
 		return returnInformation;
 	}
 

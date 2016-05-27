@@ -1,21 +1,21 @@
 package com.excilys.formation.dto;
 
 public class ComputerDTO {
-	private long id;
+	private String id;
 	private String name;
 	private String introduced;
 	private String discontinued;
 	private String companyName;
-	private long companyId;
+	private String companyId;
 
 	public ComputerDTO() {
 	}
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -51,28 +51,22 @@ public class ComputerDTO {
 		this.companyName = companyName;
 	}
 
-	public long getCompanyId() {
+	public String getCompanyId() {
 		return companyId;
 	}
 
-	public void setCompanyId(long companyId) {
+	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
-	}
-
-	@Override
-	public String toString() {
-		return "ComputerDTO [id=" + id + ", name=" + name + ", introduced=" + introduced + ", discontinued="
-				+ discontinued + ", companyName=" + companyName + ", companyId=" + companyId + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (companyId ^ (companyId >>> 32));
+		result = prime * result + ((companyId == null) ? 0 : companyId.hashCode());
 		result = prime * result + ((companyName == null) ? 0 : companyName.hashCode());
 		result = prime * result + ((discontinued == null) ? 0 : discontinued.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((introduced == null) ? 0 : introduced.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
@@ -90,7 +84,11 @@ public class ComputerDTO {
 			return false;
 		}
 		ComputerDTO other = (ComputerDTO) obj;
-		if (companyId != other.companyId) {
+		if (companyId == null) {
+			if (other.companyId != null) {
+				return false;
+			}
+		} else if (!companyId.equals(other.companyId)) {
 			return false;
 		}
 		if (companyName == null) {
@@ -107,7 +105,11 @@ public class ComputerDTO {
 		} else if (!discontinued.equals(other.discontinued)) {
 			return false;
 		}
-		if (id != other.id) {
+		if (id == null) {
+			if (other.id != null) {
+				return false;
+			}
+		} else if (!id.equals(other.id)) {
 			return false;
 		}
 		if (introduced == null) {
@@ -125,6 +127,12 @@ public class ComputerDTO {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "ComputerDTO [id=" + id + ", name=" + name + ", introduced=" + introduced + ", discontinued="
+				+ discontinued + ", companyName=" + companyName + ", companyId=" + companyId + "]";
 	}
 
 }

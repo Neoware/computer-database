@@ -22,7 +22,6 @@
 				Database </a>
 		</div>
 	</header>
-
 	<section id="main">
 		<div class="container">
 			<div class="row">
@@ -44,7 +43,7 @@
 							<div class="form-group">
 								<label for="computerName">Computer name</label> <input
 									type="text" class="form-control" id="computerName"
-									name="computerName" placeholder="Computer name" required>
+									name="computerName" placeholder="Computer name" >
 							</div>
 							<div class="form-group">
 								<label for="introduced">Introduced date</label> <input
@@ -79,6 +78,6 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/dashboard.js"></script>
 	<script src="js/jquery-ui.min.js"></script>
-	<script src="js/addComputer.js"></script>
+<!-- 	<script src="js/addComputer.js"></script> -->
 </body>
 </html>

@@ -71,6 +71,7 @@ public class AddComputer extends HttpServlet {
 			if (request.getParameterMap().containsKey("companyId")
 					&& request.getParameter("companyId").trim().length() != 0
 					&& StringUtils.isNumeric(request.getParameter("companyId").trim())) {
+
 				computer.setCompanyId(Integer.parseInt(escapeHtml4(request.getParameter("companyId").trim())));
 			}
 			ComputerDtoValidator computerDtoValidator = new ComputerDtoValidator();
