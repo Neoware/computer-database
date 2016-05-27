@@ -5,17 +5,20 @@
 <%@ attribute name="page" required="true"%>
 <%@ attribute name="count" required="true"%>
 <%@ attribute name="limit" required="true"%>
+<%@ attribute name="paginationStart" required="true" %>
+<%@ attribute name="paginationEnd" required="true" %>
 <ul class="pagination">
+
+	<li><mylib:link page="1" limit="${limit}">
+			<span aria-hidden="true">First</span>
+		</mylib:link></li>
 	<c:if test="${page > 1}">
 		<li><mylib:link page="${page - 1}" limit="${limit}">
 				<span aria-hidden="true">&laquo;</span>
 			</mylib:link></li>
 	</c:if>
-	<c:set var="endPage" scope="request" value="${page + 5}" />
-	<c:if test="${page + 5 > count}">
-		<c:set var="endPage" scope="request" value="${count}" />
-	</c:if>
-	<c:forEach begin="${page}" end="${endPage}" varStatus="loop">
+
+	<c:forEach begin="${paginationStart}" end="${paginationEnd}" varStatus="loop">
 		<c:if test="${loop.index == page}">
 			<li class="active"><mylib:link page="${loop.index}"
 					limit="${limit}">${loop.index}</mylib:link></li>
@@ -29,4 +32,7 @@
 				<span aria-hidden="true">&raquo;</span>
 			</mylib:link></li>
 	</c:if>
+	<li><mylib:link page="${count}" limit="${limit}">
+			<span aria-hidden="true">Last</span>
+		</mylib:link></li>
 </ul>

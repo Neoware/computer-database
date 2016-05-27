@@ -26,7 +26,7 @@
 	<section id="main">
 		<div class="container">
 			<div class="row">
-				<div class="error"></div>
+				<div id="error"></div>
 				<c:if test="${requestScope.display}">
 					<c:if test="${requestScope.success}">
 						<div class="alert alert-success" role="alert">
@@ -79,6 +79,6 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/dashboard.js"></script>
 	<script src="js/jquery-ui.min.js"></script>
-	<script src="js/validator.js"></script>
+	<script src="js/addComputer.js"></script>
 </body>
 </html>

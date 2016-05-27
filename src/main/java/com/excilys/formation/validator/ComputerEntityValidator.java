@@ -7,8 +7,29 @@ public class ComputerEntityValidator implements Validator<Computer> {
 
 	@Override
 	public ReturnInformation isValid(Computer toVerify) {
-		// TODO Auto-generated method stub
-		return null;
+		ReturnInformation returnInformation = new ReturnInformation();
+		validateComputerName(returnInformation, toVerify);
+		validateDate(returnInformation, toVerify);
+		validateCompanyName(returnInformation, toVerify);
+		validateCompany(returnInformation, toVerify);
+		System.out.println(returnInformation.getMessage());
+		return returnInformation;
+	}
+
+	private void validateCompany(ReturnInformation returnInformation, Computer toVerify) {
+
+	}
+
+	private void validateCompanyName(ReturnInformation returnInformation, Computer toVerify) {
+
+	}
+
+	private void validateDate(ReturnInformation returnInformation, Computer toVerify) {
+
+	}
+
+	private void validateComputerName(ReturnInformation returnInformation, Computer toVerify) {
+
 	}
 
 }

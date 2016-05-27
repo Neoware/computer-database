@@ -21,7 +21,7 @@
 
 	<section id="main">
 		<div class="container">
-			<h1 id="homeTitle">${numberElements}Computersfound</h1>
+			<h1 id="homeTitle">${numberElements}&nbsp;Computers&nbsp;found</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="#" method="GET" class="form-inline">
@@ -72,11 +72,12 @@
 		<div class="container text-center">
 
 			<mylib:pagination page="${requestScope.page}"
-				count="${requestScope.count}" limit="${requestScope.limit}" />
+				count="${requestScope.count}" limit="${requestScope.limit}"
+				paginationEnd="${requestScope.paginationEnd}" paginationStart="${requestScope.paginationStart}"/>
 			<div class="btn-group btn-group-sm pull-right" role="group">
-				<button type="button" class="btn btn-default">10</button>
-				<button type="button" class="btn btn-default">50</button>
-				<button type="button" class="btn btn-default">100</button>
+				<mylib:link page="1" limit="10" classes="btn btn-default">10</mylib:link>
+				<mylib:link page="1" limit="50" classes="btn btn-lg btn-default">50</mylib:link>
+				<mylib:link page="1" limit="100" classes="btn btn-lg btn-default">100</mylib:link>
 			</div>
 		</div>
 	</footer>

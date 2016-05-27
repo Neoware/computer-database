@@ -117,7 +117,11 @@ public class Page<T> {
 
 	public int getTotalPage() {
 		numberElements = service.count();
-		totalPage = numberElements / pageSize;
+		if (numberElements % pageSize == 0) {
+			totalPage = numberElements / pageSize - 1;
+		} else {
+			totalPage = numberElements / pageSize;
+		}
 		return totalPage;
 	}
 

@@ -1,5 +1,7 @@
 package com.excilys.formation.servlet;
 
+import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -8,6 +10,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.excilys.formation.dto.ComputerDTO;
 import com.excilys.formation.entity.Company;
@@ -49,25 +53,31 @@ public class AddComputer extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("Post");
+
 		ReturnInformation returnInformation = new ReturnInformation();
-		if (request.getParameterMap().containsKey("computerName")) {
-			String name = request.getParameter("computerName");
+		if (request.getParameterMap().containsKey("computerName")
+				&& request.getParameter("computerName").trim().length() != 0) {
+			String name = escapeHtml4(request.getParameter("computerName").trim());
 			ComputerDTO computer = new ComputerDTO();
 			computer.setName(name);
-			if (request.getParameterMap().containsKey("introduced")) {
-				computer.setIntroduced(request.getParameter("introduced"));
+			if (request.getParameterMap().containsKey("introduced")
+					&& request.getParameter("introduced").trim().length() != 0) {
+				computer.setIntroduced(escapeHtml4(request.getParameter("introduced").trim()));
 			}
-			if (request.getParameterMap().containsKey("discontinued")) {
-				computer.setDiscontinued(request.getParameter("discontinued"));
+			if (request.getParameterMap().containsKey("discontinued")
+					&& request.getParameter("discontinued").trim().length() != 0) {
+				computer.setDiscontinued(escapeHtml4(request.getParameter("discontinued").trim()));
 			}
-			if (request.getParameterMap().containsKey("companyId")) {
-				computer.setCompanyId(Integer.parseInt(request.getParameter("companyId")));
+			if (request.getParameterMap().containsKey("companyId")
+					&& request.getParameter("companyId").trim().length() != 0
+					&& StringUtils.isNumeric(request.getParameter("companyId").trim())) {
+				computer.setCompanyId(Integer.parseInt(escapeHtml4(request.getParameter("companyId").trim())));
 			}
 			ComputerDtoValidator computerDtoValidator = new ComputerDtoValidator();
 			returnInformation = computerDtoValidator.isValid(computer);
 			if (returnInformation.isSuccess() == true) {
 				Computer toAdd = ComputerMapper.FromDtoToEntity(computer);
+
 				ComputerService computerService = ComputerService.getInstance();
 				computerService.create(toAdd);
 				returnInformation.getMessage().append("Successfully added computer " + computer.getName());

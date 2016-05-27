@@ -163,7 +163,7 @@ public class ComputerDAO implements DAO<Computer> {
 		String sql = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, "
 				+ "company.name AS company_name FROM computer "
 				+ "LEFT JOIN company ON computer.company_id = company.id " + " LIMIT " + offset + ", " + limit;
-		System.out.println(sql);
+		LOG.info(sql);
 		List<Computer> computers = new ArrayList<>();
 		try {
 			connection = connectionManager.getConnection();
