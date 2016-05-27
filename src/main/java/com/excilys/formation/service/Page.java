@@ -1,12 +1,10 @@
-package com.excilys.formation.command;
+package com.excilys.formation.service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.excilys.formation.service.Service;
 
 public class Page<T> {
 
@@ -72,6 +70,12 @@ public class Page<T> {
 		}
 	}
 
+	/**
+	 * 
+	 * @param pageRequest
+	 *            the page that is asked to be retrieved
+	 * @return the list of elements corresponding to the current page
+	 */
 	public List<T> getPageElements(int pageRequest) {
 		int elements = service.count();
 		totalPage = elements / pageSize;

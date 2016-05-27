@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.excilys.formation.command.Page;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.service.ComputerService;
+import com.excilys.formation.service.Page;
 
 public class ListComputersCommand implements Command {
 	private static ComputerService computerService;

@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.excilys.formation.command.Page;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.service.ComputerService;
+import com.excilys.formation.service.Page;
 
 /**
  * Servlet implementation class Dashboard
