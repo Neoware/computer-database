@@ -9,7 +9,7 @@ public class CompanyMapper {
 		CompanyDTO companyDTO = null;
 		if (toConvert.getName() != null) {
 			companyDTO = new CompanyDTO();
-			companyDTO.setId(toConvert.getId());
+			companyDTO.setId(Long.toString(toConvert.getId()));
 			companyDTO.setName(toConvert.getName());
 		}
 		return companyDTO;
@@ -18,7 +18,7 @@ public class CompanyMapper {
 	public static Company FromDtoToEntity(CompanyDTO toConvert) {
 		Company company = null;
 		if (toConvert.getName() != null) {
-			company = new Company(toConvert.getId(), toConvert.getName());
+			company = new Company(Long.parseLong(toConvert.getId()), toConvert.getName());
 		}
 		return company;
 	}

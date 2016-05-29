@@ -55,24 +55,19 @@ public class AddComputer extends HttpServlet {
 			throws ServletException, IOException {
 
 		ReturnInformation returnInformation = new ReturnInformation();
-		if (request.getParameterMap().containsKey("computerName")
-				&& request.getParameter("computerName").trim().length() != 0) {
+		if (request.getParameterMap().containsKey("computerName")) {
 			String name = escapeHtml4(request.getParameter("computerName").trim());
 			ComputerDTO computer = new ComputerDTO();
 			computer.setName(name);
-			if (request.getParameterMap().containsKey("introduced")
-					&& request.getParameter("introduced").trim().length() != 0) {
+			if (request.getParameterMap().containsKey("introduced")) {
 				computer.setIntroduced(escapeHtml4(request.getParameter("introduced").trim()));
 			}
-			if (request.getParameterMap().containsKey("discontinued")
-					&& request.getParameter("discontinued").trim().length() != 0) {
+			if (request.getParameterMap().containsKey("discontinued")) {
 				computer.setDiscontinued(escapeHtml4(request.getParameter("discontinued").trim()));
 			}
-			if (request.getParameterMap().containsKey("companyId")
-					&& request.getParameter("companyId").trim().length() != 0
-					&& StringUtils.isNumeric(request.getParameter("companyId").trim())) {
+			if (request.getParameterMap().containsKey("companyId")) {
 
-				computer.setCompanyId(Integer.parseInt(escapeHtml4(request.getParameter("companyId").trim())));
+				computer.setCompanyId(escapeHtml4(request.getParameter("companyId").trim()));
 			}
 			ComputerDtoValidator computerDtoValidator = new ComputerDtoValidator();
 			returnInformation = computerDtoValidator.isValid(computer);

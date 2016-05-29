@@ -10,9 +10,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.excilys.formation.dto.ComputerDTO;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.service.ComputerService;
 import com.excilys.formation.service.Page;
+import com.excilys.formation.service.PageRequest;
+import com.excilys.formation.utils.ComputerMapper;
 
 /**
  * Servlet implementation class Dashboard
@@ -34,33 +37,28 @@ public class Dashboard extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		int pageRequest = 1;
-		int limit = 10;
-		if (request.getParameterMap().containsKey("page")) {
-			pageRequest = Integer.parseInt(request.getParameter("page"));
-		}
-		if (request.getParameterMap().containsKey("limit")) {
-			limit = Integer.parseInt(request.getParameter("limit"));
-		}
+		PageRequest pageRequest = new PageRequest(request);
 		ComputerService computerService = ComputerService.getInstance();
-		List<Computer> computers = new ArrayList<>();
-		Page<Computer> pages = new Page<Computer>(computerService, limit);
-		int pageCount = pages.getTotalPage();
-		int numberElements = pages.getNumberElements();
-		int paginationStart = pageRequest - 4;
-		int paginationEnd = pageRequest + 4;
+		List<Computer> computers = computerService.getPage(pageRequest);
+		List <ComputerDTO> computerDTOs = new ArrayList<>();
+		for (Computer computer : computers){
+			computerDTOs.add(ComputerMapper.FromEntityToDto(computer));
+		}
+		Page<ComputerDTO> page = new Page(computerDTOs, pageRequest.getPage());
+		int count = computerService.count();
+		int paginationStart = pageRequest.getPage() - 3;
+		int paginationEnd = pageRequest.getPage() + 3;
 		if (paginationStart < 1) {
 			paginationStart = 1;
 		}
-		if (paginationEnd > pageCount) {
-			paginationEnd = pageCount;
+		if (paginationEnd > page.getTotalPage()) {
+			paginationEnd = page.getTotalPage();
 		}
-		computers = pages.getPageElements(pageRequest);
 		request.setAttribute("computers", computers);
-		request.setAttribute("page", pageRequest);
-		request.setAttribute("count", pageCount);
+		request.setAttribute("page", pageRequest.getPage());
+		request.setAttribute("count", count);
 		request.setAttribute("numberElements", numberElements);
-		request.setAttribute("limit", limit);
+		request.setAttribute("limit", page.getRe);
 		request.setAttribute("paginationEnd", paginationEnd);
 		request.setAttribute("paginationStart", paginationStart);
 		request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request, response);

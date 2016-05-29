@@ -10,11 +10,11 @@ public class ComputerMapper {
 		ComputerDTO computerDTO = null;
 		if (toConvert.getName() != null) {
 			computerDTO = new ComputerDTO();
-			computerDTO.setId(toConvert.getId());
+			computerDTO.setId(Long.toString(toConvert.getId()));
 			computerDTO.setName(toConvert.getName());
 			computerDTO.setIntroduced(DateUtils.localDateToString(toConvert.getIntroduced()));
 			computerDTO.setDiscontinued(DateUtils.localDateToString(toConvert.getDiscontinued()));
-			computerDTO.setCompanyId(toConvert.getComputerCompany().getId());
+			computerDTO.setCompanyId(Long.toString(toConvert.getComputerCompany().getId()));
 			computerDTO.setCompanyName(toConvert.getComputerCompany().getName());
 		}
 		return computerDTO;
@@ -24,13 +24,13 @@ public class ComputerMapper {
 		Computer computer = null;
 		Company company = null;
 		if (toConvert.getName() != null) {
-			if (toConvert.getCompanyId() == 0) {
+			if (toConvert.getCompanyId() == null) {
 				company = new Company(null, toConvert.getCompanyName());
 				System.out.println("null id");
 			} else {
-				company = new Company(toConvert.getCompanyId(), toConvert.getCompanyName());
+				company = new Company(Long.parseLong(toConvert.getCompanyId()), toConvert.getCompanyName());
 			}
-			computer = new Computer.ComputerBuilder(toConvert.getName()).id(toConvert.getId())
+			computer = new Computer.ComputerBuilder(toConvert.getName()).id(Long.parseLong(toConvert.getId()))
 					.introduced(DateUtils.stringToLocalDate(toConvert.getIntroduced()))
 					.discontinued(DateUtils.stringToLocalDate(toConvert.getDiscontinued())).computerCompany(company)
 					.build();

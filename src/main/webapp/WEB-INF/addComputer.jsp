@@ -78,6 +78,6 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/dashboard.js"></script>
 	<script src="js/jquery-ui.min.js"></script>
-<!-- 	<script src="js/addComputer.js"></script> -->
+		<script src="js/addComputer.js"></script>
 </body>
 </html>

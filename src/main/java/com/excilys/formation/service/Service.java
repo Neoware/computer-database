@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface Service<T> {
 
-	List<T> getSelection(int offset, int limit);
+	List<T> getPage(PageRequest pageRequest);
 
 	int count();
 }

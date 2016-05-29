@@ -3,6 +3,7 @@ package com.excilys.formation.service;
 import java.util.List;
 
 import com.excilys.formation.entity.Company;
+import com.excilys.formation.entity.Computer;
 import com.excilys.formation.persistence.CompanyDAO;
 
 public class CompanyService implements Service<Company> {
@@ -36,14 +37,15 @@ public class CompanyService implements Service<Company> {
 	}
 
 	@Override
-	public List<Company> getSelection(int offset, int limit) {
-		List<Company> companies = companyDAO.getLimited(offset, limit);
-		return companies;
-	}
-
-	@Override
 	public int count() {
 		// TODO count company
 		return 0;
+	}
+
+	@Override
+	public List<Company> getPage(PageRequest pageRequest) {
+		int offset = pageRequest.getLimit() * pageRequest.getPage();
+		List<Company> companies = companyDAO.getLimited(offset, pageRequest.getLimit());
+		return companies;
 	}
 }

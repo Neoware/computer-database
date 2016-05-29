@@ -1,9 +1,12 @@
 package com.excilys.formation.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.excilys.formation.dto.ComputerDTO;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.persistence.ComputerDAO;
+import com.excilys.formation.utils.ComputerMapper;
 
 public class ComputerService implements Service<Computer> {
 
@@ -32,9 +35,9 @@ public class ComputerService implements Service<Computer> {
 	}
 
 	@Override
-	public List<Computer> getSelection(int offset, int limit) {
-		List<Computer> computers = computerDAO.getLimited(offset, limit);
-		// List <ComputerDTO> computerDTOs =
+	public List<Computer> getPage(PageRequest pageRequest) {
+		int offset = pageRequest.getLimit() * pageRequest.getPage();
+		List <Computer> computers = computerDAO.getLimited(offset, pageRequest.getLimit());
 		return computers;
 	}
 
