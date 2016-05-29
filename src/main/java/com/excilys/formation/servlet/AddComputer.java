@@ -66,17 +66,15 @@ public class AddComputer extends HttpServlet {
 				computer.setDiscontinued(escapeHtml4(request.getParameter("discontinued").trim()));
 			}
 			if (request.getParameterMap().containsKey("companyId")) {
-
 				computer.setCompanyId(escapeHtml4(request.getParameter("companyId").trim()));
 			}
 			ComputerDtoValidator computerDtoValidator = new ComputerDtoValidator();
 			returnInformation = computerDtoValidator.isValid(computer);
 			if (returnInformation.isSuccess() == true) {
 				Computer toAdd = ComputerMapper.FromDtoToEntity(computer);
-
 				ComputerService computerService = ComputerService.getInstance();
 				computerService.create(toAdd);
-				returnInformation.getMessage().append("Successfully added computer " + computer.getName());
+				returnInformation.getMessage().append("Successfully added computer ");
 				returnInformation.setSuccess(true);
 			}
 		} else {

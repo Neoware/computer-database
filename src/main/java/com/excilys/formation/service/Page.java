@@ -12,7 +12,14 @@ public class Page<T> {
 	private int limit;
 	private List<T> currentPageElements;
 	private int current;
+	private int count;
 
 	public Page() {
 	}
+	
+	public Page(List<T> elements, PageRequest pageRequest){
+		currentPageElements = elements;
+	}
+	
+	
 }
