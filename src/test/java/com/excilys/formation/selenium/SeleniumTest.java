@@ -1,50 +1,63 @@
 package com.excilys.formation.selenium;
 
+import static org.junit.Assert.fail;
+
+import java.io.File;
 import java.util.concurrent.TimeUnit;
-import org.junit.*;
-import static org.junit.Assert.*;
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 
 public class SeleniumTest {
-	private WebDriver driver;
+	private WebDriver driverNoJs;
 	private String baseUrl;
 	private boolean acceptNextAlert = true;
 	private StringBuffer verificationErrors = new StringBuffer();
-	@Ignore
+
 	@Before
 	public void setUp() throws Exception {
-		System.setProperty("webdriver.chrome.driver", "src/test/ressources/chromedriver");
-		driver = new ChromeDriver();
+		FirefoxProfile firefoxProfile = new FirefoxProfile();
+		File noScriptFile = new File("src/test/resources/noscript.xpi");
+		firefoxProfile.addExtension(noScriptFile);
+		driverNoJs = new FirefoxDriver(firefoxProfile);
 		baseUrl = "http://localhost:8080";
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-	}
- @Ignore
-	@Test
-	public void testFirst() throws Exception {
-		driver.get(baseUrl + "/computer-database/dashboard");
-		driver.findElement(By.linkText("2")).click();
-		driver.findElement(By.linkText("3")).click();
-		driver.findElement(By.linkText("«")).click();
-		driver.findElement(By.id("addComputer")).click();
-		driver.findElement(By.id("computerName")).clear();
-		driver.findElement(By.id("computerName")).sendKeys("dqzzqdqz");
-		driver.findElement(By.id("introduced")).clear();
-		driver.findElement(By.id("introduced")).sendKeys("qzddqz");
-		driver.findElement(By.id("discontinued")).clear();
-		driver.findElement(By.id("discontinued")).sendKeys("dqzdq");
-		driver.findElement(By.id("submitButton")).click();
-		driver.findElement(By.id("introduced")).clear();
-		driver.findElement(By.id("introduced")).sendKeys("24-08-1992");
-		driver.findElement(By.id("discontinued")).clear();
-		driver.findElement(By.id("discontinued")).sendKeys("26-05-2016");
-		driver.findElement(By.id("submitButton")).click();
+		driverNoJs.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
- @Ignore
+	@Test
+	public void testFirst() throws Exception {
+		driverNoJs.get(baseUrl + "/computer-database/dashboard");
+		driverNoJs.findElement(By.linkText("2")).click();
+		driverNoJs.findElement(By.linkText("3")).click();
+		driverNoJs.findElement(By.linkText("«")).click();
+		driverNoJs.findElement(By.id("addComputer")).click();
+		driverNoJs.findElement(By.id("computerName")).clear();
+		driverNoJs.findElement(By.id("computerName")).sendKeys("dqzzqdqz");
+		driverNoJs.findElement(By.id("introduced")).clear();
+		driverNoJs.findElement(By.id("introduced")).sendKeys("qzddqz");
+		driverNoJs.findElement(By.id("discontinued")).clear();
+		driverNoJs.findElement(By.id("discontinued")).sendKeys("dqzdq");
+		driverNoJs.findElement(By.id("submitButton")).click();
+		driverNoJs.findElement(By.id("introduced")).clear();
+		driverNoJs.findElement(By.id("introduced")).sendKeys("24-08-1992");
+		driverNoJs.findElement(By.id("discontinued")).clear();
+		driverNoJs.findElement(By.id("discontinued")).sendKeys("26-05-2016");
+		driverNoJs.findElement(By.id("submitButton")).click();
+	}
+
+	@Ignore
 	@After
 	public void tearDown() throws Exception {
-		driver.quit();
+		driverNoJs.quit();
 		String verificationErrorString = verificationErrors.toString();
 		if (!"".equals(verificationErrorString)) {
 			fail(verificationErrorString);
@@ -53,7 +66,7 @@ public class SeleniumTest {
 
 	private boolean isElementPresent(By by) {
 		try {
-			driver.findElement(by);
+			driverNoJs.findElement(by);
 			return true;
 		} catch (NoSuchElementException e) {
 			return false;
@@ -62,7 +75,7 @@ public class SeleniumTest {
 
 	private boolean isAlertPresent() {
 		try {
-			driver.switchTo().alert();
+			driverNoJs.switchTo().alert();
 			return true;
 		} catch (NoAlertPresentException e) {
 			return false;
@@ -71,7 +84,7 @@ public class SeleniumTest {
 
 	private String closeAlertAndGetItsText() {
 		try {
-			Alert alert = driver.switchTo().alert();
+			Alert alert = driverNoJs.switchTo().alert();
 			String alertText = alert.getText();
 			if (acceptNextAlert) {
 				alert.accept();

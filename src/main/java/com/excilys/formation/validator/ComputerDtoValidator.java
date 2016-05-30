@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.excilys.formation.dto.ComputerDTO;
-import com.excilys.formation.utils.ReturnInformation;
+import com.excilys.formation.util.ReturnInformation;
 
 public class ComputerDtoValidator implements Validator<ComputerDTO> {
 

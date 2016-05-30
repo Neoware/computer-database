@@ -1,7 +1,7 @@
 package com.excilys.formation.validator;
 
 import com.excilys.formation.entity.Computer;
-import com.excilys.formation.utils.ReturnInformation;
+import com.excilys.formation.util.ReturnInformation;
 
 public class ComputerEntityValidator implements Validator<Computer> {
 

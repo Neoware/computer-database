@@ -3,26 +3,18 @@ package com.excilys.formation.service;
 import java.util.List;
 
 import com.excilys.formation.entity.Company;
-import com.excilys.formation.entity.Computer;
 import com.excilys.formation.persistence.CompanyDAO;
 
 public class CompanyService implements Service<Company> {
 
 	private static CompanyDAO companyDAO;
-	private static CompanyService instance;
+	private static CompanyService instance = new CompanyService();
 
 	private CompanyService() {
 		companyDAO = CompanyDAO.getInstance();
 	}
 
 	public static CompanyService getInstance() {
-		if (instance == null) {
-			synchronized (CompanyService.class) {
-				if (instance == null) {
-					instance = new CompanyService();
-				}
-			}
-		}
 		return instance;
 	}
 

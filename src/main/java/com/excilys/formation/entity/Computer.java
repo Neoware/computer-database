@@ -9,34 +9,37 @@ public class Computer {
 	private LocalDate discontinued;
 	private Company computerCompany;
 
-	public static class ComputerBuilder {
-		private final String name;
-
+	public static class Builder {
+		private String name;
 		private Long id;
 		private LocalDate introduced;
 		private LocalDate discontinued;
 		private Company computerCompany;
 
-		public ComputerBuilder(String name) {
-			this.name = name;
+		public Builder() {
 		}
 
-		public ComputerBuilder id(Long id) {
+		public Builder name(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public Builder id(Long id) {
 			this.id = id;
 			return this;
 		}
 
-		public ComputerBuilder introduced(LocalDate introduced) {
+		public Builder introduced(LocalDate introduced) {
 			this.introduced = introduced;
 			return this;
 		}
 
-		public ComputerBuilder discontinued(LocalDate discontinued) {
+		public Builder discontinued(LocalDate discontinued) {
 			this.discontinued = discontinued;
 			return this;
 		}
 
-		public ComputerBuilder computerCompany(Company computerCompany) {
+		public Builder computerCompany(Company computerCompany) {
 			this.computerCompany = computerCompany;
 			return this;
 		}
@@ -46,12 +49,16 @@ public class Computer {
 		}
 	}
 
-	private Computer(ComputerBuilder computerBuilder) {
+	private Computer(Builder computerBuilder) {
 		this.id = computerBuilder.id;
 		this.name = computerBuilder.name;
 		this.introduced = computerBuilder.introduced;
 		this.discontinued = computerBuilder.discontinued;
 		this.computerCompany = computerBuilder.computerCompany;
+	}
+
+	public static Builder getBuilder() {
+		return new Builder();
 	}
 
 	public Long getId() {

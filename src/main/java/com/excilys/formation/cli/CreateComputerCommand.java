@@ -7,7 +7,7 @@ import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.service.CompanyService;
 import com.excilys.formation.service.ComputerService;
-import com.excilys.formation.utils.DateUtils;
+import com.excilys.formation.util.DateUtils;
 
 public class CreateComputerCommand implements Command {
 	private static ComputerService computerService;
@@ -27,7 +27,7 @@ public class CreateComputerCommand implements Command {
 			name = scanner.nextLine();
 			System.out.println("You have pressed enter");
 		} while (name.equals(""));
-		Computer.ComputerBuilder builder = new Computer.ComputerBuilder(name);
+		Computer.Builder builder = Computer.getBuilder();
 		System.out.println("Choose a timestamp introduced for your computer (not mandatory)");
 		String introduced = scanner.nextLine();
 		Timestamp introducedTimestamp = DateUtils.getTimestampFromString(introduced);

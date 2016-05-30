@@ -1,4 +1,4 @@
-package com.excilys.formation.utils;
+package com.excilys.formation.util;
 
 import com.excilys.formation.dto.ComputerDTO;
 import com.excilys.formation.entity.Company;
@@ -30,7 +30,7 @@ public class ComputerMapper {
 			} else {
 				company = new Company(Long.parseLong(toConvert.getCompanyId()), toConvert.getCompanyName());
 			}
-			computer = new Computer.ComputerBuilder(toConvert.getName())
+			computer = Computer.getBuilder().name(toConvert.getName())
 					.introduced(DateUtils.stringToLocalDate(toConvert.getIntroduced()))
 					.discontinued(DateUtils.stringToLocalDate(toConvert.getDiscontinued())).computerCompany(company)
 					.build();

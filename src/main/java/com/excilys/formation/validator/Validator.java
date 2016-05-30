@@ -1,6 +1,6 @@
 package com.excilys.formation.validator;
 
-import com.excilys.formation.utils.ReturnInformation;
+import com.excilys.formation.util.ReturnInformation;
 
 public interface Validator<T> {
 

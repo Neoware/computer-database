@@ -18,8 +18,8 @@ import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.service.CompanyService;
 import com.excilys.formation.service.ComputerService;
-import com.excilys.formation.utils.ComputerMapper;
-import com.excilys.formation.utils.ReturnInformation;
+import com.excilys.formation.util.ComputerMapper;
+import com.excilys.formation.util.ReturnInformation;
 import com.excilys.formation.validator.ComputerDtoValidator;
 
 /**

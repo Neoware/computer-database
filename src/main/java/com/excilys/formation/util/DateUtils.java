@@ -1,4 +1,4 @@
-package com.excilys.formation.utils;
+package com.excilys.formation.util;
 
 import java.sql.Timestamp;
 import java.text.ParseException;

@@ -15,7 +15,7 @@ import com.excilys.formation.entity.Computer;
 import com.excilys.formation.service.ComputerService;
 import com.excilys.formation.service.Page;
 import com.excilys.formation.service.PageRequest;
-import com.excilys.formation.utils.ComputerMapper;
+import com.excilys.formation.util.ComputerMapper;
 
 /**
  * Servlet implementation class Dashboard

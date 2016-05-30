@@ -1,4 +1,4 @@
-package com.excilys.formation.utils;
+package com.excilys.formation.util;
 
 public class ReturnInformation {
 	private boolean success;

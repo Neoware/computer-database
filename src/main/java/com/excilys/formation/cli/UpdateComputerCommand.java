@@ -7,7 +7,7 @@ import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.service.CompanyService;
 import com.excilys.formation.service.ComputerService;
-import com.excilys.formation.utils.DateUtils;
+import com.excilys.formation.util.DateUtils;
 
 public class UpdateComputerCommand implements Command {
 

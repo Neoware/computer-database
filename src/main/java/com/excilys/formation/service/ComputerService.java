@@ -8,20 +8,13 @@ import com.excilys.formation.persistence.ComputerDAO;
 public class ComputerService implements Service<Computer> {
 
 	private static ComputerDAO computerDAO;
-	private static ComputerService instance;
+	private static ComputerService instance = new ComputerService();
 
 	private ComputerService() {
 		computerDAO = ComputerDAO.getInstance();
 	}
 
 	public static ComputerService getInstance() {
-		if (instance == null) {
-			synchronized (ComputerService.class) {
-				if (instance == null) {
-					instance = new ComputerService();
-				}
-			}
-		}
 		return instance;
 	}
 
