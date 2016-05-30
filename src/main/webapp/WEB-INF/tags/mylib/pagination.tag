@@ -28,7 +28,6 @@
 		</c:if>
 	</c:forEach>
 	<c:if test="${page lt count}">
-	TEST
 	</c:if>
 	<c:if test="${page < count}">
 		<li><mylib:link page="${page + 1}" limit="${limit}">

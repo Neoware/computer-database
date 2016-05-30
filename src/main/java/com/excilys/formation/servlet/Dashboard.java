@@ -40,14 +40,14 @@ public class Dashboard extends HttpServlet {
 		PageRequest pageRequest = new PageRequest(request);
 		ComputerService computerService = ComputerService.getInstance();
 		List<Computer> computers = computerService.getPage(pageRequest);
-		List <ComputerDTO> computerDTOs = new ArrayList<>();
-		for (Computer computer : computers){
+		List<ComputerDTO> computerDTOs = new ArrayList<>();
+		for (Computer computer : computers) {
 			computerDTOs.add(ComputerMapper.FromEntityToDto(computer));
 		}
-		Page<ComputerDTO> page = new Page(computerDTOs, pageRequest.getPage());
 		int count = computerService.count();
-		int paginationStart = pageRequest.getPage() - 3;
-		int paginationEnd = pageRequest.getPage() + 3;
+		Page<ComputerDTO> page = new Page(computerDTOs, pageRequest, count);
+		int paginationStart = page.getCurrent() - 3;
+		int paginationEnd = page.getCurrent() + 3;
 		if (paginationStart < 1) {
 			paginationStart = 1;
 		}
@@ -55,10 +55,7 @@ public class Dashboard extends HttpServlet {
 			paginationEnd = page.getTotalPage();
 		}
 		request.setAttribute("computers", computers);
-		request.setAttribute("page", pageRequest.getPage());
-		request.setAttribute("count", count);
-		request.setAttribute("numberElements", numberElements);
-		request.setAttribute("limit", page.getRe);
+		request.setAttribute("page", page);
 		request.setAttribute("paginationEnd", paginationEnd);
 		request.setAttribute("paginationStart", paginationStart);
 		request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request, response);

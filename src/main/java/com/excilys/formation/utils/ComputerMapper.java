@@ -30,7 +30,7 @@ public class ComputerMapper {
 			} else {
 				company = new Company(Long.parseLong(toConvert.getCompanyId()), toConvert.getCompanyName());
 			}
-			computer = new Computer.ComputerBuilder(toConvert.getName()).id(Long.parseLong(toConvert.getId()))
+			computer = new Computer.ComputerBuilder(toConvert.getName())
 					.introduced(DateUtils.stringToLocalDate(toConvert.getIntroduced()))
 					.discontinued(DateUtils.stringToLocalDate(toConvert.getDiscontinued())).computerCompany(company)
 					.build();

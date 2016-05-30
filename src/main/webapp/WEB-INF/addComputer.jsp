@@ -13,7 +13,8 @@
 <link href="css/main.css" rel="stylesheet" media="screen">
 <link href="css/jquery-ui.min.css" rel="stylesheet" media="screen">
 <link href="css/jquery-ui.theme.min.css" rel="stylesheet" media="screen">
-<link href="css/jquery-ui.structure.min.css" rel="stylesheet" media="screen">
+<link href="css/jquery-ui.structure.min.css" rel="stylesheet"
+	media="screen">
 </head>
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
@@ -25,17 +26,18 @@
 	<section id="main">
 		<div class="container">
 			<div class="row">
-				<div id="error"></div>
-				<c:if test="${requestScope.display}">
-					<c:if test="${requestScope.success}">
-						<div class="alert alert-success" role="alert">
-							${requestScope.successMessage}</div>
+				<div id="information">
+					<c:if test="${requestScope.display}">
+						<c:if test="${requestScope.success}">
+							<div class="alert alert-success" role="alert">
+								${requestScope.successMessage}</div>
+						</c:if>
+						<c:if test="${!requestScope.success}">
+							<div class="alert alert-danger" role="alert">
+								${requestScope.successMessage}</div>
+						</c:if>
 					</c:if>
-					<c:if test="${!requestScope.success}">
-						<div class="alert alert-danger" role="alert">
-							${requestScope.successMessage}</div>
-					</c:if>
-				</c:if>
+				</div>
 				<div class="col-xs-8 col-xs-offset-2 box">
 					<h1>Add Computer</h1>
 					<form action="addcomputer" method="POST">
@@ -43,7 +45,7 @@
 							<div class="form-group">
 								<label for="computerName">Computer name</label> <input
 									type="text" class="form-control" id="computerName"
-									name="computerName" placeholder="Computer name" >
+									name="computerName" placeholder="Computer name">
 							</div>
 							<div class="form-group">
 								<label for="introduced">Introduced date</label> <input
@@ -78,6 +80,6 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/dashboard.js"></script>
 	<script src="js/jquery-ui.min.js"></script>
-		<script src="js/addComputer.js"></script>
+	<script src="js/addComputer.js"></script>
 </body>
 </html>

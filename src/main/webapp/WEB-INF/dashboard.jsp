@@ -21,7 +21,7 @@
 
 	<section id="main">
 		<div class="container">
-			<h1 id="homeTitle">${numberElements}&nbsp;Computers&nbsp;found</h1>
+			<h1 id="homeTitle">${requestScope.page.count}&nbsp;Computers&nbsp;found</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="#" method="GET" class="form-inline">
@@ -54,12 +54,12 @@
 					</tr>
 				</thead>
 				<tbody id="results">
-					<c:forEach items="${computers}" var="item">
+					<c:forEach items="${requestScope.page.currentPageElements}" var="item">
 						<tr>
 							<td>${item.name}</td>
 							<td>${item.introduced}</td>
 							<td>${item.discontinued}</td>
-							<td>${item.computerCompany.name}</td>
+							<td>${item.companyName}</td>
 						</tr>
 					</c:forEach>
 
@@ -71,8 +71,8 @@
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
 
-			<mylib:pagination page="${requestScope.page}"
-				count="${requestScope.count}" limit="${requestScope.limit}"
+			<mylib:pagination page="${requestScope.page.current}"
+				count="${requestScope.page.totalPage}" limit="${requestScope.page.limit}"
 				paginationEnd="${requestScope.paginationEnd}" paginationStart="${requestScope.paginationStart}"/>
 			<div class="btn-group btn-group-sm pull-right" role="group">
 				<mylib:link page="1" limit="10" classes="btn btn-default">10</mylib:link>
