@@ -12,21 +12,11 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 public class ConnectionManager {
-
-	private static final String URL = "jdbc:mysql://localhost:3306/computer-database-db?zeroDateTimeBehavior=convertToNull";
-	private static final String USER = "admincdb";
-	private static final String PASSWORD = "qwerty1234";
 	private static final Logger LOG = LoggerFactory.getLogger(ConnectionManager.class);
 	private static ConnectionManager instance = new ConnectionManager();
-	private HikariDataSource hikariDataSource;
+	private static HikariDataSource hikariDataSource;
 
 	private ConnectionManager() {
-		/*
-		 * try { Class.forName("com.mysql.jdbc.Driver"); } catch
-		 * (ClassNotFoundException e) { LOG.error(
-		 * "Impossible to load the mysql jdbc driver, exiting...", e);
-		 * System.exit(-1); }
-		 */
 		HikariConfig config = new HikariConfig("/hikari.properties");
 		hikariDataSource = new HikariDataSource(config);
 	}
@@ -37,10 +27,8 @@ public class ConnectionManager {
 
 	public Connection getConnection() {
 		try {
-			// Connection connect = DriverManager.getConnection(URL, USER,
-			// PASSWORD);
-			Connection connection = hikariDataSource.getConnection();
-			return connection;
+			LOG.info("Asking for a connection");
+			return hikariDataSource.getConnection();
 		} catch (SQLException e) {
 			LOG.error("Impossible to connect to the database, exiting...", e);
 			System.exit(-1);
@@ -52,6 +40,7 @@ public class ConnectionManager {
 	public void cleanUp(Connection connection, Statement statement, ResultSet resultSet) {
 		if (connection != null) {
 			try {
+				LOG.info("Liberating connection");
 				connection.close();
 			} catch (SQLException e) {
 				LOG.error("Not able to close connection", e);

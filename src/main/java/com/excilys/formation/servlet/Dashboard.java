@@ -1,5 +1,7 @@
 package com.excilys.formation.servlet;
 
+import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,28 +39,54 @@ public class Dashboard extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		PageRequest pageRequest = new PageRequest(request);
-		ComputerService computerService = ComputerService.getInstance();
-		List<Computer> computers = computerService.getPage(pageRequest);
-		List<ComputerDTO> computerDTOs = new ArrayList<>();
-		for (Computer computer : computers) {
-			computerDTOs.add(ComputerMapper.FromEntityToDto(computer));
+		if (request.getParameterMap().containsKey("search")) {
+			ComputerService computerService = ComputerService.getInstance();
+			String search = escapeHtml4(request.getParameter("search").trim());
+			List<Computer> computers = computerService.searchByName(search, 0, 10);
+			List<ComputerDTO> computerDTOs = new ArrayList<>();
+			for (Computer computer : computers) {
+				computerDTOs.add(ComputerMapper.FromEntityToDto(computer));
+			}
+			PageRequest pageRequest = new PageRequest();
+			int count = computerDTOs.size();
+			Page<ComputerDTO> page = new Page<>(computerDTOs, pageRequest, count);
+			int paginationStart = page.getCurrent() - 3;
+			int paginationEnd = page.getCurrent() + 3;
+			if (paginationStart < 1) {
+				paginationStart = 1;
+			}
+			if (paginationEnd > page.getTotalPage()) {
+				paginationEnd = page.getTotalPage();
+			}
+			request.setAttribute("computers", computers);
+			request.setAttribute("page", page);
+			request.setAttribute("paginationEnd", paginationEnd);
+			request.setAttribute("paginationStart", paginationStart);
+			request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request, response);
+		} else {
+			PageRequest pageRequest = new PageRequest(request);
+			ComputerService computerService = ComputerService.getInstance();
+			List<Computer> computers = computerService.getPage(pageRequest);
+			List<ComputerDTO> computerDTOs = new ArrayList<>();
+			for (Computer computer : computers) {
+				computerDTOs.add(ComputerMapper.FromEntityToDto(computer));
+			}
+			int count = computerService.count();
+			Page<ComputerDTO> page = new Page<>(computerDTOs, pageRequest, count);
+			int paginationStart = page.getCurrent() - 3;
+			int paginationEnd = page.getCurrent() + 3;
+			if (paginationStart < 1) {
+				paginationStart = 1;
+			}
+			if (paginationEnd > page.getTotalPage()) {
+				paginationEnd = page.getTotalPage();
+			}
+			request.setAttribute("computers", computers);
+			request.setAttribute("page", page);
+			request.setAttribute("paginationEnd", paginationEnd);
+			request.setAttribute("paginationStart", paginationStart);
+			request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request, response);
 		}
-		int count = computerService.count();
-		Page<ComputerDTO> page = new Page(computerDTOs, pageRequest, count);
-		int paginationStart = page.getCurrent() - 3;
-		int paginationEnd = page.getCurrent() + 3;
-		if (paginationStart < 1) {
-			paginationStart = 1;
-		}
-		if (paginationEnd > page.getTotalPage()) {
-			paginationEnd = page.getTotalPage();
-		}
-		request.setAttribute("computers", computers);
-		request.setAttribute("page", page);
-		request.setAttribute("paginationEnd", paginationEnd);
-		request.setAttribute("paginationStart", paginationStart);
-		request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request, response);
 	}
 
 	/**
@@ -68,6 +96,14 @@ public class Dashboard extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		doGet(request, response);
+		ComputerService computerService = ComputerService.getInstance();
+		if (request.getParameterMap().containsKey("selection")) {
+			String selection = escapeHtml4(request.getParameter("introduced").trim());
+			String[] toDeletes = selection.split(",");
+			for (int i = 0; i < toDeletes.length; i++) {
+				computerService.delete(Long.parseLong(toDeletes[i]));
+			}
+			doGet(request, response);
+		}
 	}
 }

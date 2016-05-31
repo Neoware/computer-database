@@ -66,7 +66,6 @@ public class ComputerDAO implements DAO<Computer> {
 		PreparedStatement preparedStatement = null;
 		ResultSet generatedKeys = null;
 		try {
-			connection = connectionManager.getConnection();
 			String sql = "INSERT INTO computer VALUES (NULL, ?, ?, ?, ?)";
 			preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, toCreate.getName());
@@ -93,7 +92,6 @@ public class ComputerDAO implements DAO<Computer> {
 		Connection connection = connectionManager.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
-			connection = connectionManager.getConnection();
 			String sql = "UPDATE computer SET name= ?, introduced= ?, discontinued=?, company_id= ? WHERE  id = ?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, toUpdate.getName());
@@ -116,7 +114,6 @@ public class ComputerDAO implements DAO<Computer> {
 		Connection connection = connectionManager.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
-			connection = connectionManager.getConnection();
 			String sql = "DELETE from computer where id=?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, id);
@@ -141,7 +138,6 @@ public class ComputerDAO implements DAO<Computer> {
 		Statement statement = null;
 		ResultSet result = null;
 		try {
-			connection = connectionManager.getConnection();
 			statement = connection.createStatement();
 			result = statement.executeQuery(sql);
 			while (result.next()) {
@@ -172,7 +168,6 @@ public class ComputerDAO implements DAO<Computer> {
 		Statement statement = null;
 		ResultSet result = null;
 		try {
-			connection = connectionManager.getConnection();
 			statement = connection.createStatement();
 			result = statement.executeQuery(sql);
 			while (result.next()) {
@@ -200,7 +195,6 @@ public class ComputerDAO implements DAO<Computer> {
 		Statement statement = null;
 		ResultSet result = null;
 		try {
-			connection = connectionManager.getConnection();
 			statement = connection.createStatement();
 			result = statement.executeQuery(sql);
 			if (result.next()) {
@@ -215,4 +209,36 @@ public class ComputerDAO implements DAO<Computer> {
 		return count;
 	}
 
+	public List<Computer> searchByName(String name, int offset, int limit) {
+		List<Computer> computers = new ArrayList<>();
+		String sql = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, "
+				+ "company.name AS company_name FROM computer "
+				+ "LEFT JOIN company ON computer.company_id = company.id WHERE company.name LIKE ? OR computer.name LIKE ? LIMIT "
+				+ offset + ", " + limit;
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+		Connection connection = connectionManager.getConnection();
+		try {
+			preparedStatement = connection.prepareStatement(sql);
+			name = name + '%';
+			preparedStatement.setString(1, name);
+			preparedStatement.setString(2, name);
+			LOG.info(preparedStatement.toString());
+			result = preparedStatement.executeQuery();
+			while (result.next()) {
+				Company company = new Company(result.getLong("company_id"), result.getString("company_name"));
+				Computer computer = Computer.getBuilder().name(result.getString("name")).id(result.getLong("id"))
+						.introduced(DateUtils.timestampToLocalDate(result.getTimestamp("introduced")))
+						.discontinued(DateUtils.timestampToLocalDate(result.getTimestamp("discontinued")))
+						.computerCompany(company).build();
+				computers.add(computer);
+			}
+		} catch (SQLException e) {
+			LOG.error("Error when searching by name", e);
+			throw new DaoException("Error when searching by name");
+		} finally {
+			connectionManager.cleanUp(connection, preparedStatement, result);
+		}
+		return computers;
+	}
 }

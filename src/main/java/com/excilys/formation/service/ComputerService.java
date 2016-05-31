@@ -54,4 +54,8 @@ public class ComputerService implements Service<Computer> {
 		return computerDAO.count();
 	}
 
+	public List<Computer> searchByName(String name, int offset, int limit) {
+		return computerDAO.searchByName(name, offset, limit);
+	}
+
 }

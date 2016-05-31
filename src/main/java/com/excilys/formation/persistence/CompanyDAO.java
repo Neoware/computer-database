@@ -159,5 +159,4 @@ public class CompanyDAO implements DAO<Company> {
 		}
 		return companies;
 	}
-
 }

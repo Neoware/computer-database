@@ -1,5 +1,4 @@
 $(document).ready(function() {
-	alert("JS EST LA");
 	$( ".datepicker" ).datepicker({
 		  dateFormat: "dd-mm-yy"
 		});

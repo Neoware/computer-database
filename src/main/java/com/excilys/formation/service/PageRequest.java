@@ -11,6 +11,9 @@ public class PageRequest {
 	private int limit = 10;
 	private int offset = 0;
 
+	public PageRequest() {
+	}
+
 	public PageRequest(HttpServletRequest request) {
 		if (request.getParameter("page") != null) {
 			String pageString = escapeHtml4(request.getParameter("page").trim());
