@@ -13,6 +13,8 @@ public class Page<T> {
 	private int current;
 	private int count;
 	private int totalPage;
+	private String search;
+	private String sort;
 
 	public Page() {
 	}
@@ -21,6 +23,8 @@ public class Page<T> {
 		this.currentPageElements = elements;
 		this.limit = pageRequest.getLimit();
 		this.current = pageRequest.getPage();
+		this.search = pageRequest.getSearch();
+		this.sort = pageRequest.getSort();
 		this.count = count;
 		if (count % limit == 0) {
 			totalPage = count / limit;
@@ -68,4 +72,27 @@ public class Page<T> {
 	public void setTotalPage(int totalPage) {
 		this.totalPage = totalPage;
 	}
+
+	public String getSearch() {
+		return search;
+	}
+
+	public void setSearch(String search) {
+		this.search = search;
+	}
+
+	public String getSort() {
+		return sort;
+	}
+
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
+
+	@Override
+	public String toString() {
+		return "Page [limit=" + limit + ", currentPageElements=" + currentPageElements + ", current=" + current
+				+ ", count=" + count + ", totalPage=" + totalPage + ", search=" + search + ", sort=" + sort + "]";
+	}
+
 }

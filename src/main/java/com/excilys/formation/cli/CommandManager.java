@@ -18,6 +18,7 @@ public class CommandManager {
 		commands.put("create", new CreateComputerCommand());
 		commands.put("update", new UpdateComputerCommand());
 		commands.put("delete", new DeleteComputerCommand());
+		commands.put("delete-company", new DeleteCompanyCommand());
 		commands.put("exit", new ExitCommand());
 	}
 

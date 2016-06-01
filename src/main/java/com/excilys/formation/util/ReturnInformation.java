@@ -1,12 +1,19 @@
 package com.excilys.formation.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReturnInformation {
 	private boolean success;
-	private StringBuffer message;
+	private List<String> messages;
 
 	public ReturnInformation() {
 		success = true;
-		message = new StringBuffer();
+		messages = new ArrayList<>();
+	}
+
+	public void addMessage(String errorMessage) {
+		messages.add(errorMessage);
 	}
 
 	public boolean isSuccess() {
@@ -17,11 +24,12 @@ public class ReturnInformation {
 		this.success = success;
 	}
 
-	public StringBuffer getMessage() {
-		return message;
+	public List<String> getMessages() {
+		return messages;
 	}
 
-	public void setMessage(StringBuffer message) {
-		this.message = message;
+	public void setMessages(List<String> messages) {
+		messages = messages;
 	}
+
 }

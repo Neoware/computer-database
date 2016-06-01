@@ -8,6 +8,7 @@ import java.sql.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.formation.exception.TransactionException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -59,6 +60,32 @@ public class ConnectionManager {
 			} catch (SQLException e) {
 				LOG.error("Not able to close resultset", e);
 			}
+		}
+	}
+
+	public void beginTransaction(Connection connection) {
+		try {
+			connection.setAutoCommit(false);
+		} catch (SQLException e) {
+			LOG.error("Not able to perform transaction");
+		}
+	}
+
+	public void endTransaction(Connection connection) {
+		try {
+			connection.setAutoCommit(true);
+		} catch (SQLException e) {
+			LOG.error("Not able to perform transaction");
+			throw new TransactionException("Not able to perform transaction");
+		}
+	}
+
+	public void commitTransaction(Connection connection) {
+		try {
+			connection.commit();
+		} catch (SQLException e) {
+			LOG.error("Not able to commit transaction");
+			throw new TransactionException("Not able to commit transaction");
 		}
 	}
 }

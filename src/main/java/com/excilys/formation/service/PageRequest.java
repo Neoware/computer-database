@@ -1,33 +1,44 @@
 package com.excilys.formation.service;
 
-import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
-
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
+import com.excilys.formation.util.RequestUtils;
+import com.excilys.formation.util.ReturnInformation;
+import com.excilys.formation.validator.PageRequestValidator;
 
 public class PageRequest {
-	private int page = 1;
-	private int limit = 10;
-	private int offset = 0;
+	private Integer page = 1;
+	private Integer limit = 10;
+	private String search;
+	private String sort;
+	private Integer offset;
 
 	public PageRequest() {
 	}
 
-	public PageRequest(HttpServletRequest request) {
-		if (request.getParameter("page") != null) {
-			String pageString = escapeHtml4(request.getParameter("page").trim());
-			if (pageString.length() > 0 && StringUtils.isNumeric(pageString)) {
-				page = Integer.parseInt(pageString);
+	public void extract(HttpServletRequest request, ReturnInformation returnInformation) {
+		PageRequestValidator validator = new PageRequestValidator(returnInformation);
+		String pageString = RequestUtils.getCleanParameter("page", request);
+		String limitString = RequestUtils.getCleanParameter("limit", request);
+		if (validator.validatePage(pageString) == true) {
+			if (pageString == null || pageString.isEmpty()) {
+				this.page = 1;
+			} else {
+				this.page = Integer.parseInt(pageString);
 			}
 		}
-		if (request.getParameter("limit") != null) {
-			String limitString = escapeHtml4(request.getParameter("limit"));
-			if (limitString.length() > 0 && StringUtils.isNumeric(limitString)) {
-				limit = Integer.parseInt(limitString);
+		if (validator.validateLimit(limitString) == true) {
+			if (limitString == null || limitString.isEmpty()) {
+				this.limit = 10;
+			} else {
+				this.limit = Integer.parseInt(limitString);
 			}
 		}
-		offset = (page - 1) * limit;
+		if (limit != null && page != null) {
+			this.offset = (page - 1) * limit;
+		}
+		this.search = RequestUtils.getCleanParameter("search", request);
+		this.sort = RequestUtils.getCleanParameter("sort", request);
 	}
 
 	public int getPage() {
@@ -46,6 +57,22 @@ public class PageRequest {
 		this.limit = limit;
 	}
 
+	public String getSearch() {
+		return search;
+	}
+
+	public void setSearch(String search) {
+		this.search = search;
+	}
+
+	public String getSort() {
+		return sort;
+	}
+
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
+
 	public int getOffset() {
 		return offset;
 	}
@@ -53,5 +80,4 @@ public class PageRequest {
 	public void setOffset(int offset) {
 		this.offset = offset;
 	}
-
 }

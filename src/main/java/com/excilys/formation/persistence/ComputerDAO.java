@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,13 +15,15 @@ import org.slf4j.LoggerFactory;
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.exception.DaoException;
+import com.excilys.formation.service.PageRequest;
 import com.excilys.formation.util.DateUtils;
 
-public class ComputerDAO implements DAO<Computer> {
+public class ComputerDAO {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ComputerDAO.class);
 	private static ConnectionManager connectionManager;
 	private static ComputerDAO instance = new ComputerDAO();
+	private static Map<String, String> equivalence;
 
 	private ComputerDAO() {
 		connectionManager = ConnectionManager.getInstance();
@@ -30,13 +33,12 @@ public class ComputerDAO implements DAO<Computer> {
 		return instance;
 	}
 
-	@Override
-	public Computer find(Long id) {
+	public Computer find(Long id, Connection connection) {
 		Computer computer = null;
 		String sql = "SELECT computer.name, computer.introduced, computer.discontinued, "
 				+ "computer.company_id, company.name AS company_name" + " FROM computer " + "LEFT JOIN company"
 				+ " ON computer.company_id = company.id" + " WHERE computer.id =? ";
-		Connection connection = connectionManager.getConnection();
+		// Connection connection = connectionManager.getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
 		try {
@@ -60,9 +62,8 @@ public class ComputerDAO implements DAO<Computer> {
 		return computer;
 	}
 
-	@Override
-	public Computer create(Computer toCreate) {
-		Connection connection = connectionManager.getConnection();
+	public Computer create(Computer toCreate, Connection connection) {
+		// Connection connection = connectionManager.getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet generatedKeys = null;
 		try {
@@ -87,9 +88,8 @@ public class ComputerDAO implements DAO<Computer> {
 		return toCreate;
 	}
 
-	@Override
-	public void update(Computer toUpdate) {
-		Connection connection = connectionManager.getConnection();
+	public void update(Computer toUpdate, Connection connection) {
+		// Connection connection = connectionManager.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = "UPDATE computer SET name= ?, introduced= ?, discontinued=?, company_id= ? WHERE  id = ?";
@@ -109,9 +109,8 @@ public class ComputerDAO implements DAO<Computer> {
 		}
 	}
 
-	@Override
-	public void delete(Long id) {
-		Connection connection = connectionManager.getConnection();
+	public void delete(Long id, Connection connection) {
+		// Connection connection = connectionManager.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = "DELETE from computer where id=?";
@@ -127,14 +126,13 @@ public class ComputerDAO implements DAO<Computer> {
 		}
 	}
 
-	@Override
-	public List<Computer> getAll() {
+	public List<Computer> getAll(Connection connection) {
 		String sql = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, "
 				+ "computer.company_id, company.name AS company_name" + "FROM computer " + "INNER JOIN company"
 				+ "ON computer.company_id = company.id";
 		LOG.info(sql);
 		List<Computer> computers = new ArrayList<>();
-		Connection connection = connectionManager.getConnection();
+		// Connection connection = connectionManager.getConnection();
 		Statement statement = null;
 		ResultSet result = null;
 		try {
@@ -157,19 +155,14 @@ public class ComputerDAO implements DAO<Computer> {
 		return computers;
 	}
 
-	@Override
-	public List<Computer> getLimited(int offset, int limit) {
-		String sql = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, "
-				+ "company.name AS company_name FROM computer "
-				+ "LEFT JOIN company ON computer.company_id = company.id " + " LIMIT " + offset + ", " + limit;
-		LOG.info(sql);
+	public List<Computer> getPage(PageRequest pageRequest, Connection connection) {
 		List<Computer> computers = new ArrayList<>();
-		Connection connection = connectionManager.getConnection();
-		Statement statement = null;
 		ResultSet result = null;
+		QueryBuilder queryBuilder = new QueryBuilder();
+		PreparedStatement preparedStatement = queryBuilder.createGetPageQuery(pageRequest, connection);
+		// Connection connection = connectionManager.getConnection();
 		try {
-			statement = connection.createStatement();
-			result = statement.executeQuery(sql);
+			result = preparedStatement.executeQuery();
 			while (result.next()) {
 				Company company = new Company(result.getLong("company_id"), result.getString("company_name"));
 				Computer computer = Computer.getBuilder().name(result.getString("name")).id(result.getLong("id"))
@@ -182,16 +175,53 @@ public class ComputerDAO implements DAO<Computer> {
 			LOG.error("Error when fetching a part of all computers", e);
 			throw new DaoException("Error when fetching a part of all computers");
 		} finally {
-			connectionManager.cleanUp(connection, statement, result);
+			connectionManager.cleanUp(null, preparedStatement, result);
 		}
 		return computers;
 	}
 
-	public int count() {
+	public int getCountElements(PageRequest pageRequest, Connection connection) {
+		QueryBuilder queryBuilder = new QueryBuilder();
+		PreparedStatement preparedStatement = queryBuilder.createGetCountQuery(pageRequest, connection);
+		ResultSet result;
+		int count = -1;
+		try {
+			result = preparedStatement.executeQuery();
+			if (result.next()) {
+				count = result.getInt(1);
+			}
+		} catch (SQLException e) {
+			LOG.error("Error when getting count elements", e);
+			throw new DaoException("Error when getting count elements", e);
+		}
+		return count;
+	}
+
+	public void deleteByCompany(Long companyId, Connection connection) {
+		String sql = "DELETE FROM computer where company_id = ?";
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setLong(1, companyId);
+			LOG.info(preparedStatement.toString());
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			LOG.error("Error when deleting computers by company, rollback engaged");
+			try {
+				connection.rollback();
+				throw new DaoException("Error when deleting computers by company");
+			} catch (SQLException e1) {
+				LOG.error("Error when rollbacking");
+				throw new DaoException("Error when rollbacking");
+			}
+		}
+	}
+
+	public int count(Connection connection) {
 		String sql = "SELECT COUNT( id )FROM computer";
 		LOG.info(sql);
 		int count = -1;
-		Connection connection = connectionManager.getConnection();
+		// Connection connection = connectionManager.getConnection();
 		Statement statement = null;
 		ResultSet result = null;
 		try {
@@ -209,36 +239,4 @@ public class ComputerDAO implements DAO<Computer> {
 		return count;
 	}
 
-	public List<Computer> searchByName(String name, int offset, int limit) {
-		List<Computer> computers = new ArrayList<>();
-		String sql = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, "
-				+ "company.name AS company_name FROM computer "
-				+ "LEFT JOIN company ON computer.company_id = company.id WHERE company.name LIKE ? OR computer.name LIKE ? LIMIT "
-				+ offset + ", " + limit;
-		PreparedStatement preparedStatement = null;
-		ResultSet result = null;
-		Connection connection = connectionManager.getConnection();
-		try {
-			preparedStatement = connection.prepareStatement(sql);
-			name = name + '%';
-			preparedStatement.setString(1, name);
-			preparedStatement.setString(2, name);
-			LOG.info(preparedStatement.toString());
-			result = preparedStatement.executeQuery();
-			while (result.next()) {
-				Company company = new Company(result.getLong("company_id"), result.getString("company_name"));
-				Computer computer = Computer.getBuilder().name(result.getString("name")).id(result.getLong("id"))
-						.introduced(DateUtils.timestampToLocalDate(result.getTimestamp("introduced")))
-						.discontinued(DateUtils.timestampToLocalDate(result.getTimestamp("discontinued")))
-						.computerCompany(company).build();
-				computers.add(computer);
-			}
-		} catch (SQLException e) {
-			LOG.error("Error when searching by name", e);
-			throw new DaoException("Error when searching by name");
-		} finally {
-			connectionManager.cleanUp(connection, preparedStatement, result);
-		}
-		return computers;
-	}
 }

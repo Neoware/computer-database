@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.exception.DaoException;
 
-public class CompanyDAO implements DAO<Company> {
+public class CompanyDAO {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CompanyDAO.class);
 	private static ConnectionManager connectionManager;
@@ -28,10 +28,9 @@ public class CompanyDAO implements DAO<Company> {
 		return instance;
 	}
 
-	@Override
-	public Company find(Long id) {
+	public Company find(Long id, Connection connection) {
 		Company company = null;
-		Connection connection = connectionManager.getConnection();
+		// Connection connection = connectionManager.getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
 		try {
@@ -52,9 +51,8 @@ public class CompanyDAO implements DAO<Company> {
 		return company;
 	}
 
-	@Override
-	public Company create(Company toCreate) {
-		Connection connection = connectionManager.getConnection();
+	public Company create(Company toCreate, Connection connection) {
+		// Connection connection = connectionManager.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = "INSERT INTO computer VALUES (NULL, ?)";
@@ -71,9 +69,8 @@ public class CompanyDAO implements DAO<Company> {
 		return null;
 	}
 
-	@Override
-	public void update(Company toUpdate) {
-		Connection connection = connectionManager.getConnection();
+	public void update(Company toUpdate, Connection connection) {
+		// Connection connection = connectionManager.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = "UPDATE computer SET name=? WHERE id=?";
@@ -90,30 +87,34 @@ public class CompanyDAO implements DAO<Company> {
 		}
 	}
 
-	@Override
-	public void delete(Long id) {
-		Connection connection = connectionManager.getConnection();
+	public void delete(Long id, Connection connection) {
+		// Connection connection = connectionManager.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
-			String sql = "DELETE from computer where id=?";
+			String sql = "DELETE from company where id=?";
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, id);
 			LOG.info(sql);
-			preparedStatement.executeQuery();
+			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
-			LOG.error("Error while deleting a company", e);
-			throw new DaoException("Error while deleting a company");
+			LOG.error("Error while deleting a company rollbacking engaged", e);
+			try {
+				connection.rollback();
+				throw new DaoException("Error while deleting a company rollbacking engaged");
+			} catch (SQLException e1) {
+				LOG.error("Error when rollbacking");
+				throw new DaoException("Error when rollbacking");
+			}
 		} finally {
-			connectionManager.cleanUp(connection, preparedStatement, null);
+			connectionManager.cleanUp(null, preparedStatement, null);
 		}
 	}
 
-	@Override
-	public List<Company> getAll() {
+	public List<Company> getAll(Connection connection) {
 		List<Company> companies = new ArrayList<>();
 		String sql = "SELECT * from company";
 		LOG.info(sql);
-		Connection connection = connectionManager.getConnection();
+		// Connection connection = connectionManager.getConnection();
 		Statement statement = null;
 		ResultSet result = null;
 		try {
@@ -134,12 +135,11 @@ public class CompanyDAO implements DAO<Company> {
 		return companies;
 	}
 
-	@Override
-	public List<Company> getLimited(int offset, int limit) {
+	public List<Company> getLimited(int offset, int limit, Connection connection) {
 		List<Company> companies = new ArrayList<>();
 		String sql = "SELECT * from company LIMIT " + offset + ", " + limit;
 		LOG.info(sql);
-		Connection connection = connectionManager.getConnection();
+		// Connection connection = connectionManager.getConnection();
 		Statement statement = null;
 		ResultSet result = null;
 		try {

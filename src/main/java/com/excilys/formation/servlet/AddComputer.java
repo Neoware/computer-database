@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.excilys.formation.dto.ComputerDTO;
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
@@ -71,17 +69,17 @@ public class AddComputer extends HttpServlet {
 			ComputerDtoValidator computerDtoValidator = new ComputerDtoValidator();
 			returnInformation = computerDtoValidator.isValid(computer);
 			if (returnInformation.isSuccess() == true) {
-				Computer toAdd = ComputerMapper.FromDtoToEntity(computer);
+				Computer toAdd = ComputerMapper.fromDtoToEntity(computer);
 				ComputerService computerService = ComputerService.getInstance();
 				computerService.create(toAdd);
-				returnInformation.getMessage().append("Successfully added computer ");
+				returnInformation.addMessage("Successfully added computer ");
 				returnInformation.setSuccess(true);
 			}
 		} else {
-			returnInformation.getMessage().append("Impossible to add computer without name");
+			returnInformation.addMessage("Impossible to add computer without name");
 			returnInformation.setSuccess(false);
 		}
-		request.setAttribute("successMessage", returnInformation.getMessage().toString());
+		request.setAttribute("successMessage", returnInformation.getMessages());
 		request.setAttribute("success", returnInformation.isSuccess());
 		request.setAttribute("display", true);
 		doGet(request, response);

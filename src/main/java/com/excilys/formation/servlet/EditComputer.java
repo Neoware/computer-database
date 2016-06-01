@@ -51,7 +51,7 @@ public class EditComputer extends HttpServlet {
 			if (StringUtils.isNumeric(request.getParameter("id"))) {
 				Long id = Long.parseLong(request.getParameter("id"));
 				Computer computer = ComputerService.getInstance().getById(id);
-				ComputerDTO computerDTO = ComputerMapper.FromEntityToDto(computer);
+				ComputerDTO computerDTO = ComputerMapper.fromEntityToDto(computer);
 				if (computer != null) {
 					CompanyService companyService = CompanyService.getInstance();
 					List<Company> companies = companyService.getAll();
@@ -97,18 +97,18 @@ public class EditComputer extends HttpServlet {
 			returnInformation = computerDtoValidator.isValid(computer);
 			if (returnInformation.isSuccess() == true) {
 				request.setAttribute("computer", computer);
-				Computer toUpdate = ComputerMapper.FromDtoToEntity(computer);
+				Computer toUpdate = ComputerMapper.fromDtoToEntity(computer);
 				System.out.println(toUpdate);
 				ComputerService computerService = ComputerService.getInstance();
 				computerService.update(toUpdate);
-				returnInformation.getMessage().append("Successfully updated computer ");
+				returnInformation.addMessage("Successfully updated computer ");
 				returnInformation.setSuccess(true);
 			}
 		} else {
-			returnInformation.getMessage().append("Impossible to update computer without name");
+			returnInformation.addMessage("Impossible to update computer without name");
 			returnInformation.setSuccess(false);
 		}
-		request.setAttribute("successMessage", returnInformation.getMessage().toString());
+		request.setAttribute("successMessage", returnInformation.getMessages());
 		request.setAttribute("success", returnInformation.isSuccess());
 		request.setAttribute("display", true);
 		if (id != null) {

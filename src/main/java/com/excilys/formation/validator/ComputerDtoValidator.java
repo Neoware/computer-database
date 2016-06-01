@@ -8,21 +8,21 @@ import com.excilys.formation.util.ReturnInformation;
 
 public class ComputerDtoValidator implements Validator<ComputerDTO> {
 
+	private static final int LIMIT_SIZE = 255;
+
 	@Override
 	public ReturnInformation isValid(ComputerDTO toVerify) {
 		ReturnInformation returnInformation = new ReturnInformation();
 		validateComputerName(returnInformation, toVerify);
 		validateDate(returnInformation, toVerify);
 		validateCompanyName(returnInformation, toVerify);
-		// validateCompanyId(returnInformation, toVerify);
-		System.out.println(returnInformation.getMessage());
 		return returnInformation;
 	}
 
 	private void validateCompanyName(ReturnInformation returnInformation, ComputerDTO toVerify) {
 		if (toVerify.getCompanyName() != null) {
-			if (toVerify.getCompanyName().length() > 255) {
-				returnInformation.getMessage().append("Company name is too big, enter 250 characters or less\n");
+			if (toVerify.getCompanyName().length() > LIMIT_SIZE) {
+				returnInformation.addMessage("Company name is too big, enter 250 characters or less\n");
 				returnInformation.setSuccess(false);
 			}
 		}
@@ -35,14 +35,14 @@ public class ComputerDtoValidator implements Validator<ComputerDTO> {
 		if (toVerify.getDiscontinued() != null && !toVerify.getDiscontinued().isEmpty()) {
 			matcher = pattern.matcher(toVerify.getDiscontinued());
 			if (!matcher.find()) {
-				returnInformation.getMessage().append("Bad date format for discontinued\n");
+				returnInformation.addMessage("Bad date format for discontinued\n");
 				returnInformation.setSuccess(false);
 			}
 		}
 		if (toVerify.getIntroduced() != null && !toVerify.getIntroduced().isEmpty()) {
 			matcher = pattern.matcher(toVerify.getIntroduced());
 			if (!matcher.find()) {
-				returnInformation.getMessage().append("Bad date format for introduced\n");
+				returnInformation.addMessage("Bad date format for introduced\n");
 				returnInformation.setSuccess(false);
 			}
 		}
@@ -51,15 +51,15 @@ public class ComputerDtoValidator implements Validator<ComputerDTO> {
 	private void validateComputerName(ReturnInformation returnInformation, ComputerDTO toVerify) {
 		String name = toVerify.getName();
 		if (name == null) {
-			returnInformation.getMessage().append("Computer name can't be null\n");
+			returnInformation.addMessage("Computer name can't be null\n");
 			returnInformation.setSuccess(false);
 		}
 		if (name.isEmpty()) {
-			returnInformation.getMessage().append("Computer name can't be empty\n");
+			returnInformation.addMessage("Computer name can't be empty\n");
 			returnInformation.setSuccess(false);
 		}
-		if (name.length() > 255) {
-			returnInformation.getMessage().append("Computer name is too big, enter 250 characters or less\n");
+		if (name.length() > LIMIT_SIZE) {
+			returnInformation.addMessage("Computer name is too big, enter 250 characters or less\n");
 			returnInformation.setSuccess(false);
 		}
 	}

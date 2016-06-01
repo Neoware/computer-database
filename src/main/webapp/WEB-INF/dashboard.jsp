@@ -24,7 +24,8 @@
 			<h1 id="homeTitle">${requestScope.page.count}&nbsp;Computers&nbsp;found</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
-					<form id="searchForm" action="dashboard" method="GET" class="form-inline">
+					<form id="searchForm" action="dashboard" method="GET"
+						class="form-inline">
 
 						<input type="search" id="searchbox" name="search"
 							class="form-control" placeholder="Search name" /> <input
@@ -54,10 +55,26 @@
 									class="fa fa-trash-o fa-lg"></i>
 							</a>
 						</span></th>
-						<th>Computer name</th>
-						<th>Introduced date</th>
-						<th>Discontinued date</th>
-						<th>Company</th>
+						<th>Computer name <mylib:link page="${requestScope.page.current}"
+                                limit="${requestScope.page.limit}"
+                                search="${requestScope.page.search}" sort="name">
+                                <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
+                            </mylib:link></span></th>
+						<th>Introduced date<mylib:link page="${requestScope.page.current}"
+                                limit="${requestScope.page.limit}"
+                                search="${requestScope.page.search}" sort="introduced">
+                                <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
+                            </mylib:link></th>
+						<th>Discontinued date<mylib:link page="${requestScope.page.current}"
+                                limit="${requestScope.page.limit}"
+                                search="${requestScope.page.search}" sort="discontinued">
+                                <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
+                            </mylib:link></th>
+						<th>Company<mylib:link page="${requestScope.page.current}"
+								limit="${requestScope.page.limit}"
+								search="${requestScope.page.search}" sort="companyName">
+								<span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
+							</mylib:link></th>
 					</tr>
 				</thead>
 				<tbody id="results">
@@ -84,8 +101,8 @@
 			<mylib:pagination page="${requestScope.page.current}"
 				count="${requestScope.page.totalPage}"
 				limit="${requestScope.page.limit}"
-				paginationEnd="${requestScope.paginationEnd}"
-				paginationStart="${requestScope.paginationStart}" />
+				search="${requestScope.page.search}"
+				sort="${requestScope.page.sort}" />
 			<div class="btn-group btn-group-sm pull-right" role="group">
 				<mylib:link page="1" limit="10" classes="btn btn-default">10</mylib:link>
 				<mylib:link page="1" limit="50" classes="btn btn-lg btn-default">50</mylib:link>

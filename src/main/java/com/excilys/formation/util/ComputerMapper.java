@@ -1,12 +1,15 @@
 package com.excilys.formation.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.excilys.formation.dto.ComputerDTO;
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
 
 public class ComputerMapper {
 
-	public static ComputerDTO FromEntityToDto(Computer toConvert) {
+	public static ComputerDTO fromEntityToDto(Computer toConvert) {
 		ComputerDTO computerDTO = null;
 		if (toConvert.getName() != null) {
 			computerDTO = new ComputerDTO();
@@ -20,13 +23,12 @@ public class ComputerMapper {
 		return computerDTO;
 	}
 
-	public static Computer FromDtoToEntity(ComputerDTO toConvert) {
+	public static Computer fromDtoToEntity(ComputerDTO toConvert) {
 		Computer computer = null;
 		Company company = null;
 		if (toConvert.getName() != null) {
 			if (toConvert.getCompanyId() == null) {
 				company = new Company(null, toConvert.getCompanyName());
-				System.out.println("null id");
 			} else {
 				company = new Company(Long.parseLong(toConvert.getCompanyId()), toConvert.getCompanyName());
 			}
@@ -36,5 +38,13 @@ public class ComputerMapper {
 					.build();
 		}
 		return computer;
+	}
+
+	public static List<ComputerDTO> fromEntitiesToDtos(List<Computer> computers) {
+		List<ComputerDTO> computerDtos = new ArrayList<>();
+		for (Computer computer : computers) {
+			computerDtos.add(fromEntityToDto(computer));
+		}
+		return computerDtos;
 	}
 }

@@ -43,6 +43,4 @@ public interface DAO<T> {
 
 	public List<T> getAll();
 
-	public List<T> getLimited(int offset, int limit);
-
 }
