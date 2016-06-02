@@ -1,6 +1,5 @@
 package com.excilys.formation.persistence;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,11 +12,13 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.exception.DaoException;
+import com.excilys.formation.service.Cache;
 
 public class CompanyDAO {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CompanyDAO.class);
 	private static ConnectionManager connectionManager;
+	private static Cache cache = new Cache();
 	private static CompanyDAO instance = new CompanyDAO();
 
 	private CompanyDAO() {
@@ -28,7 +29,7 @@ public class CompanyDAO {
 		return instance;
 	}
 
-	public Company find(Long id, Connection connection) {
+	public Company find(Long id) {
 		Company company = null;
 		// Connection connection = connectionManager.getConnection();
 		PreparedStatement preparedStatement = null;
@@ -51,7 +52,7 @@ public class CompanyDAO {
 		return company;
 	}
 
-	public Company create(Company toCreate, Connection connection) {
+	public Company create(Company toCreate) {
 		// Connection connection = connectionManager.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
@@ -59,7 +60,10 @@ public class CompanyDAO {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, toCreate.getName());
 			LOG.info(preparedStatement.toString());
-			preparedStatement.executeQuery();
+			int rowAffected = preparedStatement.executeUpdate();
+			if (rowAffected == 1) {
+				Cache.addCompany(toCreate);
+			}
 		} catch (SQLException e) {
 			LOG.error("Error while creating a company", e);
 			throw new DaoException("Error while creating a company");
@@ -69,7 +73,7 @@ public class CompanyDAO {
 		return null;
 	}
 
-	public void update(Company toUpdate, Connection connection) {
+	public void update(Company toUpdate) {
 		// Connection connection = connectionManager.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
@@ -87,7 +91,7 @@ public class CompanyDAO {
 		}
 	}
 
-	public void delete(Long id, Connection connection) {
+	public void delete(Long id) {
 		// Connection connection = connectionManager.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
@@ -95,7 +99,10 @@ public class CompanyDAO {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, id);
 			LOG.info(sql);
-			preparedStatement.executeUpdate();
+			int rowAffected = preparedStatement.executeUpdate();
+			if (rowAffected == 1) {
+				Cache.removeCompany(id);
+			}
 		} catch (SQLException e) {
 			LOG.error("Error while deleting a company rollbacking engaged", e);
 			try {
@@ -110,7 +117,11 @@ public class CompanyDAO {
 		}
 	}
 
-	public List<Company> getAll(Connection connection) {
+	public List<Company> getAll() {
+		if (Cache.getCompany() != null) {
+			LOG.info("Accessing cache for company");
+			return Cache.getCompany();
+		}
 		List<Company> companies = new ArrayList<>();
 		String sql = "SELECT * from company";
 		LOG.info(sql);
@@ -135,7 +146,7 @@ public class CompanyDAO {
 		return companies;
 	}
 
-	public List<Company> getLimited(int offset, int limit, Connection connection) {
+	public List<Company> getLimited(int offset, int limit) {
 		List<Company> companies = new ArrayList<>();
 		String sql = "SELECT * from company LIMIT " + offset + ", " + limit;
 		LOG.info(sql);

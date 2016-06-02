@@ -15,9 +15,14 @@ public class PageRequestValidator {
 		this.returnInformation = returnInformation;
 	}
 
-	public boolean validatePage(String page) {
-		if (page != null && page.length() > 0) {
-			if (StringUtils.isNumeric(page)) {
+	/**
+	 * 
+	 * @param page
+	 * @return
+	 */
+	public boolean validatePage(String pageNumber) {
+		if (pageNumber != null && pageNumber.length() > 0) {
+			if (StringUtils.isNumeric(pageNumber)) {
 				return true;
 			} else {
 				returnInformation.addMessage("Error with page number");
