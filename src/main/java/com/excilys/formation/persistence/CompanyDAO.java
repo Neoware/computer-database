@@ -1,5 +1,6 @@
 package com.excilys.formation.persistence;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,16 +14,15 @@ import org.slf4j.LoggerFactory;
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.exception.DaoException;
 import com.excilys.formation.service.Cache;
+import com.excilys.formation.service.ConnectionThreadLocal;
 
 public class CompanyDAO {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CompanyDAO.class);
-	private static ConnectionManager connectionManager;
-	private static Cache cache = new Cache();
 	private static CompanyDAO instance = new CompanyDAO();
+	private static ConnectionManager connectionManager = ConnectionManager.getInstance();
 
 	private CompanyDAO() {
-		connectionManager = ConnectionManager.getInstance();
 	}
 
 	public static CompanyDAO getInstance() {
@@ -31,7 +31,7 @@ public class CompanyDAO {
 
 	public Company find(Long id) {
 		Company company = null;
-		// Connection connection = connectionManager.getConnection();
+		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
 		try {
@@ -47,13 +47,13 @@ public class CompanyDAO {
 			LOG.error("Error while searching for company with id " + id, e);
 			throw new DaoException("Error while searching for company with id " + id);
 		} finally {
-			connectionManager.cleanUp(connection, preparedStatement, result);
+			connectionManager.cleanUp(null, preparedStatement, result);
 		}
 		return company;
 	}
 
 	public Company create(Company toCreate) {
-		// Connection connection = connectionManager.getConnection();
+		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = "INSERT INTO computer VALUES (NULL, ?)";
@@ -62,19 +62,19 @@ public class CompanyDAO {
 			LOG.info(preparedStatement.toString());
 			int rowAffected = preparedStatement.executeUpdate();
 			if (rowAffected == 1) {
-				Cache.addCompany(toCreate);
+				Cache.getInstance().addCompany(toCreate);
 			}
 		} catch (SQLException e) {
 			LOG.error("Error while creating a company", e);
 			throw new DaoException("Error while creating a company");
 		} finally {
-			connectionManager.cleanUp(connection, preparedStatement, null);
+			connectionManager.cleanUp(null, preparedStatement, null);
 		}
 		return null;
 	}
 
 	public void update(Company toUpdate) {
-		// Connection connection = connectionManager.getConnection();
+		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = "UPDATE computer SET name=? WHERE id=?";
@@ -87,12 +87,12 @@ public class CompanyDAO {
 			LOG.error("Error while updating a company", e);
 			throw new DaoException("Error while updating a company");
 		} finally {
-			connectionManager.cleanUp(connection, preparedStatement, null);
+			connectionManager.cleanUp(null, preparedStatement, null);
 		}
 	}
 
 	public void delete(Long id) {
-		// Connection connection = connectionManager.getConnection();
+		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = "DELETE from company where id=?";
@@ -101,7 +101,7 @@ public class CompanyDAO {
 			LOG.info(sql);
 			int rowAffected = preparedStatement.executeUpdate();
 			if (rowAffected == 1) {
-				Cache.removeCompany(id);
+				Cache.getInstance().removeCompany(id);
 			}
 		} catch (SQLException e) {
 			LOG.error("Error while deleting a company rollbacking engaged", e);
@@ -118,14 +118,14 @@ public class CompanyDAO {
 	}
 
 	public List<Company> getAll() {
-		if (Cache.getCompany() != null) {
+		if (Cache.getInstance().getCompany() != null) {
 			LOG.info("Accessing cache for company");
-			return Cache.getCompany();
+			return Cache.getInstance().getCompany();
 		}
 		List<Company> companies = new ArrayList<>();
 		String sql = "SELECT * from company";
 		LOG.info(sql);
-		// Connection connection = connectionManager.getConnection();
+		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		Statement statement = null;
 		ResultSet result = null;
 		try {
@@ -141,7 +141,7 @@ public class CompanyDAO {
 			LOG.error("Error while retrieving all companies", e);
 			throw new DaoException("Error while retrieving all companies");
 		} finally {
-			connectionManager.cleanUp(connection, statement, result);
+			connectionManager.cleanUp(null, statement, result);
 		}
 		return companies;
 	}
@@ -150,7 +150,7 @@ public class CompanyDAO {
 		List<Company> companies = new ArrayList<>();
 		String sql = "SELECT * from company LIMIT " + offset + ", " + limit;
 		LOG.info(sql);
-		// Connection connection = connectionManager.getConnection();
+		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		Statement statement = null;
 		ResultSet result = null;
 		try {
@@ -166,7 +166,7 @@ public class CompanyDAO {
 			LOG.error("Error when fetching a part of all companies", e);
 			throw new DaoException("Error when fetching a part of all companies");
 		} finally {
-			connectionManager.cleanUp(connection, statement, result);
+			connectionManager.cleanUp(null, statement, result);
 		}
 		return companies;
 	}

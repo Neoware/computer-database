@@ -12,6 +12,7 @@ public class PageRequest {
 	private String search;
 	private String sort;
 	private Integer offset;
+	private String order;
 
 	public PageRequest() {
 	}
@@ -39,21 +40,22 @@ public class PageRequest {
 		}
 		this.search = RequestUtils.getCleanParameter("search", request);
 		this.sort = RequestUtils.getCleanParameter("sort", request);
+		this.order = RequestUtils.getCleanParameter("order", request);
 	}
 
-	public int getPage() {
+	public Integer getPage() {
 		return page;
 	}
 
-	public void setPage(int page) {
+	public void setPage(Integer page) {
 		this.page = page;
 	}
 
-	public int getLimit() {
+	public Integer getLimit() {
 		return limit;
 	}
 
-	public void setLimit(int limit) {
+	public void setLimit(Integer limit) {
 		this.limit = limit;
 	}
 
@@ -73,11 +75,22 @@ public class PageRequest {
 		this.sort = sort;
 	}
 
-	public int getOffset() {
+	public Integer getOffset() {
 		return offset;
 	}
 
-	public void setOffset(int offset) {
+	public void setOffset(Integer offset) {
 		this.offset = offset;
 	}
+
+	public String getOrder() {
+		return order;
+	}
+
+	public void setOrder(String order) {
+		this.order = order;
+	}
+
+
+	
 }

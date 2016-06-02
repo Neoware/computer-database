@@ -32,10 +32,12 @@ public class ComputerMapper {
 			} else {
 				company = new Company(Long.parseLong(toConvert.getCompanyId()), toConvert.getCompanyName());
 			}
-			computer = Computer.getBuilder().name(toConvert.getName()).id(Long.parseLong(toConvert.getId()))
-					.introduced(DateUtils.stringToLocalDate(toConvert.getIntroduced()))
+			computer = Computer.getBuilder().name(toConvert.getName()).introduced(DateUtils.stringToLocalDate(toConvert.getIntroduced()))
 					.discontinued(DateUtils.stringToLocalDate(toConvert.getDiscontinued())).computerCompany(company)
 					.build();
+			if (toConvert.getId() != null){
+				computer.setId(Long.parseLong(toConvert.getId()));
+			}		
 		}
 		return computer;
 	}

@@ -34,12 +34,11 @@ public class ComputerDAO {
 	}
 
 	public Computer find(Long id) {
-		if (ConnectionThreadLocal.getInstance())
 		Computer computer = null;
 		String sql = "SELECT computer.name, computer.introduced, computer.discontinued, "
 				+ "computer.company_id, company.name AS company_name" + " FROM computer " + "LEFT JOIN company"
 				+ " ON computer.company_id = company.id" + " WHERE computer.id =? ";
-		// Connection connection = connectionManager.getConnection();
+		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
 		try {
@@ -58,13 +57,13 @@ public class ComputerDAO {
 			LOG.error("Error while searching for computer with id " + id, e);
 			throw new DaoException("Error while searching for computer with id " + id);
 		} finally {
-			connectionManager.cleanUp(connection, preparedStatement, result);
+			connectionManager.cleanUp(null, preparedStatement, result);
 		}
 		return computer;
 	}
 
 	public Computer create(Computer toCreate) {
-		// Connection connection = connectionManager.getConnection();
+		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet generatedKeys = null;
 		try {
@@ -77,7 +76,7 @@ public class ComputerDAO {
 			LOG.info(preparedStatement.toString());
 			int rowAffected = preparedStatement.executeUpdate();
 			if (rowAffected == 1) {
-				Cache.incrementCount();
+				Cache.getInstance().incrementCount();
 			}
 			generatedKeys = preparedStatement.getGeneratedKeys();
 			if (generatedKeys.next()) {
@@ -87,13 +86,13 @@ public class ComputerDAO {
 			LOG.error("Error while creating computer", e);
 			throw new DaoException("Error while creating computer");
 		} finally {
-			connectionManager.cleanUp(connection, preparedStatement, generatedKeys);
+			connectionManager.cleanUp(null, preparedStatement, generatedKeys);
 		}
 		return toCreate;
 	}
 
 	public void update(Computer toUpdate) {
-		// Connection connection = connectionManager.getConnection();
+		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = "UPDATE computer SET name= ?, introduced= ?, discontinued=?, company_id= ? WHERE  id = ?";
@@ -109,12 +108,12 @@ public class ComputerDAO {
 			LOG.error("Error while updating a computer", e);
 			throw new DaoException("Error while updating a computer");
 		} finally {
-			connectionManager.cleanUp(connection, preparedStatement, null);
+			connectionManager.cleanUp(null, preparedStatement, null);
 		}
 	}
 
 	public void delete(Long id) {
-		// Connection connection = connectionManager.getConnection();
+		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = "DELETE from computer where id=?";
@@ -123,13 +122,13 @@ public class ComputerDAO {
 			LOG.info(preparedStatement.toString());
 			int rowAffected = preparedStatement.executeUpdate();
 			if (rowAffected == 1) {
-				Cache.decrementCount();
+				Cache.getInstance().decrementCount();
 			}
 		} catch (SQLException e) {
 			LOG.error("Error while deleting a computer", e);
 			throw new DaoException("Error while deleting a computer");
 		} finally {
-			connectionManager.cleanUp(connection, preparedStatement, null);
+			connectionManager.cleanUp(null, preparedStatement, null);
 		}
 	}
 
@@ -139,7 +138,7 @@ public class ComputerDAO {
 				+ "ON computer.company_id = company.id";
 		LOG.info(sql);
 		List<Computer> computers = new ArrayList<>();
-		// Connection connection = connectionManager.getConnection();
+		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		Statement statement = null;
 		ResultSet result = null;
 		try {
@@ -157,17 +156,17 @@ public class ComputerDAO {
 			LOG.error("Error when retrieving all the computers", e);
 			throw new DaoException("Error when retrieving all the computers");
 		} finally {
-			connectionManager.cleanUp(connection, statement, result);
+			connectionManager.cleanUp(null, statement, result);
 		}
 		return computers;
 	}
 
 	public List<Computer> getPage(PageRequest pageRequest) {
 		List<Computer> computers = new ArrayList<>();
+		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		ResultSet result = null;
 		QueryBuilder queryBuilder = new QueryBuilder();
 		PreparedStatement preparedStatement = queryBuilder.createGetPageQuery(pageRequest, connection);
-		// Connection connection = connectionManager.getConnection();
 		try {
 			result = preparedStatement.executeQuery();
 			while (result.next()) {
@@ -189,6 +188,7 @@ public class ComputerDAO {
 
 	public int getCountElements(PageRequest pageRequest) {
 		QueryBuilder queryBuilder = new QueryBuilder();
+		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		PreparedStatement preparedStatement = queryBuilder.createGetCountQuery(pageRequest, connection);
 		ResultSet result;
 		int count = -1;
@@ -201,12 +201,16 @@ public class ComputerDAO {
 			LOG.error("Error when getting count elements", e);
 			throw new DaoException("Error when getting count elements", e);
 		}
+		finally {
+			connectionManager.cleanUp(null, preparedStatement, null);
+		}
 		return count;
 	}
 
 	public void deleteByCompany(Long companyId) {
 		String sql = "DELETE FROM computer where company_id = ?";
 		PreparedStatement preparedStatement = null;
+		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, companyId);
@@ -223,18 +227,21 @@ public class ComputerDAO {
 				LOG.error("Error when rollbacking");
 				throw new DaoException("Error when rollbacking");
 			}
+			finally {
+				connectionManager.cleanUp(null, preparedStatement, null);
+			}
 		}
 	}
 
 	public int count() {
-		if (Cache.getCount() != null) {
+		if (Cache.getInstance().getCount() != null) {
 			LOG.info("Accessing cache count");
-			return Cache.getCount();
+			return Cache.getInstance().getCount();	
 		} else {
+			Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 			String sql = "SELECT COUNT( id )FROM computer";
 			LOG.info(sql);
 			int count = -1;
-			// Connection connection = connectionManager.getConnection();
 			Statement statement = null;
 			ResultSet result = null;
 			try {
@@ -247,7 +254,7 @@ public class ComputerDAO {
 				LOG.error("Error when getting the count computers count", e);
 				throw new DaoException("Error when getting the computers count");
 			} finally {
-				connectionManager.cleanUp(connection, statement, result);
+				connectionManager.cleanUp(null, statement, result);
 			}
 			return count;
 		}

@@ -44,6 +44,15 @@
 		<form id="deleteForm" action="dashboard" method="POST">
 			<input type="hidden" name="selection" value="">
 		</form>
+		<c:if test="${requestScope.page.order == 'ASC'}">
+			<c:set var="futureOrder" scope="request" value="DESC" />
+		</c:if>
+		<c:if test="${requestScope.page.order == 'DESC'}">
+			<c:set var="futureOrder" scope="request" value="ASC" />
+		</c:if>
+		<c:if test="${empty requestScope.page.order}">
+			<c:set var="futureOrder" scope="request" value="ASC" />
+		</c:if>
 		<div class="container" style="margin-top: 10px;">
 			<table class="table table-striped table-bordered">
 				<thead>
@@ -57,22 +66,22 @@
 						</span></th>
 						<th>Computer name <mylib:link page="${requestScope.page.current}"
                                 limit="${requestScope.page.limit}"
-                                search="${requestScope.page.search}" sort="name">
+                                search="${requestScope.page.search}" sort="name" order="${futureOrder}">
                                 <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
-                            </mylib:link></span></th>
+                            </mylib:link></th>
 						<th>Introduced date<mylib:link page="${requestScope.page.current}"
                                 limit="${requestScope.page.limit}"
-                                search="${requestScope.page.search}" sort="introduced">
+                                search="${requestScope.page.search}" sort="introduced" order="${futureOrder}">
                                 <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
                             </mylib:link></th>
 						<th>Discontinued date<mylib:link page="${requestScope.page.current}"
                                 limit="${requestScope.page.limit}"
-                                search="${requestScope.page.search}" sort="discontinued">
+                                search="${requestScope.page.search}" sort="discontinued" order="${futureOrder}">
                                 <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
                             </mylib:link></th>
 						<th>Company<mylib:link page="${requestScope.page.current}"
 								limit="${requestScope.page.limit}"
-								search="${requestScope.page.search}" sort="companyName">
+								search="${requestScope.page.search}" sort="companyName" order="${futureOrder}">
 								<span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
 							</mylib:link></th>
 					</tr>
@@ -102,7 +111,8 @@
 				count="${requestScope.page.totalPage}"
 				limit="${requestScope.page.limit}"
 				search="${requestScope.page.search}"
-				sort="${requestScope.page.sort}" />
+				sort="${requestScope.page.sort}"
+				order="${requestScope.page.order}" />
 			<div class="btn-group btn-group-sm pull-right" role="group">
 				<mylib:link page="1" limit="10" classes="btn btn-default">10</mylib:link>
 				<mylib:link page="1" limit="50" classes="btn btn-lg btn-default">50</mylib:link>

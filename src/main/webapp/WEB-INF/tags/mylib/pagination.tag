@@ -7,15 +7,16 @@
 <%@ attribute name="limit" required="true" type="java.lang.Integer"%>
 <%@ attribute name="search" required="false"%>
 <%@ attribute name="sort" required="false"%>
+<%@ attribute name="order" required="false" %>
 <ul class="pagination">
 
 	<li><mylib:link page="1" limit="${limit}" search="${search}"
-			sort="${sort}">
+			sort="${sort}" order="${order}">
 			<span aria-hidden="true">First</span>
 		</mylib:link></li>
 	<c:if test="${page > 1}">
 		<li><mylib:link page="${page - 1}" limit="${limit}"
-				search="${search}" sort="${sort}">
+				search="${search}" sort="${sort}" order="${order}">
 				<span aria-hidden="true">&laquo;</span>
 			</mylib:link></li>
 	</c:if>
@@ -31,23 +32,23 @@
 		varStatus="loop">
 		<c:if test="${loop.index == page}">
 			<li class="active"><mylib:link page="${loop.index}"
-					limit="${limit}" search="${search}" sort="${sort}">${loop.index}</mylib:link></li>
+					limit="${limit}" search="${search}" sort="${sort}" order="${order}">${loop.index}</mylib:link></li>
 		</c:if>
 		<c:if test="${loop.index != page}">
 			<li><mylib:link page="${loop.index}" limit="${limit}"
-					search="${search}" sort="${sort}">${loop.index}</mylib:link></li>
+					search="${search}" sort="${sort}" order="${order}">${loop.index}</mylib:link></li>
 		</c:if>
 	</c:forEach>
 	<c:if test="${page lt count}">
 	</c:if>
 	<c:if test="${page < count}">
 		<li><mylib:link page="${page + 1}" limit="${limit}"
-				search="${search}" sort="${sort}">
+				search="${search}" sort="${sort}" order="${order}">
 				<span aria-hidden="true">&raquo;</span>
 			</mylib:link></li>
 	</c:if>
 	<li><mylib:link page="${count}" limit="${limit}"
-			search="${search}" sort="${sort}">
+			search="${search}" sort="${sort}" order="${order}">
 			<span aria-hidden="true">Last</span>
 		</mylib:link></li>
 </ul>

@@ -43,7 +43,18 @@ public class QueryBuilder {
 			parameters.put("searchComputer", ++i);
 		}
 		if (!StringUtils.isNullOrEmpty(pageRequest.getSort())) {
+			LOG.error(pageRequest.getSort());
 			stringBuilder.append("ORDER BY " + equivalence.get(pageRequest.getSort()) + " ");
+		if (!StringUtils.isNullOrEmpty(pageRequest.getOrder())) {
+			LOG.debug("Entering order sort " + pageRequest.getOrder());
+			if (pageRequest.getOrder().equals("ASC") ){
+				LOG.debug("Matching ASC");
+				stringBuilder.append(" ASC ");
+			}
+			else if (pageRequest.getOrder().equals("DESC")){
+				stringBuilder.append(" DESC ");
+			}
+		}
 		}
 		stringBuilder.append("LIMIT ?, ? ");
 		parameters.put("offset", ++i);
