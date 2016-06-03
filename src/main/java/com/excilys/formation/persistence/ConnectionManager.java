@@ -18,6 +18,10 @@ public class ConnectionManager {
 
 	private ConnectionManager() {
 		HikariConfig config = new HikariConfig("/hikari.properties");
+		config.setMaximumPoolSize(50);
+		config.addDataSourceProperty("cachePrepStmts", "true");
+		config.addDataSourceProperty("prepStmtCacheSize", "250");
+		config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 		hikariDataSource = new HikariDataSource(config);
 	}
 

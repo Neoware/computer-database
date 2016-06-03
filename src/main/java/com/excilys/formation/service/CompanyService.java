@@ -19,6 +19,7 @@ public class CompanyService implements Service<Company> {
 	private static CompanyDAO companyDAO;
 	private static ComputerDAO computerDAO;
 	private static CompanyService instance = new CompanyService();
+	private static ConnectionThreadLocal connectionThreadLocal = ConnectionThreadLocal.getInstance();
 
 	private CompanyService() {
 		companyDAO = CompanyDAO.getInstance();
@@ -36,9 +37,9 @@ public class CompanyService implements Service<Company> {
 	 * @return
 	 */
 	public Company getById(Long id) {
-		ConnectionThreadLocal.getInstance().initConnection();
+		connectionThreadLocal.initConnection();
 		Company company = companyDAO.find(id);
-		ConnectionThreadLocal.getInstance().close();
+		connectionThreadLocal.close();
 		return company;
 	}
 
@@ -47,9 +48,12 @@ public class CompanyService implements Service<Company> {
 	 * @return
 	 */
 	public List<Company> getAll() {
-		ConnectionThreadLocal.getInstance().initConnection();
+		connectionThreadLocal.initConnection();
 		List<Company> companies = companyDAO.getAll();
-		ConnectionThreadLocal.getInstance().close();
+		if (Cache.getInstance().getCompany() == null) {
+			Cache.getInstance().setCompanies(companies);
+		}
+		connectionThreadLocal.close();
 		return companies;
 	}
 
@@ -58,8 +62,8 @@ public class CompanyService implements Service<Company> {
 	 */
 	@Override
 	public int count() {
-		ConnectionThreadLocal.getInstance().initConnection();
-		ConnectionThreadLocal.getInstance().close();
+		connectionThreadLocal.initConnection();
+		connectionThreadLocal.close();
 		// TODO count company
 		return 0;
 	}
@@ -69,8 +73,8 @@ public class CompanyService implements Service<Company> {
 	 */
 	@Override
 	public Page<Company> getPage(PageRequest pageRequest) {
-		ConnectionThreadLocal.getInstance().initConnection();
-		ConnectionThreadLocal.getInstance().close();
+		connectionThreadLocal.initConnection();
+		connectionThreadLocal.close();
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -80,13 +84,13 @@ public class CompanyService implements Service<Company> {
 	 * @param id
 	 */
 	public void delete(Long id) {
-		ConnectionThreadLocal.getInstance().initConnection();
-		ConnectionThreadLocal.getInstance().beginTransaction();
+		connectionThreadLocal.initConnection();
+		connectionThreadLocal.beginTransaction();
 		computerDAO.deleteByCompany(id);
 		companyDAO.delete(id);
-		ConnectionThreadLocal.getInstance().commit();
-		ConnectionThreadLocal.getInstance().endTransaction();
-		ConnectionThreadLocal.getInstance().close();
+		connectionThreadLocal.commit();
+		connectionThreadLocal.endTransaction();
+		connectionThreadLocal.close();
 	}
 
 	/*

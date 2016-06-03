@@ -20,7 +20,7 @@
 		<commons-lang3.version>3.4</commons-lang3.version>
 		<selenium-java.version>2.53.0</selenium-java.version>
 		<jstl.version>1.2</jstl.version>
-		<HikariCP.version>2.4.5</HikariCP.version>
+		<HikariCP.version>2.4.6</HikariCP.version>
 	</properties>
 	<reporting>
 		<plugins>
