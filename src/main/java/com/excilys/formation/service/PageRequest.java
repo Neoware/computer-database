@@ -6,6 +6,13 @@ import com.excilys.formation.util.RequestUtils;
 import com.excilys.formation.util.ReturnInformation;
 import com.excilys.formation.validator.PageRequestValidator;
 
+/**
+ * Object extracting data from the servlet request and holding all its
+ * information for further treatment.
+ * 
+ * @author neoware
+ *
+ */
 public class PageRequest {
 	private Integer page = 1;
 	private Integer limit = 10;
@@ -17,6 +24,15 @@ public class PageRequest {
 	public PageRequest() {
 	}
 
+	/**
+	 * Extract data from servlet request.
+	 * 
+	 * @param request
+	 *            the request from which informations will be extracted.
+	 * @param returnInformation
+	 *            Object containing information about failure or success of the
+	 *            process and information about it.
+	 */
 	public void extract(HttpServletRequest request, ReturnInformation returnInformation) {
 		PageRequestValidator validator = new PageRequestValidator(returnInformation);
 		String pageString = RequestUtils.getCleanParameter("page", request);
@@ -91,6 +107,4 @@ public class PageRequest {
 		this.order = order;
 	}
 
-
-	
 }

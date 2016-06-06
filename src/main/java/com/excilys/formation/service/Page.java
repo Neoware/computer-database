@@ -5,6 +5,16 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * Class containing entities and meta-informations about the page that will be
+ * displayed in the view.
+ * 
+ * @author neoware
+ *
+ * @param <T>
+ *            The type of entites that will be hold in the page
+ */
 public class Page<T> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Page.class);
@@ -20,6 +30,18 @@ public class Page<T> {
 	public Page() {
 	}
 
+	/**
+	 * Setting all parameters for the page, including the totalPage that is
+	 * calculated here.
+	 * 
+	 * @param elements
+	 *            The list of elements that will be contained in the page
+	 * @param pageRequest
+	 *            The pageRequest containing all informations from the user
+	 *            request from the view.
+	 * @param count
+	 *            The total count of elements that are in the database
+	 */
 	public Page(List<T> elements, PageRequest pageRequest, int count) {
 		this.currentPageElements = elements;
 		this.limit = pageRequest.getLimit();

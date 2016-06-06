@@ -1,5 +1,11 @@
 package com.excilys.formation.dto;
 
+/**
+ * DTO for the company attribute
+ * 
+ * @author neoware
+ *
+ */
 public class CompanyDTO {
 
 	private String id;

@@ -3,8 +3,21 @@ package com.excilys.formation.util;
 import com.excilys.formation.dto.CompanyDTO;
 import com.excilys.formation.entity.Company;
 
+/**
+ * Mapper for the Company objects.
+ * 
+ * @author neoware
+ *
+ */
 public class CompanyMapper {
 
+	/**
+	 * Convert an entity company to a DTO company
+	 * 
+	 * @param toConvert
+	 *            The entity that need to be converted.
+	 * @return The DTO generated from the entity.
+	 */
 	public static CompanyDTO FromEntityToDto(Company toConvert) {
 		CompanyDTO companyDTO = null;
 		if (toConvert.getName() != null) {
@@ -15,6 +28,13 @@ public class CompanyMapper {
 		return companyDTO;
 	}
 
+	/**
+	 * Convert a DTO company to an entity company
+	 * 
+	 * @param toConvert
+	 *            the DTO that need to be converted.
+	 * @return The entity generated from the DTO.
+	 */
 	public static Company FromDtoToEntity(CompanyDTO toConvert) {
 		Company company = null;
 		if (toConvert.getName() != null) {

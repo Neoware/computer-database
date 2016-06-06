@@ -26,23 +26,20 @@ import com.excilys.formation.util.ReturnInformation;
 import com.excilys.formation.validator.ComputerDtoValidator;
 
 /**
- * Servlet implementation class EditComputer
+ * Servlet corresponding to the edit computer page.
  */
 @WebServlet("/editcomputer")
 public class EditComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
 	public EditComputer() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
+	 * Get request loading the page for a specific computer, and load the list
+	 * of companies from database.
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -69,8 +66,9 @@ public class EditComputer extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
+	 * handle POST request. Validate data from the request and give them to the
+	 * service layer to update a computer.
+	 * 
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

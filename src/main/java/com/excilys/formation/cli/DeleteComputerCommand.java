@@ -5,6 +5,12 @@ import java.util.Scanner;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.service.ComputerService;
 
+/**
+ * Command to delete a computer by giving its id.
+ * 
+ * @author neoware
+ *
+ */
 public class DeleteComputerCommand implements Command {
 
 	private static ComputerService computerService;

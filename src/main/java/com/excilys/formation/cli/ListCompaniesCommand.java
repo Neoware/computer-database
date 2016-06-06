@@ -2,6 +2,12 @@ package com.excilys.formation.cli;
 
 import com.excilys.formation.service.CompanyService;
 
+/**
+ * Command to list companies with a pagination system.
+ * 
+ * @author neoware
+ *
+ */
 public class ListCompaniesCommand implements Command {
 
 	CompanyService companyService;

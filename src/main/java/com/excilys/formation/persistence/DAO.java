@@ -2,6 +2,15 @@ package com.excilys.formation.persistence;
 
 import java.util.List;
 
+/**
+ * DAO interface implemented by all DAO.
+ * 
+ * @author neoware
+ *
+ * @param <T>
+ *            The entity mapped to the database that will be managed by this
+ *            DAO.
+ */
 public interface DAO<T> {
 
 	/**

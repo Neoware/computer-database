@@ -1,5 +1,11 @@
 package com.excilys.formation.dto;
 
+/**
+ * DTO for the computer attribute
+ * 
+ * @author neoware
+ *
+ */
 public class ComputerDTO {
 	private String id;
 	private String name;

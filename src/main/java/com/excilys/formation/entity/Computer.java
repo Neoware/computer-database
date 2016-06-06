@@ -2,6 +2,12 @@ package com.excilys.formation.entity;
 
 import java.time.LocalDate;
 
+/**
+ * Computer entity corresponding to the computer table in database.
+ * 
+ * @author neoware
+ *
+ */
 public class Computer {
 	private Long id;
 	private String name;

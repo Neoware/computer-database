@@ -19,6 +19,12 @@ import com.excilys.formation.service.ConnectionThreadLocal;
 import com.excilys.formation.service.PageRequest;
 import com.excilys.formation.util.DateUtils;
 
+/**
+ * DAO class for the computer table.
+ * 
+ * @author neoware
+ *
+ */
 public class ComputerDAO {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ComputerDAO.class);
@@ -33,6 +39,13 @@ public class ComputerDAO {
 		return instance;
 	}
 
+	/**
+	 * Get an entity corresponding to a row in the computer table.
+	 * 
+	 * @param id
+	 *            the id of the computer that will be searched.
+	 * @return the computer entity if the id exists, null otherwise.
+	 */
 	public Computer find(Long id) {
 		Computer computer = null;
 		String sql = "SELECT computer.name, computer.introduced, computer.discontinued, "
@@ -62,6 +75,14 @@ public class ComputerDAO {
 		return computer;
 	}
 
+	/**
+	 * Create a new computer.
+	 * 
+	 * @param toCreate
+	 *            The computer entity corresponding to the row that will be
+	 *            inserted.
+	 * @return The computer entity that has been inserted.
+	 */
 	public Computer create(Computer toCreate) {
 		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		PreparedStatement preparedStatement = null;
@@ -91,6 +112,13 @@ public class ComputerDAO {
 		return toCreate;
 	}
 
+	/**
+	 * Update an already existing computer.
+	 * 
+	 * @param toUpdate
+	 *            Entity containing all attributes that will be updated in the
+	 *            database.
+	 */
 	public void update(Computer toUpdate) {
 		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		PreparedStatement preparedStatement = null;
@@ -112,6 +140,12 @@ public class ComputerDAO {
 		}
 	}
 
+	/**
+	 * Delete a computer in the database
+	 * 
+	 * @param id
+	 *            The id of the computer that will be deleted.
+	 */
 	public void delete(Long id) {
 		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		PreparedStatement preparedStatement = null;
@@ -132,6 +166,11 @@ public class ComputerDAO {
 		}
 	}
 
+	/**
+	 * Get all the computers in the database without pagination system.
+	 * 
+	 * @return A list containing all computers in the database.
+	 */
 	public List<Computer> getAll() {
 		String sql = "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, "
 				+ "computer.company_id, company.name AS company_name" + "FROM computer " + "INNER JOIN company"
@@ -161,6 +200,16 @@ public class ComputerDAO {
 		return computers;
 	}
 
+	/**
+	 * Get a page from the database by building a complex request from a
+	 * Pagerequest object.
+	 * 
+	 * @param pageRequest
+	 *            the object containg all the parameter to build the SQL request
+	 *            like offset, limit, where clause.
+	 * @return The list of computers corresponding to the result of the query
+	 *         that has been performed.
+	 */
 	public List<Computer> getPage(PageRequest pageRequest) {
 		List<Computer> computers = new ArrayList<>();
 		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
@@ -186,6 +235,15 @@ public class ComputerDAO {
 		return computers;
 	}
 
+	/**
+	 * Retrieve the count of the query build from the pagerequest object without
+	 * the limit and offset clause.
+	 * 
+	 * @param pageRequest
+	 *            the object containg all the parameter to build the SQL request
+	 *            like where clause.
+	 * @return the count that has been retrieved.
+	 */
 	public int getCountElements(PageRequest pageRequest) {
 		QueryBuilder queryBuilder = new QueryBuilder();
 		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
@@ -200,13 +258,20 @@ public class ComputerDAO {
 		} catch (SQLException e) {
 			LOG.error("Error when getting count elements", e);
 			throw new DaoException("Error when getting count elements", e);
-		}
-		finally {
+		} finally {
 			connectionManager.cleanUp(null, preparedStatement, null);
 		}
 		return count;
 	}
 
+	/**
+	 * Delete all computers that have a specific company as company_id entry.
+	 * Useful for the delete company feature.
+	 * 
+	 * @param companyId
+	 *            The id of the company corresponding to the computers that will
+	 *            be deleted.
+	 */
 	public void deleteByCompany(Long companyId) {
 		String sql = "DELETE FROM computer where company_id = ?";
 		PreparedStatement preparedStatement = null;
@@ -226,17 +291,21 @@ public class ComputerDAO {
 			} catch (SQLException e1) {
 				LOG.error("Error when rollbacking");
 				throw new DaoException("Error when rollbacking");
-			}
-			finally {
+			} finally {
 				connectionManager.cleanUp(null, preparedStatement, null);
 			}
 		}
 	}
 
+	/**
+	 * Count the total number of computers in the database.
+	 * 
+	 * @return the count retrieved from the database.
+	 */
 	public int count() {
 		if (Cache.getInstance().getCount() != null) {
 			LOG.info("Accessing cache count");
-			return Cache.getInstance().getCount();	
+			return Cache.getInstance().getCount();
 		} else {
 			Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 			String sql = "SELECT COUNT( id )FROM computer";

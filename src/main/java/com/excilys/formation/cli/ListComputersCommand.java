@@ -2,6 +2,12 @@ package com.excilys.formation.cli;
 
 import com.excilys.formation.service.ComputerService;
 
+/**
+ * Command to list all computers with a pagination system.
+ * 
+ * @author neoware
+ *
+ */
 public class ListComputersCommand implements Command {
 	private static ComputerService computerService;
 

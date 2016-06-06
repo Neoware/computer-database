@@ -1,5 +1,11 @@
 package com.excilys.formation.entity;
 
+/**
+ * Company entity corresponding to the company table in database.
+ * 
+ * @author neoware
+ *
+ */
 public class Company {
 
 	private Long id;

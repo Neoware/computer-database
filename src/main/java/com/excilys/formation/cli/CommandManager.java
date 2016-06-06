@@ -6,10 +6,20 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class is responsible to populate the list of command that the CLI can
+ * execute, and to execute them.
+ * 
+ * @author neoware
+ *
+ */
 public class CommandManager {
 	private static final Logger LOG = LoggerFactory.getLogger(CommandManager.class);
 	private static Map<String, Command> commands;
 
+	/**
+	 * The constructor populate the map associating a keyword with a command.
+	 */
 	public CommandManager() {
 		commands = new HashMap<String, Command>();
 		commands.put("list-computers", new ListComputersCommand());
@@ -22,18 +32,27 @@ public class CommandManager {
 		commands.put("exit", new ExitCommand());
 	}
 
+	/**
+	 * Add a command to the map containing all commands.
+	 * 
+	 * @param commandName
+	 *            the name of the command, what the user is supposed to enter in
+	 *            the CLI to execute the command.
+	 * @param toExecute
+	 *            the Command class with an execute method that is going to be
+	 *            triggered when the command is called in the CLI.
+	 */
 	public void addCommand(String commandName, Command toExecute) {
 		commands.put(commandName, toExecute);
 	}
 
-	public static Map<String, Command> getCommands() {
-		return commands;
-	}
-
-	public static void setCommands(Map<String, Command> commands) {
-		CommandManager.commands = commands;
-	}
-
+	/**
+	 * 
+	 * @param commandName
+	 *            the input from the user that should correspond to a key in the
+	 *            command map.
+	 * @return true if the cli should continue, false otherwise.
+	 */
 	public boolean launchCommand(String commandName) {
 		Command command = commands.get(commandName);
 		boolean shouldContinue = true;
@@ -45,6 +64,14 @@ public class CommandManager {
 			LOG.info("Invalid command : " + commandName);
 		}
 		return shouldContinue;
+	}
+
+	public static Map<String, Command> getCommands() {
+		return commands;
+	}
+
+	public static void setCommands(Map<String, Command> commands) {
+		CommandManager.commands = commands;
 	}
 
 }

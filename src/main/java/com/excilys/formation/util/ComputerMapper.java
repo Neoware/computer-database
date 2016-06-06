@@ -7,8 +7,21 @@ import com.excilys.formation.dto.ComputerDTO;
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
 
+/**
+ * Mapper for the computer Objects.
+ * 
+ * @author neoware
+ *
+ */
 public class ComputerMapper {
 
+	/**
+	 * Convert an entity computer to a DTO computer
+	 * 
+	 * @param toConvert
+	 *            The entity that need to be converted.
+	 * @return The DTO generated from the entity.
+	 */
 	public static ComputerDTO fromEntityToDto(Computer toConvert) {
 		ComputerDTO computerDTO = null;
 		if (toConvert.getName() != null) {
@@ -23,6 +36,13 @@ public class ComputerMapper {
 		return computerDTO;
 	}
 
+	/**
+	 * Convert a DTO computer to an entity computer
+	 * 
+	 * @param toConvert
+	 *            the DTO that need to be converted.
+	 * @return The entity generated from the DTO.
+	 */
 	public static Computer fromDtoToEntity(ComputerDTO toConvert) {
 		Computer computer = null;
 		Company company = null;
@@ -32,12 +52,13 @@ public class ComputerMapper {
 			} else {
 				company = new Company(Long.parseLong(toConvert.getCompanyId()), toConvert.getCompanyName());
 			}
-			computer = Computer.getBuilder().name(toConvert.getName()).introduced(DateUtils.stringToLocalDate(toConvert.getIntroduced()))
+			computer = Computer.getBuilder().name(toConvert.getName())
+					.introduced(DateUtils.stringToLocalDate(toConvert.getIntroduced()))
 					.discontinued(DateUtils.stringToLocalDate(toConvert.getDiscontinued())).computerCompany(company)
 					.build();
-			if (toConvert.getId() != null){
+			if (toConvert.getId() != null) {
 				computer.setId(Long.parseLong(toConvert.getId()));
-			}		
+			}
 		}
 		return computer;
 	}

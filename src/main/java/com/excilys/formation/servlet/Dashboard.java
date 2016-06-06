@@ -19,7 +19,7 @@ import com.excilys.formation.util.RequestUtils;
 import com.excilys.formation.util.ReturnInformation;
 
 /**
- * Servlet implementation class Dashboard
+ * Servlet corresponding to the dashboard page.
  */
 @WebServlet("/dashboard")
 public class Dashboard extends HttpServlet {
@@ -34,8 +34,9 @@ public class Dashboard extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
+	 * Method managing the display of the dashboard with possible url attributes
+	 * that will be validated, and lead to a specific part of the computers that
+	 * will be displayed.
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -52,8 +53,8 @@ public class Dashboard extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
+	 * This method manage the POST request allowing one to delete computers. It
+	 * will get the data from the request and send it to the service layer.
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

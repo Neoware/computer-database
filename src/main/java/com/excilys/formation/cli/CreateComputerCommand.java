@@ -9,6 +9,13 @@ import com.excilys.formation.service.CompanyService;
 import com.excilys.formation.service.ComputerService;
 import com.excilys.formation.util.DateUtils;
 
+/**
+ * Command to create a computer by precising the mandatory attribute name, then
+ * some optional attributes if desired
+ * 
+ * @author neoware
+ *
+ */
 public class CreateComputerCommand implements Command {
 	private static ComputerService computerService;
 	private static CompanyService companyService;

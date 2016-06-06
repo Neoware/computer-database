@@ -5,6 +5,12 @@ import java.util.Scanner;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.service.ComputerService;
 
+/**
+ * Command to show information about one computer by providing its id.
+ * 
+ * @author neoware
+ *
+ */
 public class ShowOneComputerCommand implements Command {
 
 	private static ComputerService computerService;

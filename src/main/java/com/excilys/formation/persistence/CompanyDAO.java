@@ -16,6 +16,12 @@ import com.excilys.formation.exception.DaoException;
 import com.excilys.formation.service.Cache;
 import com.excilys.formation.service.ConnectionThreadLocal;
 
+/**
+ * DAO class for the company table.
+ * 
+ * @author neoware
+ *
+ */
 public class CompanyDAO {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CompanyDAO.class);
@@ -29,6 +35,13 @@ public class CompanyDAO {
 		return instance;
 	}
 
+	/**
+	 * Get a row in the company table by id.
+	 * 
+	 * @param id
+	 *            the id of the company that is searched.
+	 * @return the company entity if the id exists, null otherwise.
+	 */
 	public Company find(Long id) {
 		Company company = null;
 		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
@@ -52,6 +65,14 @@ public class CompanyDAO {
 		return company;
 	}
 
+	/**
+	 * Insert a new company into the company table
+	 * 
+	 * @param toCreate
+	 *            The company that need to be created.
+	 * @return The created company with the id that has been given to it in the
+	 *         database.
+	 */
 	public Company create(Company toCreate) {
 		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		PreparedStatement preparedStatement = null;
@@ -73,6 +94,13 @@ public class CompanyDAO {
 		return null;
 	}
 
+	/**
+	 * Update an already existing company
+	 * 
+	 * @param toUpdate
+	 *            company entity containg attributes that need to replace the
+	 *            existing values in database.
+	 */
 	public void update(Company toUpdate) {
 		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		PreparedStatement preparedStatement = null;
@@ -91,6 +119,13 @@ public class CompanyDAO {
 		}
 	}
 
+	/**
+	 * Delete a company in the database and all the computers that have this
+	 * company as company_id
+	 * 
+	 * @param id
+	 *            the id of the company that will be deleted
+	 */
 	public void delete(Long id) {
 		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
 		PreparedStatement preparedStatement = null;
@@ -117,6 +152,12 @@ public class CompanyDAO {
 		}
 	}
 
+	/**
+	 * Get all company without a pagination system.
+	 * 
+	 * @return a list containing all companies from the database mapped on
+	 *         entities.
+	 */
 	public List<Company> getAll() {
 		if (Cache.getInstance().getCompany() != null) {
 			LOG.info("Accessing cache for company");
@@ -146,6 +187,16 @@ public class CompanyDAO {
 		return companies;
 	}
 
+	/**
+	 * Get a part of the company (useful for the pagination system)
+	 * 
+	 * @param offset
+	 *            the offset of the request
+	 * @param limit
+	 *            the limit of the request
+	 * @return a list of companies that resulted from the request done with
+	 *         offset and limit.
+	 */
 	public List<Company> getLimited(int offset, int limit) {
 		List<Company> companies = new ArrayList<>();
 		String sql = "SELECT * from company LIMIT " + offset + ", " + limit;

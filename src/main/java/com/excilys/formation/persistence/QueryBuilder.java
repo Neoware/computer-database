@@ -13,11 +13,20 @@ import com.excilys.formation.exception.DaoException;
 import com.excilys.formation.service.PageRequest;
 import com.excilys.formation.util.StringUtils;
 
+/**
+ * Class building queries from informations contained in the pageRequest object
+ * 
+ * @author neoware
+ *
+ */
 public class QueryBuilder {
 	private static final Logger LOG = LoggerFactory.getLogger(QueryBuilder.class);
 	private StringBuilder stringBuilder;
 	private static Map<String, String> equivalence;
 
+	/**
+	 * Setting equivalence between the POST sort variables and the SQL ones.
+	 */
 	static {
 		equivalence = new HashMap<>();
 		equivalence.put("introduced", "computer.introduced");
@@ -30,6 +39,17 @@ public class QueryBuilder {
 		stringBuilder = new StringBuilder();
 	}
 
+	/**
+	 * Create a page query that will retrieved a part of the computers by using
+	 * clauses contained in the pageRequest object
+	 * 
+	 * @param pageRequest
+	 *            Object containing clauses that will be used in the SQL
+	 *            request.
+	 * @param connection
+	 *            The database connection that will be used.
+	 * @return the prepared statement that has been generated.
+	 */
 	public PreparedStatement createGetPageQuery(PageRequest pageRequest, Connection connection) {
 		int i = 0;
 		Map<String, Integer> parameters = new HashMap<>();
@@ -76,6 +96,16 @@ public class QueryBuilder {
 		return preparedStatement;
 	}
 
+	/**
+	 * Get the count of a request generated from pagerequest Object.
+	 * 
+	 * @param pageRequest
+	 *            The object containing clauses that will be used in the
+	 *            request.
+	 * @param connection
+	 *            The connection to the database that will be used.
+	 * @return The prepared statement that has been generated.
+	 */
 	public PreparedStatement createGetCountQuery(PageRequest pageRequest, Connection connection) {
 		stringBuilder.append("SELECT COUNT( * ) FROM computer LEFT JOIN company ON computer.company_id = company.id ");
 		PreparedStatement preparedStatement = null;

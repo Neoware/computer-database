@@ -5,6 +5,13 @@ import java.util.Scanner;
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.service.CompanyService;
 
+/**
+ * Command to delete a company by submitting its id. All computers that have
+ * this company_id will be deleted too.
+ * 
+ * @author neoware
+ *
+ */
 public class DeleteCompanyCommand implements Command {
 	private static CompanyService companyService;
 

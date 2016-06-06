@@ -21,7 +21,7 @@ import com.excilys.formation.util.ReturnInformation;
 import com.excilys.formation.validator.ComputerDtoValidator;
 
 /**
- * Servlet implementation class AddComputer
+ * Servlet corresponding to the addComputer page
  */
 @WebServlet("/addcomputer")
 public class AddComputer extends HttpServlet {
@@ -35,6 +35,11 @@ public class AddComputer extends HttpServlet {
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * doGet method loading companies from service in order to display them in
+	 * the htl select to allow the user to choose from existing companies and
+	 * sending the addComputer JSP.
+	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -45,8 +50,10 @@ public class AddComputer extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
+	 * Method managing the POST request of adding a computer, verifying the data
+	 * sent, mapping to an entity and calling the service. A ReturnInformation
+	 * object is used to hold information about success, failure, and
+	 * information of the process.
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

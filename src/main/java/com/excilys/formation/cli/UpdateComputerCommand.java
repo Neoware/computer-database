@@ -9,6 +9,13 @@ import com.excilys.formation.service.CompanyService;
 import com.excilys.formation.service.ComputerService;
 import com.excilys.formation.util.DateUtils;
 
+/**
+ * Command to update an already existing computer by submitting one or multiple
+ * attributes that will be modified in database.
+ * 
+ * @author neoware
+ *
+ */
 public class UpdateComputerCommand implements Command {
 
 	private static ComputerService computerService;
