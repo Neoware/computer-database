@@ -43,4 +43,15 @@ public class ComputerDtoValidatorTest {
 		ReturnInformation returnInformation = computerDtoValidator.isValid(computerDTO);
 		assertFalse(returnInformation.isSuccess());
 	}
+
+	@Test
+	public void ValidateABadComputerWithBadIntroducedDateFormatAfterDiscontinued() {
+		ComputerDtoValidator computerDtoValidator = new ComputerDtoValidator();
+		ComputerDTO computerDTO;
+		computerDTO = new ComputerDTO();
+		computerDTO.setName("name");
+		computerDTO.setIntroduced("24/08/1992");
+		ReturnInformation returnInformation = computerDtoValidator.isValid(computerDTO);
+		assertTrue(returnInformation.isSuccess());
+	}
 }
