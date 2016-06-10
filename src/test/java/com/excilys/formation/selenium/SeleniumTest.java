@@ -7,7 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 
-//push purpose
+// purpose
 public class SeleniumTest {
 	private WebDriver driver;
 	private String baseUrl;
