@@ -52,6 +52,6 @@ public class ComputerDtoValidatorTest {
 		computerDTO.setName("name");
 		computerDTO.setIntroduced("24/08/1992");
 		ReturnInformation returnInformation = computerDtoValidator.isValid(computerDTO);
-		assertTrue(returnInformation.isSuccess());
+		assertFalse(returnInformation.isSuccess());
 	}
 }
