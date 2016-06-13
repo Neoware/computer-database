@@ -12,6 +12,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<!-- Version of dependencies -->
+		<dbip>localhost</dbip>
 		<junit.version>4.12</junit.version>
 		<mysql-connector-java.version>5.1.39</mysql-connector-java.version>
 		<javax.servlet-api.version>3.1.0</javax.servlet-api.version>
@@ -117,6 +118,12 @@
 		</dependency>
 	</dependencies>
 	<build>
+	 <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
 		<plugins>
 			<!-- Plugin to package as war -->
 			<plugin>
