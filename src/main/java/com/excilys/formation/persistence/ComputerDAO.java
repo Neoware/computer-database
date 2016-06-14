@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
@@ -25,6 +26,7 @@ import com.excilys.formation.util.DateUtils;
  * @author neoware
  *
  */
+@Repository
 public class ComputerDAO {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ComputerDAO.class);
