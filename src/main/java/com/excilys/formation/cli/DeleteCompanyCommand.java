@@ -2,6 +2,8 @@ package com.excilys.formation.cli;
 
 import java.util.Scanner;
 
+import org.springframework.stereotype.Component;
+
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.service.CompanyService;
 
@@ -12,11 +14,12 @@ import com.excilys.formation.service.CompanyService;
  * @author neoware
  *
  */
+@Component("deleteCompanyCommand")
 public class DeleteCompanyCommand implements Command {
-	private static CompanyService companyService;
+	@
+	private CompanyService companyService;
 
 	public DeleteCompanyCommand() {
-		companyService = CompanyService.getInstance();
 	}
 
 	@Override

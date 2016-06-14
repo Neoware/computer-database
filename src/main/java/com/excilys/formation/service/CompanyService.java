@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.persistence.CompanyDAO;
@@ -15,26 +17,17 @@ import com.excilys.formation.persistence.ComputerDAO;
  * @author Neoware
  *
  */
-public class CompanyService implements Service<Company> {
+@Service("companyService")
+public class CompanyService {
 	private static final Logger LOG = LoggerFactory.getLogger(CompanyService.class);
-	private static CompanyDAO companyDAO;
-	private static ComputerDAO computerDAO;
-	private static CompanyService instance = new CompanyService();
-	private static ConnectionThreadLocal connectionThreadLocal = ConnectionThreadLocal.getInstance();
+	@Autowired
+	private CompanyDAO companyDAO;
+	@Autowired
+	private ComputerDAO computerDAO;
+	@Autowired
+	private ConnectionThreadLocal connectionThreadLocal;
 
 	private CompanyService() {
-		companyDAO = CompanyDAO.getInstance();
-		computerDAO = ComputerDAO.getInstance();
-
-	}
-
-	/**
-	 * Get the unique instance of the CompanyService.
-	 * 
-	 * @return the singleton instance.
-	 */
-	public static CompanyService getInstance() {
-		return instance;
 	}
 
 	/**
@@ -71,7 +64,6 @@ public class CompanyService implements Service<Company> {
 	 * 
 	 * @return the count of companies.
 	 */
-	@Override
 	public int count() {
 		connectionThreadLocal.initConnection();
 		connectionThreadLocal.close();
@@ -79,7 +71,6 @@ public class CompanyService implements Service<Company> {
 		return 0;
 	}
 
-	@Override
 	public Page<Company> getPage(PageRequest pageRequest) {
 		connectionThreadLocal.initConnection();
 		connectionThreadLocal.close();

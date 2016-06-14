@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.excilys.formation.dto.ComputerDTO;
 import com.excilys.formation.entity.Computer;
@@ -17,20 +19,15 @@ import com.excilys.formation.util.StringUtils;
  * @author Neoware
  *
  */
-public class ComputerService implements Service<ComputerDTO> {
-
+@Service("computerService")
+public class ComputerService {
 	private static final Logger LOG = LoggerFactory.getLogger(ComputerService.class);
-	private static ComputerDAO computerDAO;
-	private static ComputerService instance = new ComputerService();
-	private static ConnectionThreadLocal connectionThreadLocal = ConnectionThreadLocal.getInstance();
-
-	private ComputerService() {
-		computerDAO = ComputerDAO.getInstance();
-	}
-
-	public static ComputerService getInstance() {
-		return instance;
-	}
+	@Autowired
+	private ComputerDAO computerDAO;
+	@Autowired
+	private ConnectionThreadLocal connectionThreadLocal;
+	@Autowired
+	private Cache cache;
 
 	/**
 	 * Function to access the list of all computers
@@ -52,7 +49,6 @@ public class ComputerService implements Service<ComputerDTO> {
 	 * @return a page of computer containing elements and metadata for view
 	 *         purpose
 	 */
-	@Override
 	public Page<ComputerDTO> getPage(PageRequest pageRequest) {
 		connectionThreadLocal.initConnection();
 		connectionThreadLocal.beginTransaction();
@@ -147,12 +143,11 @@ public class ComputerService implements Service<ComputerDTO> {
 	 * 
 	 * @return count the number of computers in database
 	 */
-	@Override
 	public int count() {
 		connectionThreadLocal.initConnection();
 		int result = computerDAO.count();
-		if (Cache.getInstance().getCount() == null) {
-			Cache.getInstance().setCount(result);
+		if (cache.getCount() == null) {
+			cache.setCount(result);
 		}
 		connectionThreadLocal.close();
 		return result;

@@ -37,7 +37,7 @@ public class AddComputer extends HttpServlet {
 
 	/**
 	 * doGet method loading companies from service in order to display them in
-	 * the htl select to allow the user to choose from existing companies and
+	 * the html select to allow the user to choose from existing companies and
 	 * sending the addComputer JSP.
 	 */
 	@Override

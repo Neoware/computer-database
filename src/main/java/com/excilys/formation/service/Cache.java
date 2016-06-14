@@ -12,13 +12,9 @@ import com.excilys.formation.entity.Company;
  * @author Neoware
  *
  */
+
 public class Cache {
-	private static ConcurrentHashMap<String, Object> cacheRepository = new ConcurrentHashMap<>();;
-	private static Cache instance = new Cache();
-
-	private Cache() {
-
-	}
+	private static ConcurrentHashMap<String, Object> cacheRepository = new ConcurrentHashMap<>();
 
 	/**
 	 * Increment the count when a computer has been inserted.
@@ -27,15 +23,6 @@ public class Cache {
 		if (cacheRepository.containsKey("count")) {
 			cacheRepository.put("count", (Integer) cacheRepository.get("count") + 1);
 		}
-	}
-
-	/**
-	 * Method to get the unique instance of the class
-	 * 
-	 * @return The singleton instance
-	 */
-	public static Cache getInstance() {
-		return instance;
 	}
 
 	/**

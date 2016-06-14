@@ -16,7 +16,6 @@ public class ShowOneComputerCommand implements Command {
 	private static ComputerService computerService;
 
 	public ShowOneComputerCommand() {
-		computerService = ComputerService.getInstance();
 	}
 
 	@Override

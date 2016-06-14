@@ -18,12 +18,10 @@ import com.excilys.formation.util.DateUtils;
  */
 public class UpdateComputerCommand implements Command {
 
-	private static ComputerService computerService;
-	private static CompanyService companyService;
+	private ComputerService computerService;
+	private CompanyService companyService;
 
 	public UpdateComputerCommand() {
-		computerService = ComputerService.getInstance();
-		companyService = CompanyService.getInstance();
 	}
 
 	@Override

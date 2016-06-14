@@ -2,6 +2,8 @@ package com.excilys.formation.cli;
 
 import java.util.Scanner;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.service.ComputerService;
 
@@ -11,13 +13,11 @@ import com.excilys.formation.service.ComputerService;
  * @author neoware
  *
  */
+
 public class DeleteComputerCommand implements Command {
 
-	private static ComputerService computerService;
-
-	public DeleteComputerCommand() {
-		computerService = ComputerService.getInstance();
-	}
+	@Autowired
+	private ComputerService computerService;
 
 	@Override
 	public boolean execute() {

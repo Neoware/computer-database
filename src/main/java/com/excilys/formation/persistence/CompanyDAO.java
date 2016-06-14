@@ -10,6 +10,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.exception.DaoException;
@@ -22,18 +24,12 @@ import com.excilys.formation.service.ConnectionThreadLocal;
  * @author neoware
  *
  */
+@Repository("companyDAO")
 public class CompanyDAO {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CompanyDAO.class);
-	private static CompanyDAO instance = new CompanyDAO();
-	private static ConnectionManager connectionManager = ConnectionManager.getInstance();
-
-	private CompanyDAO() {
-	}
-
-	public static CompanyDAO getInstance() {
-		return instance;
-	}
+	@Autowired
+	private static ConnectionManager connectionManager;
 
 	/**
 	 * Get a row in the company table by id.

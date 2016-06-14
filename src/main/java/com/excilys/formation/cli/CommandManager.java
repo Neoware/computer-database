@@ -73,5 +73,4 @@ public class CommandManager {
 	public static void setCommands(Map<String, Command> commands) {
 		CommandManager.commands = commands;
 	}
-
 }
