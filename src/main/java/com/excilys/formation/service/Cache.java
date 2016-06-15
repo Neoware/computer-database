@@ -3,6 +3,8 @@ package com.excilys.formation.service;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.stereotype.Component;
+
 import com.excilys.formation.entity.Company;
 
 /**
@@ -12,11 +14,11 @@ import com.excilys.formation.entity.Company;
  * @author Neoware
  *
  */
+@Component
 public class Cache {
 	private static ConcurrentHashMap<String, Object> cacheRepository = new ConcurrentHashMap<>();;
-	private static Cache instance = new Cache();
 
-	private Cache() {
+	public Cache() {
 
 	}
 
@@ -27,15 +29,6 @@ public class Cache {
 		if (cacheRepository.containsKey("count")) {
 			cacheRepository.put("count", (Integer) cacheRepository.get("count") + 1);
 		}
-	}
-
-	/**
-	 * Method to get the unique instance of the class
-	 * 
-	 * @return The singleton instance
-	 */
-	public static Cache getInstance() {
-		return instance;
 	}
 
 	/**

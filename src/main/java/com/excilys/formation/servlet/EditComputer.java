@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.excilys.formation.dto.CompanyDTO;
 import com.excilys.formation.dto.ComputerDTO;
@@ -31,6 +32,10 @@ import com.excilys.formation.validator.ComputerDtoValidator;
 @WebServlet("/editcomputer")
 public class EditComputer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	@Autowired
+	private ComputerService computerService;
+	@Autowired
+	private CompanyService companyService;
 
 	public EditComputer() {
 		super();
@@ -47,10 +52,9 @@ public class EditComputer extends HttpServlet {
 		if (request.getParameterMap().containsKey("id")) {
 			if (StringUtils.isNumeric(request.getParameter("id"))) {
 				Long id = Long.parseLong(request.getParameter("id"));
-				Computer computer = ComputerService.getInstance().getById(id);
+				Computer computer = computerService.getById(id);
 				ComputerDTO computerDTO = ComputerMapper.fromEntityToDto(computer);
 				if (computer != null) {
-					CompanyService companyService = CompanyService.getInstance();
 					List<Company> companies = companyService.getAll();
 					List<CompanyDTO> companyDTOs = new ArrayList<>();
 					for (Company company : companies) {
@@ -97,7 +101,6 @@ public class EditComputer extends HttpServlet {
 				request.setAttribute("computer", computer);
 				Computer toUpdate = ComputerMapper.fromDtoToEntity(computer);
 				System.out.println(toUpdate);
-				ComputerService computerService = ComputerService.getInstance();
 				computerService.update(toUpdate);
 				returnInformation.addMessage("Successfully updated computer ");
 				returnInformation.setSuccess(true);
@@ -112,7 +115,6 @@ public class EditComputer extends HttpServlet {
 		if (id != null) {
 			request.setAttribute("id", id);
 		}
-		CompanyService companyService = CompanyService.getInstance();
 		List<Company> companies = companyService.getAll();
 		List<CompanyDTO> companyDTOs = new ArrayList<>();
 		for (Company company : companies) {

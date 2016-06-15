@@ -21,6 +21,8 @@ public class CommandManager {
 	private static Map<String, Command> commands;
 	@Autowired
 	private ExitCommand exitCommand;
+	@Autowired
+	private CreateComputerCommand createComputerCommand;
 
 	/**
 	 * The constructor populate the map associating a keyword with a command.
@@ -34,7 +36,7 @@ public class CommandManager {
 		commands.put("list-computers", new ListComputersCommand());
 		commands.put("list-companies", new ListCompaniesCommand());
 		commands.put("computer", new ShowOneComputerCommand());
-		commands.put("create", new CreateComputerCommand());
+		commands.put("create", createComputerCommand);
 		commands.put("update", new UpdateComputerCommand());
 		commands.put("delete", new DeleteComputerCommand());
 		commands.put("delete-company", new DeleteCompanyCommand());

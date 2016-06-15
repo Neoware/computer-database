@@ -3,6 +3,9 @@ package com.excilys.formation.cli;
 import java.sql.Timestamp;
 import java.util.Scanner;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.service.CompanyService;
@@ -16,14 +19,15 @@ import com.excilys.formation.util.DateUtils;
  * @author neoware
  *
  */
+@Component
 public class UpdateComputerCommand implements Command {
 
-	private static ComputerService computerService;
-	private static CompanyService companyService;
+	@Autowired
+	private ComputerService computerService;
+	@Autowired
+	private CompanyService companyService;
 
 	public UpdateComputerCommand() {
-		computerService = ComputerService.getInstance();
-		companyService = CompanyService.getInstance();
 	}
 
 	@Override

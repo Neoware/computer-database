@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.excilys.formation.dto.ComputerDTO;
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
@@ -25,6 +27,10 @@ import com.excilys.formation.validator.ComputerDtoValidator;
  */
 @WebServlet("/addcomputer")
 public class AddComputer extends HttpServlet {
+	@Autowired
+	private CompanyService companyService;
+	@Autowired
+	private ComputerService computerService;
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -43,7 +49,6 @@ public class AddComputer extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		CompanyService companyService = CompanyService.getInstance();
 		List<Company> companies = companyService.getAll();
 		request.setAttribute("companies", companies);
 		request.getRequestDispatcher("WEB-INF/addComputer.jsp").forward(request, response);
@@ -77,7 +82,6 @@ public class AddComputer extends HttpServlet {
 			returnInformation = computerDtoValidator.isValid(computer);
 			if (returnInformation.isSuccess() == true) {
 				Computer toAdd = ComputerMapper.fromDtoToEntity(computer);
-				ComputerService computerService = ComputerService.getInstance();
 				computerService.create(toAdd);
 				returnInformation.addMessage("Successfully added computer ");
 				returnInformation.setSuccess(true);

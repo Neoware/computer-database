@@ -10,6 +10,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.exception.DaoException;
@@ -22,17 +24,18 @@ import com.excilys.formation.service.ConnectionThreadLocal;
  * @author neoware
  *
  */
+@Repository
 public class CompanyDAO {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CompanyDAO.class);
-	private static CompanyDAO instance = new CompanyDAO();
-	private static ConnectionManager connectionManager = ConnectionManager.getInstance();
+	@Autowired
+	private ConnectionManager connectionManager;
+	@Autowired
+	private ConnectionThreadLocal connectionThreadLocal;
+	@Autowired
+	private Cache cache;
 
-	private CompanyDAO() {
-	}
-
-	public static CompanyDAO getInstance() {
-		return instance;
+	public CompanyDAO() {
 	}
 
 	/**
@@ -44,7 +47,7 @@ public class CompanyDAO {
 	 */
 	public Company find(Long id) {
 		Company company = null;
-		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
+		Connection connection = connectionThreadLocal.getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
 		try {
@@ -74,7 +77,7 @@ public class CompanyDAO {
 	 *         database.
 	 */
 	public Company create(Company toCreate) {
-		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
+		Connection connection = connectionThreadLocal.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = "INSERT INTO computer VALUES (NULL, ?)";
@@ -83,7 +86,7 @@ public class CompanyDAO {
 			LOG.info(preparedStatement.toString());
 			int rowAffected = preparedStatement.executeUpdate();
 			if (rowAffected == 1) {
-				Cache.getInstance().addCompany(toCreate);
+				cache.addCompany(toCreate);
 			}
 		} catch (SQLException e) {
 			LOG.error("Error while creating a company", e);
@@ -102,7 +105,7 @@ public class CompanyDAO {
 	 *            existing values in database.
 	 */
 	public void update(Company toUpdate) {
-		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
+		Connection connection = connectionThreadLocal.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = "UPDATE computer SET name=? WHERE id=?";
@@ -127,7 +130,7 @@ public class CompanyDAO {
 	 *            the id of the company that will be deleted
 	 */
 	public void delete(Long id) {
-		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
+		Connection connection = connectionThreadLocal.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = "DELETE from company where id=?";
@@ -136,7 +139,7 @@ public class CompanyDAO {
 			LOG.info(sql);
 			int rowAffected = preparedStatement.executeUpdate();
 			if (rowAffected == 1) {
-				Cache.getInstance().removeCompany(id);
+				cache.removeCompany(id);
 			}
 		} catch (SQLException e) {
 			LOG.error("Error while deleting a company rollbacking engaged", e);
@@ -159,14 +162,14 @@ public class CompanyDAO {
 	 *         entities.
 	 */
 	public List<Company> getAll() {
-		if (Cache.getInstance().getCompany() != null) {
+		if (cache.getCompany() != null) {
 			LOG.info("Accessing cache for company");
-			return Cache.getInstance().getCompany();
+			return cache.getCompany();
 		}
 		List<Company> companies = new ArrayList<>();
 		String sql = "SELECT * from company";
 		LOG.info(sql);
-		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
+		Connection connection = connectionThreadLocal.getConnection();
 		Statement statement = null;
 		ResultSet result = null;
 		try {
@@ -201,7 +204,7 @@ public class CompanyDAO {
 		List<Company> companies = new ArrayList<>();
 		String sql = "SELECT * from company LIMIT " + offset + ", " + limit;
 		LOG.info(sql);
-		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
+		Connection connection = connectionThreadLocal.getConnection();
 		Statement statement = null;
 		ResultSet result = null;
 		try {

@@ -7,6 +7,7 @@ import java.sql.Statement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -18,16 +19,16 @@ import com.zaxxer.hikari.HikariDataSource;
  * @author neoware
  *
  */
+@Component
 public class ConnectionManager {
 	private static final Logger LOG = LoggerFactory.getLogger(ConnectionManager.class);
-	private static ConnectionManager instance = new ConnectionManager();
 	private static HikariDataSource hikariDataSource;
 
 	/**
 	 * Setup of the hikariCP datasource using a properties file and some other
 	 * configurations.
 	 */
-	private ConnectionManager() {
+	public ConnectionManager() {
 		HikariConfig config = new HikariConfig("/hikari.properties");
 		config.setMaximumPoolSize(50);
 		config.addDataSourceProperty("cachePrepStmts", "true");
@@ -36,13 +37,9 @@ public class ConnectionManager {
 		hikariDataSource = new HikariDataSource(config);
 	}
 
-	/**
-	 * Return the unique instance of the class.
-	 * 
-	 * @return the singleton instance.
-	 */
-	public static ConnectionManager getInstance() {
-		return instance;
+	@Override
+	protected void finalize() throws Throwable {
+		hikariDataSource.close();
 	}
 
 	/**

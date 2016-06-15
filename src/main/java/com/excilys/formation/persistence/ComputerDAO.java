@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.formation.entity.Company;
@@ -30,15 +31,14 @@ import com.excilys.formation.util.DateUtils;
 public class ComputerDAO {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ComputerDAO.class);
-	private static ConnectionManager connectionManager;
-	private static ComputerDAO instance = new ComputerDAO();
+	@Autowired
+	private ConnectionManager connectionManager;
+	@Autowired
+	private ConnectionThreadLocal connectionThreadLocal;
+	@Autowired
+	private Cache cache;
 
-	private ComputerDAO() {
-		connectionManager = ConnectionManager.getInstance();
-	}
-
-	public static ComputerDAO getInstance() {
-		return instance;
+	public ComputerDAO() {
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class ComputerDAO {
 		String sql = "SELECT computer.name, computer.introduced, computer.discontinued, "
 				+ "computer.company_id, company.name AS company_name" + " FROM computer " + "LEFT JOIN company"
 				+ " ON computer.company_id = company.id" + " WHERE computer.id =? ";
-		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
+		Connection connection = connectionThreadLocal.getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
 		try {
@@ -86,7 +86,7 @@ public class ComputerDAO {
 	 * @return The computer entity that has been inserted.
 	 */
 	public Computer create(Computer toCreate) {
-		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
+		Connection connection = connectionThreadLocal.getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet generatedKeys = null;
 		try {
@@ -99,7 +99,7 @@ public class ComputerDAO {
 			LOG.info(preparedStatement.toString());
 			int rowAffected = preparedStatement.executeUpdate();
 			if (rowAffected == 1) {
-				Cache.getInstance().incrementCount();
+				cache.incrementCount();
 			}
 			generatedKeys = preparedStatement.getGeneratedKeys();
 			if (generatedKeys.next()) {
@@ -122,7 +122,7 @@ public class ComputerDAO {
 	 *            database.
 	 */
 	public void update(Computer toUpdate) {
-		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
+		Connection connection = connectionThreadLocal.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = "UPDATE computer SET name= ?, introduced= ?, discontinued=?, company_id= ? WHERE  id = ?";
@@ -149,7 +149,7 @@ public class ComputerDAO {
 	 *            The id of the computer that will be deleted.
 	 */
 	public void delete(Long id) {
-		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
+		Connection connection = connectionThreadLocal.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			String sql = "DELETE from computer where id=?";
@@ -158,7 +158,7 @@ public class ComputerDAO {
 			LOG.info(preparedStatement.toString());
 			int rowAffected = preparedStatement.executeUpdate();
 			if (rowAffected == 1) {
-				Cache.getInstance().decrementCount();
+				cache.decrementCount();
 			}
 		} catch (SQLException e) {
 			LOG.error("Error while deleting a computer", e);
@@ -179,7 +179,7 @@ public class ComputerDAO {
 				+ "ON computer.company_id = company.id";
 		LOG.info(sql);
 		List<Computer> computers = new ArrayList<>();
-		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
+		Connection connection = connectionThreadLocal.getConnection();
 		Statement statement = null;
 		ResultSet result = null;
 		try {
@@ -214,7 +214,7 @@ public class ComputerDAO {
 	 */
 	public List<Computer> getPage(PageRequest pageRequest) {
 		List<Computer> computers = new ArrayList<>();
-		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
+		Connection connection = connectionThreadLocal.getConnection();
 		ResultSet result = null;
 		QueryBuilder queryBuilder = new QueryBuilder();
 		PreparedStatement preparedStatement = queryBuilder.createGetPageQuery(pageRequest, connection);
@@ -248,7 +248,7 @@ public class ComputerDAO {
 	 */
 	public int getCountElements(PageRequest pageRequest) {
 		QueryBuilder queryBuilder = new QueryBuilder();
-		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
+		Connection connection = connectionThreadLocal.getConnection();
 		PreparedStatement preparedStatement = queryBuilder.createGetCountQuery(pageRequest, connection);
 		ResultSet result;
 		int count = -1;
@@ -277,7 +277,7 @@ public class ComputerDAO {
 	public void deleteByCompany(Long companyId) {
 		String sql = "DELETE FROM computer where company_id = ?";
 		PreparedStatement preparedStatement = null;
-		Connection connection = ConnectionThreadLocal.getInstance().getConnection();
+		Connection connection = connectionThreadLocal.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setLong(1, companyId);
@@ -305,11 +305,11 @@ public class ComputerDAO {
 	 * @return the count retrieved from the database.
 	 */
 	public int count() {
-		if (Cache.getInstance().getCount() != null) {
+		if (cache.getCount() != null) {
 			LOG.info("Accessing cache count");
-			return Cache.getInstance().getCount();
+			return cache.getCount();
 		} else {
-			Connection connection = ConnectionThreadLocal.getInstance().getConnection();
+			Connection connection = connectionThreadLocal.getConnection();
 			String sql = "SELECT COUNT( id )FROM computer";
 			LOG.info(sql);
 			int count = -1;
