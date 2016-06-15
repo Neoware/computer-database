@@ -74,8 +74,15 @@ public class ConnectionThreadLocal {
 		}
 	}
 
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		connection.get().close();
+	}
+
 	/**
-	 * Close the connection inside the ThreadLocal making it available to be reuse by the datasource
+	 * Close the connection inside the ThreadLocal making it available to be
+	 * reuse by the datasource
 	 */
 	public void close() {
 		try {

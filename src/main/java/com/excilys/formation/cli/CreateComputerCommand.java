@@ -35,6 +35,7 @@ public class CreateComputerCommand implements Command {
 			System.out.println("You have pressed enter");
 		} while (name.equals(""));
 		Computer.Builder builder = Computer.getBuilder();
+		builder.name(name);
 		System.out.println("Choose a timestamp introduced for your computer (not mandatory)");
 		String introduced = scanner.nextLine();
 		Timestamp introducedTimestamp = DateUtils.getTimestampFromString(introduced);

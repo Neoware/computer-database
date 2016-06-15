@@ -1,12 +1,18 @@
 package com.excilys.formation.cli;
 
+import org.springframework.stereotype.Component;
+
 /**
  * Command to exit the CLI
  * 
  * @author neoware
  *
  */
+@Component
 public class ExitCommand implements Command {
+
+	public ExitCommand() {
+	}
 
 	/**
 	 * return false in order to stop the CLI loop
