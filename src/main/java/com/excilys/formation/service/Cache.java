@@ -3,6 +3,9 @@ package com.excilys.formation.service;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.cache.annotation.CachingConfigurer;
+import org.springframework.stereotype.Component;
+
 import com.excilys.formation.entity.Company;
 
 /**
@@ -13,8 +16,13 @@ import com.excilys.formation.entity.Company;
  *
  */
 
+@Component("cache")
 public class Cache {
 	private static ConcurrentHashMap<String, Object> cacheRepository = new ConcurrentHashMap<>();
+
+	public Cache() {
+
+	}
 
 	/**
 	 * Increment the count when a computer has been inserted.

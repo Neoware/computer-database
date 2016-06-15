@@ -29,6 +29,10 @@ public class ComputerService {
 	@Autowired
 	private Cache cache;
 
+	public ComputerService() {
+
+	}
+
 	/**
 	 * Function to access the list of all computers
 	 * 

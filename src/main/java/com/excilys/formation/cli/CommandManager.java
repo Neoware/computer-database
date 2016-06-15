@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * This class is responsible to populate the list of command that the CLI can
@@ -13,23 +15,51 @@ import org.slf4j.LoggerFactory;
  * @author neoware
  *
  */
+@Component("commandManager")
 public class CommandManager {
 	private static final Logger LOG = LoggerFactory.getLogger(CommandManager.class);
 	private static Map<String, Command> commands;
+	// @Autowired
+	// private ListComputersCommand listComputersCommand;
+	// @Autowired
+	// private ListCompaniesCommand listCompaniesCommand;
+	// @Autowired
+	// private ShowOneComputerCommand showOneComputerCommand;
+	// @Autowired
+	// private CreateComputerCommand createComputerCommand;
+	// @Autowired
+	// private UpdateComputerCommand updateComputerCommand;
+	// @Autowired
+	// private DeleteComputerCommand deleteComputerCommand;
+	// @Autowired
+	// private DeleteCompanyCommand deleteCompanyCommand;
+	@Autowired
+	private ExitCommand exitCommand;
 
 	/**
 	 * The constructor populate the map associating a keyword with a command.
 	 */
 	public CommandManager() {
 		commands = new HashMap<String, Command>();
-		commands.put("list-computers", new ListComputersCommand());
-		commands.put("list-companies", new ListCompaniesCommand());
-		commands.put("computer", new ShowOneComputerCommand());
-		commands.put("create", new CreateComputerCommand());
-		commands.put("update", new UpdateComputerCommand());
-		commands.put("delete", new DeleteComputerCommand());
-		commands.put("delete-company", new DeleteCompanyCommand());
-		commands.put("exit", new ExitCommand());
+		// commands.put("list-computers", listComputersCommand);
+		// commands.put("list-companies", listCompaniesCommand);
+		// commands.put("computer", showOneComputerCommand);
+		// commands.put("create", createComputerCommand);
+		// commands.put("update", updateComputerCommand);
+		// commands.put("delete", deleteComputerCommand);
+		// commands.put("delete-company", deleteCompanyCommand);
+		// System.err.println(exitCommand);
+		// exitCommand.toString();
+		// commands.put("exit", exitCommand);
+
+		// commands.put("list-computers", new ListComputersCommand());
+		// commands.put("list-companies", new ListCompaniesCommand());
+		// commands.put("computer", new ShowOneComputerCommand());
+		// commands.put("create", new CreateComputerCommand());
+		// commands.put("update", new UpdateComputerCommand());
+		// commands.put("delete", new DeleteComputerCommand());
+		// commands.put("delete-company", new DeleteCompanyCommand());
+		// commands.put("exit", new ExitCommand());
 	}
 
 	/**
@@ -57,7 +87,7 @@ public class CommandManager {
 		Command command = commands.get(commandName);
 		boolean shouldContinue = true;
 		if (command != null) {
-			LOG.info("Excecuting command : " + commandName);
+			LOG.info("Executing command : " + commandName);
 			shouldContinue = command.execute();
 		} else {
 			System.out.println("The command " + commandName + " doesn't exist.");

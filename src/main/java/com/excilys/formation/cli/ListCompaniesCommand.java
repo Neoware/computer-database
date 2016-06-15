@@ -1,5 +1,8 @@
 package com.excilys.formation.cli;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.excilys.formation.service.CompanyService;
 
 /**
@@ -8,12 +11,12 @@ import com.excilys.formation.service.CompanyService;
  * @author neoware
  *
  */
+@Component
 public class ListCompaniesCommand implements Command {
-
-	CompanyService companyService;
+	@Autowired
+	private CompanyService companyService;
 
 	public ListCompaniesCommand() {
-		companyService = CompanyService.getInstance();
 	}
 
 	@Override

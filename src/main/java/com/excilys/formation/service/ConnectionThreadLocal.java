@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.excilys.formation.exception.TransactionException;
 import com.excilys.formation.persistence.ConnectionManager;
@@ -16,19 +18,21 @@ import com.excilys.formation.persistence.ConnectionManager;
  * @author Neoware
  *
  */
+@Component("connectionThreadLocal")
 public class ConnectionThreadLocal {
 	private static final Logger LOG = LoggerFactory.getLogger(ConnectionThreadLocal.class);
-	public static ThreadLocal<Connection> connection = new ThreadLocal<>();
-	public static ConnectionThreadLocal instance = new ConnectionThreadLocal();
+	public ThreadLocal<Connection> connection = new ThreadLocal<>();
+	@Autowired
+	private ConnectionManager connectionManager;
 
-	private ConnectionThreadLocal() {
+	public ConnectionThreadLocal() {
 	}
 
 	/**
 	 * Ask a connection to the datasource and set it in the ThreadLocal
 	 */
 	public void initConnection() {
-		connection.set(ConnectionManager.getInstance().getConnection());
+		connection.set(connectionManager.getConnection());
 	}
 
 	/**
@@ -38,14 +42,6 @@ public class ConnectionThreadLocal {
 	 */
 	public Connection getConnection() {
 		return connection.get();
-	}
-
-	/**
-	 * 
-	 * @return the instance of this singleton
-	 */
-	public static ConnectionThreadLocal getInstance() {
-		return instance;
 	}
 
 	/**
@@ -75,7 +71,8 @@ public class ConnectionThreadLocal {
 	}
 
 	/**
-	 * Close the connection inside the ThreadLocal making it available to be reuse by the datasource
+	 * Close the connection inside the ThreadLocal making it available to be
+	 * reuse by the datasource
 	 */
 	public void close() {
 		try {

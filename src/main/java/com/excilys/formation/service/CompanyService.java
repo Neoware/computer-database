@@ -26,8 +26,11 @@ public class CompanyService {
 	private ComputerDAO computerDAO;
 	@Autowired
 	private ConnectionThreadLocal connectionThreadLocal;
+	@Autowired
+	private Cache cache;
 
-	private CompanyService() {
+	public CompanyService() {
+		System.out.println("test");
 	}
 
 	/**
@@ -52,8 +55,8 @@ public class CompanyService {
 	public List<Company> getAll() {
 		connectionThreadLocal.initConnection();
 		List<Company> companies = companyDAO.getAll();
-		if (Cache.getInstance().getCompany() == null) {
-			Cache.getInstance().setCompanies(companies);
+		if (cache.getCompany() == null) {
+			cache.setCompanies(companies);
 		}
 		connectionThreadLocal.close();
 		return companies;

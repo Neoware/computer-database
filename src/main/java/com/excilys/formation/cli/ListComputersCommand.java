@@ -1,5 +1,8 @@
 package com.excilys.formation.cli;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.excilys.formation.service.ComputerService;
 
 /**
@@ -8,11 +11,12 @@ import com.excilys.formation.service.ComputerService;
  * @author neoware
  *
  */
+@Component
 public class ListComputersCommand implements Command {
-	private static ComputerService computerService;
+	@Autowired
+	private ComputerService computerService;
 
 	public ListComputersCommand() {
-		computerService = ComputerService.getInstance();
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.service.CompanyService;
 import com.excilys.formation.service.ComputerService;
@@ -27,6 +26,7 @@ public class CreateComputerCommand implements Command {
 	private CompanyService companyService;
 
 	public CreateComputerCommand() {
+		System.out.println("create constructor");
 	}
 
 	@Override
@@ -58,14 +58,16 @@ public class CreateComputerCommand implements Command {
 		System.out.println("Choose the id of the manufacturer of the computer");
 		if (scanner.hasNextLong()) {
 			Long companyId = scanner.nextLong();
-			Company company = companyService.getById(companyId);
-			if (company != null) {
-				builder.computerCompany(company);
-			} else {
-				System.out.println("No company or non existing one, fixing to default");
-			}
-			Computer computer = builder.build();
-			computerService.create(computer);
+			// Company company =
+			companyService.getById(companyId);
+			// if (company != null) {
+			// builder.computerCompany(company);
+			// } else {
+			// System.out.println("No company or non existing one, fixing to
+			// default");
+			// }
+			// Computer computer = builder.build();
+			// computerService.create(computer);
 		}
 		return true;
 	}

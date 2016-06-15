@@ -2,6 +2,7 @@ package com.excilys.formation.cli;
 
 import java.util.Scanner;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.excilys.formation.entity.Company;
@@ -16,7 +17,7 @@ import com.excilys.formation.service.CompanyService;
  */
 @Component("deleteCompanyCommand")
 public class DeleteCompanyCommand implements Command {
-	@
+	@Autowired
 	private CompanyService companyService;
 
 	public DeleteCompanyCommand() {
