@@ -44,6 +44,7 @@ public class CompanyDAO {
 	 * @param id
 	 *            the id of the company that is searched.
 	 * @return the company entity if the id exists, null otherwise.
+	 * @throws DaoException
 	 */
 	public Company find(Long id) {
 		Company company = null;
@@ -75,6 +76,7 @@ public class CompanyDAO {
 	 *            The company that need to be created.
 	 * @return The created company with the id that has been given to it in the
 	 *         database.
+	 * @throws DaoException
 	 */
 	public Company create(Company toCreate) {
 		Connection connection = connectionThreadLocal.getConnection();
@@ -103,6 +105,7 @@ public class CompanyDAO {
 	 * @param toUpdate
 	 *            company entity containg attributes that need to replace the
 	 *            existing values in database.
+	 * @throws DaoException
 	 */
 	public void update(Company toUpdate) {
 		Connection connection = connectionThreadLocal.getConnection();
@@ -128,6 +131,7 @@ public class CompanyDAO {
 	 * 
 	 * @param id
 	 *            the id of the company that will be deleted
+	 * @throws DaoException
 	 */
 	public void delete(Long id) {
 		Connection connection = connectionThreadLocal.getConnection();
@@ -143,15 +147,8 @@ public class CompanyDAO {
 			}
 		} catch (SQLException e) {
 			LOG.error("Error while deleting a company rollbacking engaged", e);
-			try {
-				connection.rollback();
-				throw new DaoException("Error while deleting a company rollbacking engaged");
-			} catch (SQLException e1) {
-				LOG.error("Error when rollbacking");
-				throw new DaoException("Error when rollbacking");
-			}
-		} finally {
 			connectionManager.cleanUp(null, preparedStatement, null);
+			throw new DaoException("Error while deleting a company rollbacking engaged");
 		}
 	}
 
@@ -160,6 +157,7 @@ public class CompanyDAO {
 	 * 
 	 * @return a list containing all companies from the database mapped on
 	 *         entities.
+	 * @throws DaoException
 	 */
 	public List<Company> getAll() {
 		if (cache.getCompany() != null) {
@@ -199,6 +197,7 @@ public class CompanyDAO {
 	 *            the limit of the request
 	 * @return a list of companies that resulted from the request done with
 	 *         offset and limit.
+	 * @throws DaoException
 	 */
 	public List<Company> getLimited(int offset, int limit) {
 		List<Company> companies = new ArrayList<>();

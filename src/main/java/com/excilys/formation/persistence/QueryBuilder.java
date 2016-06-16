@@ -1,8 +1,5 @@
 package com.excilys.formation.persistence;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,51 +46,29 @@ public class QueryBuilder {
 	 * @param connection
 	 *            The database connection that will be used.
 	 * @return the prepared statement that has been generated.
+	 * @throws DaoException
 	 */
-	public PreparedStatement createGetPageQuery(PageRequest pageRequest, Connection connection) {
-		int i = 0;
-		Map<String, Integer> parameters = new HashMap<>();
+	public String createGetPageQuery(PageRequest pageRequest) throws DaoException {
 		stringBuilder
 				.append("SELECT computer.id, computer.name, computer.introduced, computer.discontinued, computer.company_id, "
 						+ "company.name AS company_name FROM computer "
 						+ "LEFT JOIN company ON computer.company_id = company.id ");
 		if (!StringUtils.isNullOrEmpty(pageRequest.getSearch())) {
-			stringBuilder.append("WHERE company.name LIKE ? OR computer.name LIKE ? ");
-			parameters.put("searchCompany", ++i);
-			parameters.put("searchComputer", ++i);
+			stringBuilder.append("WHERE company.name LIKE " + pageRequest.getSearch() + "% OR computer.name LIKE "
+					+ pageRequest.getSearch() + "% ");
 		}
 		if (!StringUtils.isNullOrEmpty(pageRequest.getSort())) {
-			LOG.debug(pageRequest.getSort());
 			stringBuilder.append("ORDER BY " + equivalence.get(pageRequest.getSort()) + " ");
 			if (!StringUtils.isNullOrEmpty(pageRequest.getOrder())) {
-				LOG.debug("Entering order sort " + pageRequest.getOrder());
 				if (pageRequest.getOrder().equals("ASC")) {
-					LOG.debug("Matching ASC");
 					stringBuilder.append(" ASC ");
 				} else if (pageRequest.getOrder().equals("DESC")) {
 					stringBuilder.append(" DESC ");
 				}
 			}
 		}
-		stringBuilder.append("LIMIT ?, ? ");
-		parameters.put("offset", ++i);
-		parameters.put("limit", ++i);
-		PreparedStatement preparedStatement = null;
-		try {
-			preparedStatement = connection.prepareStatement(stringBuilder.toString());
-			String search = pageRequest.getSearch() + '%';
-			if (!StringUtils.isNullOrEmpty(pageRequest.getSearch())) {
-				preparedStatement.setString(parameters.get("searchCompany"), search);
-				preparedStatement.setString(parameters.get("searchComputer"), search);
-			}
-			preparedStatement.setInt(parameters.get("offset"), pageRequest.getOffset());
-			preparedStatement.setInt(parameters.get("limit"), pageRequest.getLimit());
-		} catch (SQLException e) {
-			LOG.error("Error while building query to create a page");
-			throw new DaoException("Error while building query to create a page");
-		}
-		LOG.info(preparedStatement.toString());
-		return preparedStatement;
+		stringBuilder.append("LIMIT " + pageRequest.getOffset() + ", " + pageRequest.getLimit());
+		return stringBuilder.toString();
 	}
 
 	/**
@@ -105,25 +80,14 @@ public class QueryBuilder {
 	 * @param connection
 	 *            The connection to the database that will be used.
 	 * @return The prepared statement that has been generated.
+	 * @throws DaoException
 	 */
-	public PreparedStatement createGetCountQuery(PageRequest pageRequest, Connection connection) {
+	public String createGetCountQuery(PageRequest pageRequest) throws DaoException {
 		stringBuilder.append("SELECT COUNT( * ) FROM computer LEFT JOIN company ON computer.company_id = company.id ");
-		PreparedStatement preparedStatement = null;
 		if (!StringUtils.isNullOrEmpty(pageRequest.getSearch())) {
-			stringBuilder.append("WHERE company.name LIKE ? OR computer.name LIKE ? ");
+			stringBuilder.append("WHERE company.name LIKE " + pageRequest.getSearch() + "% OR computer.name LIKE "
+					+ pageRequest.getSearch() + "% ");
 		}
-		try {
-			preparedStatement = connection.prepareStatement(stringBuilder.toString());
-			if (!StringUtils.isNullOrEmpty(pageRequest.getSearch())) {
-				String search = pageRequest.getSearch() + '%';
-				preparedStatement.setString(1, search);
-				preparedStatement.setString(2, search);
-			}
-		} catch (SQLException e) {
-			LOG.error("Error while building query to count elements");
-			throw new DaoException("Error while building query to count a page");
-		}
-		LOG.info(preparedStatement.toString());
-		return preparedStatement;
+		return stringBuilder.toString();
 	}
 }

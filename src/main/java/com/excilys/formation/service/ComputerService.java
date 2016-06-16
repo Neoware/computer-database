@@ -6,9 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.formation.dto.ComputerDTO;
 import com.excilys.formation.entity.Computer;
+import com.excilys.formation.exception.DaoException;
 import com.excilys.formation.persistence.ComputerDAO;
 import com.excilys.formation.util.ComputerMapper;
 import com.excilys.formation.util.StringUtils;
@@ -20,18 +23,16 @@ import com.excilys.formation.util.StringUtils;
  *
  */
 @Service
+@Transactional(rollbackFor = DaoException.class, propagation = Propagation.REQUIRES_NEW)
 public class ComputerService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ComputerService.class);
 	@Autowired
 	private ComputerDAO computerDAO;
 	@Autowired
-	private ConnectionThreadLocal connectionThreadLocal;
-	@Autowired
 	private Cache cache;
 
 	public ComputerService() {
-		System.out.println("computer service constructor");
 	}
 
 	/**
@@ -40,9 +41,7 @@ public class ComputerService {
 	 * @return the list containing all computers
 	 */
 	public List<Computer> getAll() {
-		connectionThreadLocal.initConnection();
 		List<Computer> computers = computerDAO.getAll();
-		connectionThreadLocal.close();
 		return computers;
 	}
 
@@ -55,8 +54,6 @@ public class ComputerService {
 	 *         purpose
 	 */
 	public Page<ComputerDTO> getPage(PageRequest pageRequest) {
-		connectionThreadLocal.initConnection();
-		connectionThreadLocal.beginTransaction();
 		List<Computer> computerList = computerDAO.getPage(pageRequest);
 		int count;
 		if (StringUtils.isNullOrEmpty(pageRequest.getSearch())) {
@@ -64,11 +61,8 @@ public class ComputerService {
 		} else {
 			count = computerDAO.getCountElements(pageRequest);
 		}
-		connectionThreadLocal.commit();
-		connectionThreadLocal.endTransaction();
 		List<ComputerDTO> computerDtos = ComputerMapper.fromEntitiesToDtos(computerList);
 		Page<ComputerDTO> computerPage = new Page<>(computerDtos, pageRequest, count);
-		connectionThreadLocal.close();
 		return computerPage;
 	}
 
@@ -80,9 +74,7 @@ public class ComputerService {
 	 * @return the computer is found, null otherwise
 	 */
 	public Computer getById(Long id) {
-		connectionThreadLocal.initConnection();
 		Computer computer = computerDAO.find(id);
-		connectionThreadLocal.close();
 		return computer;
 	}
 
@@ -94,9 +86,7 @@ public class ComputerService {
 	 * @return toCreate with the id set is the add is successful
 	 */
 	public Computer create(Computer toCreate) {
-		connectionThreadLocal.initConnection();
 		computerDAO.create(toCreate);
-		connectionThreadLocal.close();
 		return toCreate;
 	}
 
@@ -108,9 +98,7 @@ public class ComputerService {
 	 * @return the updated computer //TODO useless
 	 */
 	public Computer update(Computer toUpdate) {
-		connectionThreadLocal.initConnection();
 		computerDAO.update(toUpdate);
-		connectionThreadLocal.close();
 		return toUpdate;
 	}
 
@@ -121,9 +109,7 @@ public class ComputerService {
 	 *            the id of the computer that is going to be deleted
 	 */
 	public void delete(Long id) {
-		connectionThreadLocal.initConnection();
 		computerDAO.delete(id);
-		connectionThreadLocal.close();
 	}
 
 	/**
@@ -135,11 +121,9 @@ public class ComputerService {
 	 * 
 	 */
 	public void deleteList(String[] lists) {
-		connectionThreadLocal.initConnection();
 		for (int i = 0; i < lists.length; i++) {
 			computerDAO.delete(Long.parseLong(lists[i]));
 		}
-		connectionThreadLocal.close();
 	}
 
 	/**
@@ -149,12 +133,10 @@ public class ComputerService {
 	 * @return count the number of computers in database
 	 */
 	public int count() {
-		connectionThreadLocal.initConnection();
 		int result = computerDAO.count();
 		if (cache.getCount() == null) {
 			cache.setCount(result);
 		}
-		connectionThreadLocal.close();
 		return result;
 	}
 }

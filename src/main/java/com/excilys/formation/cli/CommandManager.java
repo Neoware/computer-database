@@ -20,6 +20,18 @@ public class CommandManager {
 	private static final Logger LOG = LoggerFactory.getLogger(CommandManager.class);
 	private static Map<String, Command> commands;
 	@Autowired
+	private ListComputersCommand listComputersCommand;
+	@Autowired
+	private ListCompaniesCommand listCompaniesCommand;
+	@Autowired
+	private ShowOneComputerCommand showOneComputerCommand;
+	@Autowired
+	private UpdateComputerCommand updateComputerCommand;
+	@Autowired
+	private DeleteComputerCommand deleteComputerCommand;
+	@Autowired
+	private DeleteCompanyCommand deleteCompanyCommand;
+	@Autowired
 	private ExitCommand exitCommand;
 	@Autowired
 	private CreateComputerCommand createComputerCommand;
@@ -33,13 +45,13 @@ public class CommandManager {
 
 	public void populate() {
 		commands = new HashMap<String, Command>();
-		commands.put("list-computers", new ListComputersCommand());
-		commands.put("list-companies", new ListCompaniesCommand());
-		commands.put("computer", new ShowOneComputerCommand());
+		commands.put("list-computers", listComputersCommand);
+		commands.put("list-companies", listCompaniesCommand);
+		commands.put("computer", showOneComputerCommand);
 		commands.put("create", createComputerCommand);
-		commands.put("update", new UpdateComputerCommand());
-		commands.put("delete", new DeleteComputerCommand());
-		commands.put("delete-company", new DeleteCompanyCommand());
+		commands.put("update", updateComputerCommand);
+		commands.put("delete", deleteComputerCommand);
+		commands.put("delete-company", deleteCompanyCommand);
 		commands.put("exit", exitCommand);
 	}
 

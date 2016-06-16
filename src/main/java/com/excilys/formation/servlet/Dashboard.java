@@ -44,7 +44,9 @@ public class Dashboard extends HttpServlet {
 		} catch (ServletException e) {
 			e.printStackTrace();
 		}
-		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
+		// SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+		// config.getServletContext());
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 	}
 
 	/**

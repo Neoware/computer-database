@@ -3,13 +3,13 @@ package com.excilys.formation.service;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
-
-import com.excilys.formation.exception.TransactionException;
-import com.excilys.formation.persistence.ConnectionManager;
 
 /**
  * Wrapper for the ThreadLocal holding the Connection to the database. It is a
@@ -23,7 +23,7 @@ public class ConnectionThreadLocal {
 	private static final Logger LOG = LoggerFactory.getLogger(ConnectionThreadLocal.class);
 	public static ThreadLocal<Connection> connection = new ThreadLocal<>();
 	@Autowired
-	private ConnectionManager connectionManager;
+	private DataSource dataSource;
 
 	public ConnectionThreadLocal() {
 	}
@@ -32,7 +32,7 @@ public class ConnectionThreadLocal {
 	 * Ask a connection to the datasource and set it in the ThreadLocal
 	 */
 	public void initConnection() {
-		connection.set(connectionManager.getConnection());
+		connection.set(DataSourceUtils.getConnection(dataSource));
 	}
 
 	/**
@@ -44,35 +44,9 @@ public class ConnectionThreadLocal {
 		return connection.get();
 	}
 
-	/**
-	 * Initialize a transaction process by setting the connection inside the
-	 * ThreadLocal
-	 */
-	public void beginTransaction() {
-		try {
-			connection.get().setAutoCommit(false);
-		} catch (SQLException e) {
-			LOG.error("Not able to begin transaction");
-			throw new TransactionException("Not able to begin transaction");
-		}
-	}
-
-	/**
-	 * End of a transaction process by setting the connection inside the
-	 * ThreadLocal
-	 */
-	public void endTransaction() {
-		try {
-			connection.get().setAutoCommit(true);
-		} catch (SQLException e) {
-			LOG.error("Not able to finish transaction");
-			throw new TransactionException("Not able to finish transaction");
-		}
-	}
-
 	@Override
 	protected void finalize() throws Throwable {
-		connection.get().close();
+		DataSourceUtils.doCloseConnection(connection.get(), dataSource);
 	}
 
 	/**
@@ -82,20 +56,9 @@ public class ConnectionThreadLocal {
 	public void close() {
 		try {
 			LOG.info("Liberating connection");
-			connection.get().close();
+			DataSourceUtils.doCloseConnection(connection.get(), dataSource);
 		} catch (SQLException e) {
 			LOG.error("Impossible to close the connection");
-		}
-	}
-
-	/**
-	 * commit queries when transaction mode is on
-	 */
-	public void commit() {
-		try {
-			connection.get().commit();
-		} catch (SQLException e) {
-			LOG.error("Impossible to commit the transaction", e);
 		}
 	}
 }

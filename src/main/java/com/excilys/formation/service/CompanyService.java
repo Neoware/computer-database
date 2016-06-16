@@ -6,8 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.formation.entity.Company;
+import com.excilys.formation.exception.DaoException;
 import com.excilys.formation.persistence.CompanyDAO;
 import com.excilys.formation.persistence.ComputerDAO;
 
@@ -18,14 +21,13 @@ import com.excilys.formation.persistence.ComputerDAO;
  *
  */
 @Service
+@Transactional(rollbackFor = DaoException.class, propagation = Propagation.REQUIRES_NEW)
 public class CompanyService {
 	private static final Logger LOG = LoggerFactory.getLogger(CompanyService.class);
 	@Autowired
 	private CompanyDAO companyDAO;
 	@Autowired
 	private ComputerDAO computerDAO;
-	@Autowired
-	private ConnectionThreadLocal connectionThreadLocal;
 	@Autowired
 	private Cache cache;
 
@@ -40,9 +42,7 @@ public class CompanyService {
 	 * @return the company entity if the id exists, null otherwise.
 	 */
 	public Company getById(Long id) {
-		connectionThreadLocal.initConnection();
 		Company company = companyDAO.find(id);
-		connectionThreadLocal.close();
 		return company;
 	}
 
@@ -52,12 +52,10 @@ public class CompanyService {
 	 * @return The list of companies.
 	 */
 	public List<Company> getAll() {
-		connectionThreadLocal.initConnection();
 		List<Company> companies = companyDAO.getAll();
 		if (cache.getCompany() == null) {
 			cache.setCompanies(companies);
 		}
-		connectionThreadLocal.close();
 		return companies;
 	}
 
@@ -68,15 +66,11 @@ public class CompanyService {
 	 */
 
 	public int count() {
-		connectionThreadLocal.initConnection();
-		connectionThreadLocal.close();
 		// TODO count company
 		return 0;
 	}
 
 	public Page<Company> getPage(PageRequest pageRequest) {
-		connectionThreadLocal.initConnection();
-		connectionThreadLocal.close();
 		// TODO getPage company
 		return null;
 	}
@@ -88,14 +82,10 @@ public class CompanyService {
 	 * @param id
 	 *            the id of the company that will be deleted
 	 */
+
 	public void delete(Long id) {
-		connectionThreadLocal.initConnection();
-		connectionThreadLocal.beginTransaction();
 		computerDAO.deleteByCompany(id);
 		companyDAO.delete(id);
-		connectionThreadLocal.commit();
-		connectionThreadLocal.endTransaction();
-		connectionThreadLocal.close();
 	}
 
 	/*

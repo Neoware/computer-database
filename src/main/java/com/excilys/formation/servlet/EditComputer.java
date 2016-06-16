@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.formation.dto.CompanyDTO;
 import com.excilys.formation.dto.ComputerDTO;
@@ -40,6 +42,18 @@ public class EditComputer extends HttpServlet {
 	public EditComputer() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void init(ServletConfig config) {
+		try {
+			super.init(config);
+		} catch (ServletException e) {
+			e.printStackTrace();
+		}
+		// SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+		// config.getServletContext());
+		SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 	}
 
 	/**
