@@ -138,6 +138,7 @@ public class ComputerDAO {
 	public List<Computer> getPage(PageRequest pageRequest) {
 		QueryBuilder queryBuilder = new QueryBuilder();
 		String sql = queryBuilder.createGetPageQuery(pageRequest);
+		LOG.info(sql);
 		jdbcTemplate = new JdbcTemplate(dataSource);
 		List<Computer> computers = new ArrayList<>();
 		computers = jdbcTemplate.query(sql, new ComputerRowMapper());

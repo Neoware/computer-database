@@ -38,6 +38,9 @@ public class RequestUtils {
 	 * @return The cleaned parameter or null if it doesn't exist
 	 */
 	public static String getCleanParameter(String name, HttpServletRequest request) {
-		return clean(request.getParameter(name));
+		if (request != null) {
+			return clean(request.getParameter(name));
+		}
+		return null;
 	}
 }
