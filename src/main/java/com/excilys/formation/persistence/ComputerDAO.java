@@ -16,7 +16,6 @@ import org.springframework.stereotype.Repository;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.exception.DaoException;
 import com.excilys.formation.service.Cache;
-import com.excilys.formation.service.ConnectionThreadLocal;
 import com.excilys.formation.service.PageRequest;
 import com.excilys.formation.util.DateUtils;
 
@@ -31,14 +30,10 @@ public class ComputerDAO {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ComputerDAO.class);
 	@Autowired
-	private ConnectionManager connectionManager;
-	@Autowired
 	private DataSource dataSource;
-	private JdbcTemplate jdbcTemplate;
 	@Autowired
 	private Cache cache;
-	@Autowired
-	private ConnectionThreadLocal connectionThreadLocal;
+	private JdbcTemplate jdbcTemplate;
 
 	public ComputerDAO() {
 	}

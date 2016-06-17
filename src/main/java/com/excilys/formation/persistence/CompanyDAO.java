@@ -1,22 +1,19 @@
 package com.excilys.formation.persistence;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.exception.DaoException;
 import com.excilys.formation.service.Cache;
-import com.excilys.formation.service.ConnectionThreadLocal;
 
 /**
  * DAO class for the company table.
@@ -29,11 +26,10 @@ public class CompanyDAO {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CompanyDAO.class);
 	@Autowired
-	private ConnectionManager connectionManager;
-	@Autowired
-	private ConnectionThreadLocal connectionThreadLocal;
+	private DataSource dataSource;
 	@Autowired
 	private Cache cache;
+	private JdbcTemplate jdbcTemplate;
 
 	public CompanyDAO() {
 	}
@@ -47,82 +43,10 @@ public class CompanyDAO {
 	 * @throws DaoException
 	 */
 	public Company find(Long id) {
-		Company company = null;
-		Connection connection = connectionThreadLocal.getConnection();
-		PreparedStatement preparedStatement = null;
-		ResultSet result = null;
-		try {
-			String sql = "SELECT * FROM company WHERE id = ?";
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setLong(1, id);
-			LOG.info(preparedStatement.toString());
-			result = preparedStatement.executeQuery();
-			if (result.first()) {
-				company = new Company(id, result.getString("name"));
-			}
-		} catch (SQLException e) {
-			LOG.error("Error while searching for company with id " + id, e);
-			throw new DaoException("Error while searching for company with id " + id);
-		} finally {
-			connectionManager.cleanUp(null, preparedStatement, result);
-		}
+		String sql = "SELECT * FROM company WHERE id = ?";
+		jdbcTemplate = new JdbcTemplate(dataSource);
+		Company company = jdbcTemplate.queryForObject(sql, new Object[] { id }, new CompanyRowMapper());
 		return company;
-	}
-
-	/**
-	 * Insert a new company into the company table
-	 * 
-	 * @param toCreate
-	 *            The company that need to be created.
-	 * @return The created company with the id that has been given to it in the
-	 *         database.
-	 * @throws DaoException
-	 */
-	public Company create(Company toCreate) {
-		Connection connection = connectionThreadLocal.getConnection();
-		PreparedStatement preparedStatement = null;
-		try {
-			String sql = "INSERT INTO computer VALUES (NULL, ?)";
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, toCreate.getName());
-			LOG.info(preparedStatement.toString());
-			int rowAffected = preparedStatement.executeUpdate();
-			if (rowAffected == 1) {
-				cache.addCompany(toCreate);
-			}
-		} catch (SQLException e) {
-			LOG.error("Error while creating a company", e);
-			throw new DaoException("Error while creating a company");
-		} finally {
-			connectionManager.cleanUp(null, preparedStatement, null);
-		}
-		return null;
-	}
-
-	/**
-	 * Update an already existing company
-	 * 
-	 * @param toUpdate
-	 *            company entity containg attributes that need to replace the
-	 *            existing values in database.
-	 * @throws DaoException
-	 */
-	public void update(Company toUpdate) {
-		Connection connection = connectionThreadLocal.getConnection();
-		PreparedStatement preparedStatement = null;
-		try {
-			String sql = "UPDATE computer SET name=? WHERE id=?";
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, toUpdate.getName());
-			preparedStatement.setLong(2, toUpdate.getId());
-			LOG.info(sql);
-			preparedStatement.executeQuery();
-		} catch (SQLException e) {
-			LOG.error("Error while updating a company", e);
-			throw new DaoException("Error while updating a company");
-		} finally {
-			connectionManager.cleanUp(null, preparedStatement, null);
-		}
 	}
 
 	/**
@@ -134,21 +58,11 @@ public class CompanyDAO {
 	 * @throws DaoException
 	 */
 	public void delete(Long id) {
-		Connection connection = connectionThreadLocal.getConnection();
-		PreparedStatement preparedStatement = null;
-		try {
-			String sql = "DELETE from company where id=?";
-			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setLong(1, id);
-			LOG.info(sql);
-			int rowAffected = preparedStatement.executeUpdate();
-			if (rowAffected == 1) {
-				cache.removeCompany(id);
-			}
-		} catch (SQLException e) {
-			LOG.error("Error while deleting a company rollbacking engaged", e);
-			connectionManager.cleanUp(null, preparedStatement, null);
-			throw new DaoException("Error while deleting a company rollbacking engaged");
+		String sql = "DELETE from company where id=?";
+		jdbcTemplate = new JdbcTemplate(dataSource);
+		int rowAffected = jdbcTemplate.update(sql, new Object[] { id });
+		if (rowAffected == 1) {
+			cache.removeCompany(id);
 		}
 	}
 
@@ -166,25 +80,8 @@ public class CompanyDAO {
 		}
 		List<Company> companies = new ArrayList<>();
 		String sql = "SELECT * from company";
-		LOG.info(sql);
-		Connection connection = connectionThreadLocal.getConnection();
-		Statement statement = null;
-		ResultSet result = null;
-		try {
-			statement = connection.createStatement();
-			result = statement.executeQuery(sql);
-			while (result.next()) {
-				Company temp = new Company();
-				temp.setId(result.getLong("id"));
-				temp.setName(result.getString("name"));
-				companies.add(temp);
-			}
-		} catch (SQLException e) {
-			LOG.error("Error while retrieving all companies", e);
-			throw new DaoException("Error while retrieving all companies");
-		} finally {
-			connectionManager.cleanUp(null, statement, result);
-		}
+		jdbcTemplate = new JdbcTemplate(dataSource);
+		companies = jdbcTemplate.query(sql, new CompanyRowMapper());
 		return companies;
 	}
 
@@ -202,25 +99,8 @@ public class CompanyDAO {
 	public List<Company> getLimited(int offset, int limit) {
 		List<Company> companies = new ArrayList<>();
 		String sql = "SELECT * from company LIMIT " + offset + ", " + limit;
-		LOG.info(sql);
-		Connection connection = connectionThreadLocal.getConnection();
-		Statement statement = null;
-		ResultSet result = null;
-		try {
-			statement = connection.createStatement();
-			result = statement.executeQuery(sql);
-			while (result.next()) {
-				Company temp = new Company();
-				temp.setId(result.getLong("id"));
-				temp.setName(result.getString("name"));
-				companies.add(temp);
-			}
-		} catch (SQLException e) {
-			LOG.error("Error when fetching a part of all companies", e);
-			throw new DaoException("Error when fetching a part of all companies");
-		} finally {
-			connectionManager.cleanUp(null, statement, result);
-		}
+		jdbcTemplate = new JdbcTemplate(dataSource);
+		companies = jdbcTemplate.query(sql, new Object[] { offset, limit }, new CompanyRowMapper());
 		return companies;
 	}
 }
