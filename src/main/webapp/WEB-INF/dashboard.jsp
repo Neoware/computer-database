@@ -1,15 +1,19 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="mylib" tagdir="/WEB-INF/tags/mylib"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
 <title>Computer Database</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
-<!-- Bootstrap -->
-<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="css/font-awesome.css" rel="stylesheet" media="screen">
-<link href="css/main.css" rel="stylesheet" media="screen">
+<spring:url value="/resources/css/bootstrap.min.css" var="bootstrapCss" />
+<spring:url value="/resources/css/font-awesome.css" var="fontCss" />
+<spring:url value="/resources/css/main.css" var="mainCss" />
+
+<link href="${bootstrapCss}" rel="stylesheet" />
+<link href="${fontCss}" rel="stylesheet" />
+<link href="${mainCss}" rel="stylesheet" />
 </head>
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
@@ -64,24 +68,31 @@
 									class="fa fa-trash-o fa-lg"></i>
 							</a>
 						</span></th>
-						<th>Computer name <mylib:link page="${requestScope.page.current}"
-                                limit="${requestScope.page.limit}"
-                                search="${requestScope.page.search}" sort="name" order="${futureOrder}">
-                                <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
-                            </mylib:link></th>
-						<th>Introduced date<mylib:link page="${requestScope.page.current}"
-                                limit="${requestScope.page.limit}"
-                                search="${requestScope.page.search}" sort="introduced" order="${futureOrder}">
-                                <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
-                            </mylib:link></th>
-						<th>Discontinued date<mylib:link page="${requestScope.page.current}"
-                                limit="${requestScope.page.limit}"
-                                search="${requestScope.page.search}" sort="discontinued" order="${futureOrder}">
-                                <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
-                            </mylib:link></th>
+						<th>Computer name <mylib:link
+								page="${requestScope.page.current}"
+								limit="${requestScope.page.limit}"
+								search="${requestScope.page.search}" sort="name"
+								order="${futureOrder}">
+								<span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
+							</mylib:link></th>
+						<th>Introduced date<mylib:link
+								page="${requestScope.page.current}"
+								limit="${requestScope.page.limit}"
+								search="${requestScope.page.search}" sort="introduced"
+								order="${futureOrder}">
+								<span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
+							</mylib:link></th>
+						<th>Discontinued date<mylib:link
+								page="${requestScope.page.current}"
+								limit="${requestScope.page.limit}"
+								search="${requestScope.page.search}" sort="discontinued"
+								order="${futureOrder}">
+								<span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
+							</mylib:link></th>
 						<th>Company<mylib:link page="${requestScope.page.current}"
 								limit="${requestScope.page.limit}"
-								search="${requestScope.page.search}" sort="companyName" order="${futureOrder}">
+								search="${requestScope.page.search}" sort="companyName"
+								order="${futureOrder}">
 								<span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
 							</mylib:link></th>
 					</tr>
@@ -111,8 +122,7 @@
 				count="${requestScope.page.totalPage}"
 				limit="${requestScope.page.limit}"
 				search="${requestScope.page.search}"
-				sort="${requestScope.page.sort}"
-				order="${requestScope.page.order}" />
+				sort="${requestScope.page.sort}" order="${requestScope.page.order}" />
 			<div class="btn-group btn-group-sm pull-right" role="group">
 				<mylib:link page="1" limit="10" classes="btn btn-default">10</mylib:link>
 				<mylib:link page="1" limit="50" classes="btn btn-lg btn-default">50</mylib:link>
@@ -120,9 +130,11 @@
 			</div>
 		</div>
 	</footer>
-	<script src="js/jquery.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/dashboard.js"></script>
-
+	<spring:url value="/resources/js/jquery.min.js" var="jqueryJs" />
+	<spring:url value="/resources/js/bootstrap.min.js" var="bootstrapJs" />
+	<spring:url value="/resources/js/dashboard.js" var="dashboardJs" />
+	<script src="${jqueryJs}"></script>
+	<script src="${dashboardJs}"></script>
+	<script src="${bootstrapJs}"></script>
 </body>
 </html>

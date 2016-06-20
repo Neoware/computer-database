@@ -1,11 +1,5 @@
 package com.excilys.formation.service;
 
-import javax.servlet.http.HttpServletRequest;
-
-import com.excilys.formation.util.RequestUtils;
-import com.excilys.formation.util.ReturnInformation;
-import com.excilys.formation.validator.PageRequestValidator;
-
 /**
  * Object extracting data from the servlet request and holding all its
  * information for further treatment.
@@ -18,7 +12,7 @@ public class PageRequest {
 	private Integer limit = 10;
 	private String search;
 	private String sort;
-	private Integer offset;
+	private Integer offset = 0;
 	private String order;
 
 	public PageRequest() {
@@ -33,30 +27,10 @@ public class PageRequest {
 	 *            Object containing information about failure or success of the
 	 *            process and information about it.
 	 */
-	public void extract(HttpServletRequest request, ReturnInformation returnInformation) {
-		PageRequestValidator validator = new PageRequestValidator(returnInformation);
-		String pageString = RequestUtils.getCleanParameter("page", request);
-		String limitString = RequestUtils.getCleanParameter("limit", request);
-		if (validator.validatePage(pageString) == true) {
-			if (pageString == null || pageString.isEmpty()) {
-				this.page = 1;
-			} else {
-				this.page = Integer.parseInt(pageString);
-			}
-		}
-		if (validator.validateLimit(limitString) == true) {
-			if (limitString == null || limitString.isEmpty()) {
-				this.limit = 10;
-			} else {
-				this.limit = Integer.parseInt(limitString);
-			}
-		}
+	public void init() {
 		if (limit != null && page != null) {
 			this.offset = (page - 1) * limit;
 		}
-		this.search = RequestUtils.getCleanParameter("search", request);
-		this.sort = RequestUtils.getCleanParameter("sort", request);
-		this.order = RequestUtils.getCleanParameter("order", request);
 	}
 
 	public Integer getPage() {
@@ -107,4 +81,9 @@ public class PageRequest {
 		this.order = order;
 	}
 
+	@Override
+	public String toString() {
+		return "PageRequest [page=" + page + ", limit=" + limit + ", search=" + search + ", sort=" + sort + ", offset="
+				+ offset + ", order=" + order + "]";
+	}
 }
