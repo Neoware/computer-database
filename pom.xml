@@ -94,6 +94,12 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>${spring.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -126,8 +132,8 @@
 		<!-- SLf4J logging api -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j-api.version}</version>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>1.7.21</version>
 		</dependency>
 		<!-- Logback implementation of the SLF4J api -->
 		<dependency>

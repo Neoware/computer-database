@@ -63,14 +63,16 @@ public class EditComputer {
 	protected String updateComputer(@RequestParam(value = "id", required = true) String id,
 			@Valid @ModelAttribute(value = "computerDTO") ComputerDTO computerDTO, BindingResult bindingResult,
 			Model model) {
-		System.out.println("test");
 		if (!bindingResult.hasErrors()) {
 			Computer toUpdate = ComputerMapper.fromDtoToEntity(computerDTO);
 			computerService.update(toUpdate);
-			System.out.println("error");
-		} else {
-			System.out.println("No error");
 		}
-		return displayEditableComputer(id, model);
+		List<Company> companies = companyService.getAll();
+		List<CompanyDTO> companyDTOs = new ArrayList<>();
+		for (Company company : companies) {
+			companyDTOs.add(CompanyMapper.FromEntityToDto(company));
+		}
+		model.addAttribute("companies", companyDTOs);
+		return "editComputer";
 	}
 }

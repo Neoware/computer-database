@@ -54,8 +54,8 @@ public class QueryBuilder {
 						+ "company.name AS company_name FROM computer "
 						+ "LEFT JOIN company ON computer.company_id = company.id ");
 		if (!StringUtils.isNullOrEmpty(pageRequest.getSearch())) {
-			stringBuilder.append("WHERE company.name LIKE " + pageRequest.getSearch() + "% OR computer.name LIKE "
-					+ pageRequest.getSearch() + "% ");
+			stringBuilder.append("WHERE company.name LIKE \"" + pageRequest.getSearch() + "%\" OR computer.name LIKE \""
+					+ pageRequest.getSearch() + "%\" ");
 		}
 		if (!StringUtils.isNullOrEmpty(pageRequest.getSort())) {
 			stringBuilder.append("ORDER BY " + equivalence.get(pageRequest.getSort()) + " ");
@@ -85,8 +85,8 @@ public class QueryBuilder {
 	public String createGetCountQuery(PageRequest pageRequest) throws DaoException {
 		stringBuilder.append("SELECT COUNT( * ) FROM computer LEFT JOIN company ON computer.company_id = company.id ");
 		if (!StringUtils.isNullOrEmpty(pageRequest.getSearch())) {
-			stringBuilder.append("WHERE company.name LIKE " + pageRequest.getSearch() + "% OR computer.name LIKE "
-					+ pageRequest.getSearch() + "% ");
+			stringBuilder.append("WHERE company.name LIKE \"" + pageRequest.getSearch() + "%\" OR computer.name LIKE \""
+					+ pageRequest.getSearch() + "%\" ");
 		}
 		return stringBuilder.toString();
 	}

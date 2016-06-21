@@ -39,16 +39,19 @@
 								<label for="computerName">Computer name</label> <form:input
 									type="text" class="form-control" id="computerName"
 									placeholder="Computer name" path="name" name="computerName"/>
+									<form:errors cssClass="error" path="name" />
 							</div>
 							<div class="form-group">
 								<label for="introduced">Introduced date</label> <form:input
 									type="date" class="form-control" id="introduced"
 									placeholder="Introduced date" path="introduced" name="introduced"/>
+									<form:errors path="introduced" />
 							</div>
 							<div class="form-group">
 								<label for="discontinued">Discontinued date</label> <form:input
 									type="date" class="form-control" id="discontinued"
 									placeholder="Discontinued date" path="discontinued" name="discontinued"/>
+									<form:errors path="discontinued" />
 							</div>
 							<div class="form-group">
 								<label for="companyId">Company</label> <form:select
@@ -67,6 +70,7 @@
 										</c:if>
 									</c:forEach>
 								</form:select>
+								<form:errors path="companyId" />
 							</div>
 						</fieldset>
 						<div class="actions pull-right">
