@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,17 +22,25 @@ import com.excilys.formation.service.ComputerService;
 import com.excilys.formation.util.ComputerMapper;
 
 /**
- * Servlet corresponding to the addComputer page
+ * Controller corresponding to the addComputer page
  */
 @Controller
 public class AddComputer {
+	private static final Logger LOG = LoggerFactory.getLogger(AddComputer.class);
 	@Autowired
 	private CompanyService companyService;
 	@Autowired
 	private ComputerService computerService;
 
+	/**
+	 * Method managing the GET request, displaying the add computer page.
+	 * 
+	 * @param model
+	 *            Hold the company list and an empty computerDTO for the view.
+	 * @return the addComputer view.
+	 */
 	@RequestMapping(value = "/addcomputer", method = RequestMethod.GET)
-	protected String displayDashboard(Model model) {
+	protected String displayAddComputerPage(Model model) {
 		List<Company> companies = companyService.getAll();
 		model.addAttribute("companies", companies);
 		model.addAttribute("computerDTO", new ComputerDTO());
@@ -38,18 +48,25 @@ public class AddComputer {
 	}
 
 	/**
+	 * 
 	 * Method managing the POST request of adding a computer, verifying the data
-	 * sent, mapping to an entity and calling the service. A ReturnInformation
-	 * object is used to hold information about success, failure, and
-	 * information of the process.
+	 * sent, mapping to an entity and calling the service.
+	 * 
+	 * @param computerDTO
+	 *            the computer that will be added.
+	 * @param bindingResult
+	 *            The object containing eventual errors.
+	 * @param model
+	 *            Holding the company list and the eventual success message.
+	 * @return the addComputer view.
 	 */
-
 	@RequestMapping(value = "/addcomputer", method = RequestMethod.POST)
 	protected String addNewComputer(@Valid @ModelAttribute(value = "computerDTO") ComputerDTO computerDTO,
 			BindingResult bindingResult, Model model) {
 		if (!bindingResult.hasErrors()) {
 			Computer toAdd = ComputerMapper.fromDtoToEntity(computerDTO);
 			computerService.create(toAdd);
+			model.addAttribute("successMessage", "Computer successfully added");
 		}
 		List<Company> companies = companyService.getAll();
 		model.addAttribute("companies", companies);

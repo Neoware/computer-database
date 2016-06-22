@@ -9,8 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.formation.entity.Computer;
@@ -66,15 +64,11 @@ public class ComputerDAO {
 	 */
 	public Computer create(Computer toCreate) {
 		String sql = "INSERT INTO computer VALUES (NULL, ?, ?, ?, ?)";
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbcTemplate = new JdbcTemplate();
+		jdbcTemplate = new JdbcTemplate(dataSource);
 		int rowAffected = jdbcTemplate.update(sql, new Object[] { toCreate.getName(), toCreate.getIntroduced(),
-				toCreate.getDiscontinued(), toCreate.getComputerCompany().getId() }, keyHolder);
+				toCreate.getDiscontinued(), toCreate.getComputerCompany().getId() });
 		if (rowAffected == 1) {
 			cache.incrementCount();
-			if (keyHolder.getKey() != null) {
-				toCreate.setId(keyHolder.getKey().longValue());
-			}
 		}
 		return toCreate;
 	}

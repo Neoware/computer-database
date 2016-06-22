@@ -4,7 +4,7 @@
 	<groupId>com.excilys.formation</groupId>
 	<artifactId>computer-database</artifactId>
 	<packaging>war</packaging>
-	<version>0.5</version>
+	<version>0.6</version>
 	<name>computer-database</name>
 	<url>https://github.com/Neoware/computer-database</url>
 	<properties>
@@ -129,7 +129,7 @@
 
 		<!-- LOGGING -->
 
-		<!-- SLf4J logging api -->
+		<!-- SLf4J logging api bridge -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>

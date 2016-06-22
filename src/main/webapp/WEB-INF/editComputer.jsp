@@ -26,40 +26,56 @@
 	<section id="main">
 		<div class="container">
 			<div class="row">
+				<div id="information">
+					<c:if test="${not empty requestScope.successMessage}">
+						<div class="alert alert-success" role="alert">
+							${requestScope.successMessage}</div>
+					</c:if>
+				</div>
 				<div class="col-xs-8 col-xs-offset-2 box">
 					<div class="label label-default pull-right">id:
 						${computerDTO.id}</div>
-					<h1>Edit Computer</h1>
+					<h1>
+						<spring:message code="label.editComputerTitle" />
+					</h1>
 
 					<form:form commandName="computerDTO" method="POST">
 						<input type="hidden" value="${computerDTO.id}" id="id"
 							name="computerId" />
 						<fieldset>
 							<div class="form-group">
-								<label for="computerName">Computer name</label> <form:input
-									type="text" class="form-control" id="computerName"
-									placeholder="Computer name" path="name" name="computerName"/>
-									<form:errors cssClass="error" path="name" />
+								<spring:message code="label.name" var="labelName" />
+								<label for="computerName">${labelName}</label>
+								<form:input type="text" class="form-control" id="computerName"
+									placeholder="${labelName}" path="name" name="computerName" />
+								<form:errors cssClass="error" path="name" />
 							</div>
 							<div class="form-group">
-								<label for="introduced">Introduced date</label> <form:input
-									type="date" class="form-control" id="introduced"
-									placeholder="Introduced date" path="introduced" name="introduced"/>
-									<form:errors path="introduced" />
+								<spring:message code="label.introduced" var="labelIntroduced" />
+								<label for="introduced">${labelIntroduced}</label>
+								<form:input type="date" class="form-control" id="introduced"
+									placeholder="${labelIntroduced}" path="introduced"
+									name="introduced" />
+								<form:errors cssClass="error" path="introduced" />
 							</div>
 							<div class="form-group">
-								<label for="discontinued">Discontinued date</label> <form:input
-									type="date" class="form-control" id="discontinued"
-									placeholder="Discontinued date" path="discontinued" name="discontinued"/>
-									<form:errors path="discontinued" />
+								<spring:message code="label.discontinued"
+									var="labelDiscontinued" />
+								<label for="discontinued">${labelDiscontinued}</label>
+								<form:input type="date" class="form-control" id="discontinued"
+									placeholder="${labelDiscontinued}" path="discontinued"
+									name="discontinued" />
+								<form:errors cssClass="error" path="discontinued" />
 							</div>
 							<div class="form-group">
-								<label for="companyId">Company</label> <form:select
-									class="form-control" id="companyId" path="companyId" name="companyId">
+								<label for="companyId"><spring:message
+										code="label.company" /></label>
+								<form:select class="form-control" id="companyId"
+									path="companyId" name="companyId">
 									<c:if test="${computer.companyId == 0}">
 
-										<option selected disabled>Choose the brand of the
-											computer</option>
+										<option selected disabled><spring:message
+												code="label.defaultSelect" /></option>
 									</c:if>
 									<c:forEach items="${requestScope.companies}" var="item">
 										<c:if test="${item.id eq computerDTO.companyId}">
@@ -70,12 +86,14 @@
 										</c:if>
 									</c:forEach>
 								</form:select>
-								<form:errors path="companyId" />
+								<form:errors cssClass="error" path="companyId" />
 							</div>
 						</fieldset>
 						<div class="actions pull-right">
-							<input type="submit" value="Edit" class="btn btn-primary">
-							or <a href="dashboard" class="btn btn-default">Cancel</a>
+							<spring:message code="button.edit" var="editButton" />
+							<input type="submit" value="${editButton}"
+								class="btn btn-primary"> or <a href="dashboard"
+								class="btn btn-default"><spring:message code="button.cancel" /></a>
 						</div>
 					</form:form>
 				</div>

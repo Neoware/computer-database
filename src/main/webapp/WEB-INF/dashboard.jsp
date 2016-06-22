@@ -25,22 +25,27 @@
 
 	<section id="main">
 		<div class="container">
-			<h1 id="homeTitle">${requestScope.page.count}&nbsp;Computers&nbsp;found</h1>
+			<h1 id="homeTitle">${requestScope.page.count}
+				<spring:message code="dashboard.found" />
+			</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="dashboard" method="GET"
 						class="form-inline">
-
+						<spring:message code="dashboard.search" var="searchPlaceholder" />
+						<spring:message code="dashboard.filterBy" var="filterBy" />
 						<input type="search" id="searchbox" name="search"
-							class="form-control" placeholder="Search name" /> <input
-							type="submit" id="searchsubmit" value="Filter by name"
+							class="form-control" placeholder="${searchPlaceholder}" /> <input
+							type="submit" id="searchsubmit" value="${filterBy}"
 							class="btn btn-primary" />
 					</form>
 				</div>
 				<div class="pull-right">
-					<a class="btn btn-success" id="addComputer" href="addcomputer">Add
-						Computer</a> <a class="btn btn-default" id="editComputer" href="#"
-						onclick="$.fn.toggleEditMode();">Edit</a>
+
+					<a class="btn btn-success" id="addComputer" href="addcomputer"><spring:message
+							code="dashboard.button.add" /></a> <a class="btn btn-default"
+						id="editComputer" href="#" onclick="$.fn.toggleEditMode();"><spring:message
+							code="dashboard.button.select" /></a>
 				</div>
 			</div>
 		</div>
@@ -68,28 +73,29 @@
 									class="fa fa-trash-o fa-lg"></i>
 							</a>
 						</span></th>
-						<th>Computer name <mylib:link
+						<th><spring:message code="dashboard.tableColumn.name" /> <mylib:link
 								page="${requestScope.page.current}"
 								limit="${requestScope.page.limit}"
 								search="${requestScope.page.search}" sort="name"
 								order="${futureOrder}">
 								<span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
 							</mylib:link></th>
-						<th>Introduced date<mylib:link
-								page="${requestScope.page.current}"
+						<th><spring:message code="dashboard.tableColumn.introduced" />
+							<mylib:link page="${requestScope.page.current}"
 								limit="${requestScope.page.limit}"
 								search="${requestScope.page.search}" sort="introduced"
 								order="${futureOrder}">
 								<span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
 							</mylib:link></th>
-						<th>Discontinued date<mylib:link
-								page="${requestScope.page.current}"
+						<th><spring:message code="dashboard.tableColumn.discontinued" />
+							<mylib:link page="${requestScope.page.current}"
 								limit="${requestScope.page.limit}"
 								search="${requestScope.page.search}" sort="discontinued"
 								order="${futureOrder}">
 								<span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
 							</mylib:link></th>
-						<th>Company<mylib:link page="${requestScope.page.current}"
+						<th><spring:message code="dashboard.tableColumn.company" />
+							<mylib:link page="${requestScope.page.current}"
 								limit="${requestScope.page.limit}"
 								search="${requestScope.page.search}" sort="companyName"
 								order="${futureOrder}">

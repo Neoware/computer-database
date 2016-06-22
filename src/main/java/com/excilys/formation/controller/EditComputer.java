@@ -24,7 +24,7 @@ import com.excilys.formation.util.CompanyMapper;
 import com.excilys.formation.util.ComputerMapper;
 
 /**
- * Servlet corresponding to the edit computer page.
+ * Controller corresponding to the edit computer page.
  */
 @Controller
 public class EditComputer {
@@ -34,8 +34,15 @@ public class EditComputer {
 	private CompanyService companyService;
 
 	/**
+	 * 
 	 * Get request loading the page for a specific computer, and load the list
 	 * of companies from database.
+	 * 
+	 * @param id
+	 *            id of the edited computer.
+	 * @param model
+	 *            Holding the companies and the edited computer.
+	 * @return the editComputer view.
 	 */
 	@RequestMapping(value = "/editcomputer", method = RequestMethod.GET)
 	protected String displayEditableComputer(@RequestParam(value = "id", required = true) String id, Model model) {
@@ -58,6 +65,15 @@ public class EditComputer {
 	 * handle POST request. Validate data from the request and give them to the
 	 * service layer to update a computer.
 	 * 
+	 * @param id
+	 *            id of the edited computer
+	 * @param computerDTO
+	 *            the computer with eventual edited fields
+	 * @param bindingResult
+	 *            contains the eventual errors
+	 * @param model
+	 *            Holding the companies and the eventual success message
+	 * @return the editComputer view.
 	 */
 	@RequestMapping(value = "/editcomputer", method = RequestMethod.POST)
 	protected String updateComputer(@RequestParam(value = "id", required = true) String id,
@@ -66,6 +82,7 @@ public class EditComputer {
 		if (!bindingResult.hasErrors()) {
 			Computer toUpdate = ComputerMapper.fromDtoToEntity(computerDTO);
 			computerService.update(toUpdate);
+			model.addAttribute("successMessage", "Computer successfully updated");
 		}
 		List<Company> companies = companyService.getAll();
 		List<CompanyDTO> companyDTOs = new ArrayList<>();

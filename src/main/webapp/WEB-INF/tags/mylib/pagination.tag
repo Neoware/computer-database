@@ -1,4 +1,5 @@
 <%@ tag language="java" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ tag body-content="empty"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="mylib" tagdir="/WEB-INF/tags/mylib"%>
@@ -7,12 +8,13 @@
 <%@ attribute name="limit" required="true" type="java.lang.Integer"%>
 <%@ attribute name="search" required="false"%>
 <%@ attribute name="sort" required="false"%>
-<%@ attribute name="order" required="false" %>
+<%@ attribute name="order" required="false"%>
 <ul class="pagination">
 
 	<li><mylib:link page="1" limit="${limit}" search="${search}"
 			sort="${sort}" order="${order}">
-			<span aria-hidden="true">First</span>
+			<span aria-hidden="true"><spring:message
+					code="dashboard.first" /></span>
 		</mylib:link></li>
 	<c:if test="${page > 1}">
 		<li><mylib:link page="${page - 1}" limit="${limit}"
@@ -49,6 +51,6 @@
 	</c:if>
 	<li><mylib:link page="${count}" limit="${limit}"
 			search="${search}" sort="${sort}" order="${order}">
-			<span aria-hidden="true">Last</span>
+			<span aria-hidden="true"><spring:message code="dashboard.last" /></span>
 		</mylib:link></li>
 </ul>
