@@ -1,6 +1,16 @@
 package com.excilys.formation.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * Computer entity corresponding to the computer table in database.
@@ -8,11 +18,21 @@ import java.time.LocalDate;
  * @author neoware
  *
  */
-public class Computer {
+@Entity
+@Table(name = "computer")
+public class Computer implements Serializable {
+	private static final long serialVersionUID = 4380453095024379582L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	@Column(name = "name")
 	private String name;
+	// @Column(name = "introduced")
 	private LocalDate introduced;
+	// @Column(name = "discontinued")
 	private LocalDate discontinued;
+	@JoinColumn(name = "company_id")
+	@ManyToOne
 	private Company computerCompany;
 
 	public static class Builder {
@@ -61,6 +81,10 @@ public class Computer {
 		this.introduced = computerBuilder.introduced;
 		this.discontinued = computerBuilder.discontinued;
 		this.computerCompany = computerBuilder.computerCompany;
+	}
+
+	public Computer() {
+
 	}
 
 	public static Builder getBuilder() {

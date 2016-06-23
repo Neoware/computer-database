@@ -1,15 +1,32 @@
 package com.excilys.formation.entity;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 /**
  * Company entity corresponding to the company table in database.
  * 
  * @author neoware
  *
  */
-public class Company {
+@Entity
+@Table(name = "company")
+public class Company implements Serializable {
 
+	private static final long serialVersionUID = 2606954127721125312L;
+	@Id
 	private Long id;
+	@Column(name = "name")
 	private String name;
+	@OneToMany
+	private List<Computer> computers = new ArrayList<>();
 
 	public Company() {
 	}
