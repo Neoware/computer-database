@@ -27,9 +27,9 @@ public class Computer implements Serializable {
 	private Long id;
 	@Column(name = "name")
 	private String name;
-	// @Column(name = "introduced")
+	@Column(name = "introduced")
 	private LocalDate introduced;
-	// @Column(name = "discontinued")
+	@Column(name = "discontinued")
 	private LocalDate discontinued;
 	@JoinColumn(name = "company_id")
 	@ManyToOne

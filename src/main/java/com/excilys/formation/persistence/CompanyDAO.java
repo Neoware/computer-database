@@ -1,19 +1,20 @@
 package com.excilys.formation.persistence;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.sql.DataSource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.exception.DaoException;
-import com.excilys.formation.service.Cache;
 
 /**
  * DAO class for the company table.
@@ -25,11 +26,8 @@ import com.excilys.formation.service.Cache;
 public class CompanyDAO {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CompanyDAO.class);
-	@Autowired
-	private DataSource dataSource;
-	@Autowired
-	private Cache cache;
-	private JdbcTemplate jdbcTemplate;
+	@PersistenceContext
+	EntityManager entityManager;
 
 	public CompanyDAO() {
 	}
@@ -43,9 +41,12 @@ public class CompanyDAO {
 	 * @throws DaoException
 	 */
 	public Company find(Long id) {
-		String sql = "SELECT * FROM company WHERE id = ?";
-		jdbcTemplate = new JdbcTemplate(dataSource);
-		Company company = jdbcTemplate.queryForObject(sql, new Object[] { id }, new CompanyRowMapper());
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Company> criteriaQuery = criteriaBuilder.createQuery(Company.class);
+		Root<Company> root = criteriaQuery.from(Company.class);
+		criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("id"), id));
+		TypedQuery<Company> query = entityManager.createQuery(criteriaQuery);
+		Company company = query.getSingleResult();
 		return company;
 	}
 
@@ -58,11 +59,9 @@ public class CompanyDAO {
 	 * @throws DaoException
 	 */
 	public void delete(Long id) {
-		String sql = "DELETE from company where id=?";
-		jdbcTemplate = new JdbcTemplate(dataSource);
-		int rowAffected = jdbcTemplate.update(sql, new Object[] { id });
-		if (rowAffected == 1) {
-			cache.removeCompany(id);
+		Company company = find(id);
+		if (company != null) {
+			entityManager.remove(company);
 		}
 	}
 
@@ -74,15 +73,12 @@ public class CompanyDAO {
 	 * @throws DaoException
 	 */
 	public List<Company> getAll() {
-		if (cache.getCompany() != null) {
-			LOG.info("Accessing cache for company");
-			return cache.getCompany();
-		}
-		List<Company> companies = new ArrayList<>();
-		String sql = "SELECT * from company";
-		jdbcTemplate = new JdbcTemplate(dataSource);
-		companies = jdbcTemplate.query(sql, new CompanyRowMapper());
-		return companies;
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Company> criteriaQuery = criteriaBuilder.createQuery(Company.class);
+		Root<Company> root = criteriaQuery.from(Company.class);
+		criteriaQuery.select(root);
+		TypedQuery<Company> query = entityManager.createQuery(criteriaQuery);
+		return query.getResultList();
 	}
 
 	/**
@@ -97,10 +93,12 @@ public class CompanyDAO {
 	 * @throws DaoException
 	 */
 	public List<Company> getLimited(int offset, int limit) {
-		List<Company> companies = new ArrayList<>();
-		String sql = "SELECT * from company LIMIT " + offset + ", " + limit;
-		jdbcTemplate = new JdbcTemplate(dataSource);
-		companies = jdbcTemplate.query(sql, new Object[] { offset, limit }, new CompanyRowMapper());
-		return companies;
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Company> criteriaQuery = criteriaBuilder.createQuery(Company.class);
+		Root<Company> root = criteriaQuery.from(Company.class);
+		criteriaQuery.select(root);
+		TypedQuery<Company> query = entityManager.createQuery(criteriaQuery);
+		query.setFirstResult(offset).setMaxResults(limit);
+		return query.getResultList();
 	}
 }

@@ -36,16 +36,6 @@ public class ComputerService {
 	}
 
 	/**
-	 * Function to access the list of all computers
-	 * 
-	 * @return the list containing all computers
-	 */
-	public List<Computer> getAll() {
-		List<Computer> computers = computerDAO.getAll();
-		return computers;
-	}
-
-	/**
 	 * Function used to get specific part of the computers
 	 * 
 	 * @param pageRequest
@@ -61,6 +51,7 @@ public class ComputerService {
 		} else {
 			count = computerDAO.getCountElements(pageRequest);
 		}
+		LOG.info("" + count);
 		List<ComputerDTO> computerDtos = ComputerMapper.fromEntitiesToDtos(computerList);
 		Page<ComputerDTO> computerPage = new Page<>(computerDtos, pageRequest, count);
 		return computerPage;

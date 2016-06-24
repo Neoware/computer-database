@@ -7,6 +7,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import com.excilys.formation.entity.Computer;
 import com.excilys.formation.exception.DaoException;
 import com.excilys.formation.service.Cache;
 import com.excilys.formation.service.PageRequest;
+import com.excilys.formation.util.StringUtils;
 
 /**
  * DAO class for the computer table.
@@ -46,16 +48,6 @@ public class ComputerDAO {
 	 * @throws DaoException
 	 */
 	public Computer find(Long id) {
-		/*
-		 * String sql =
-		 * "SELECT computer.id, computer.name, computer.introduced, computer.discontinued, "
-		 * + "computer.company_id, company.name AS company_name" +
-		 * " FROM computer " + "LEFT JOIN company" +
-		 * " ON computer.company_id = company.id" + " WHERE computer.id =? ";
-		 * jdbcTemplate = new JdbcTemplate(dataSource); Computer computer =
-		 * jdbcTemplate.queryForObject(sql, new Object[] { id }, new
-		 * ComputerRowMapper());
-		 */
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Computer> criteriaQuery = criteriaBuilder.createQuery(Computer.class);
 		Root<Computer> root = criteriaQuery.from(Computer.class);
@@ -75,16 +67,8 @@ public class ComputerDAO {
 	 * @throws DaoException
 	 */
 	public Computer create(Computer toCreate) {
-		// String sql = "INSERT INTO computer VALUES (NULL, ?, ?, ?, ?)";
-		// jdbcTemplate = new JdbcTemplate(dataSource);
-		// int rowAffected = jdbcTemplate.update(sql, new Object[] {
-		// toCreate.getName(), toCreate.getIntroduced(),
-		// toCreate.getDiscontinued(), toCreate.getComputerCompany().getId() });
-		// if (rowAffected == 1) {
-		// cache.incrementCount();
-		// }
-		// return toCreate;
-		return null;
+		entityManager.persist(toCreate);
+		return toCreate;
 	}
 
 	/**
@@ -96,15 +80,13 @@ public class ComputerDAO {
 	 * @throws DaoException
 	 */
 	public void update(Computer toUpdate) {
-		// String sql = "UPDATE computer SET name= ?, introduced= ?,
-		// discontinued=?,
-		// company_id= ? WHERE id = ?";
-		// jdbcTemplate = new JdbcTemplate(dataSource);
-		// jdbcTemplate.update(sql,
-		// new Object[] { toUpdate.getName(),
-		// DateUtils.localDateToTimestamp(toUpdate.getIntroduced()),
-		// DateUtils.localDateToTimestamp(toUpdate.getDiscontinued()),
-		// toUpdate.getComputerCompany().getId(), toUpdate.getId() });
+		Computer computer = find(toUpdate.getId());
+		if (computer != null) {
+			computer.setName(toUpdate.getName());
+			computer.setIntroduced(toUpdate.getIntroduced());
+			computer.setDiscontinued(toUpdate.getDiscontinued());
+			computer.setComputerCompany(toUpdate.getComputerCompany());
+		}
 	}
 
 	/**
@@ -115,28 +97,10 @@ public class ComputerDAO {
 	 * @throws DaoException
 	 */
 	public void delete(Long id) {
-		// String sql = "DELETE from computer where id=?";
-		// jdbcTemplate.update(sql, new Object[] { id });
-	}
-
-	/**
-	 * Get all the computers in the database without pagination system.
-	 *
-	 * @return A list containing all computers in the database.
-	 * @throws DaoException
-	 */
-	public List<Computer> getAll() {
-		// String sql = "SELECT computer.id, computer.name, computer.introduced,
-		// computer.discontinued, "
-		// + "computer.company_id, company.name AS company_name" + "FROM
-		// computer "
-		// + "INNER JOIN company"
-		// + "ON computer.company_id = company.id";
-		// LOG.info(sql);
-		// List<Computer> computers = new ArrayList<>();
-		// computers = jdbcTemplate.query(sql, new ComputerRowMapper());
-		// return computers;
-		return null;
+		Computer computer = find(id);
+		if (computer != null) {
+			entityManager.remove(computer);
+		}
 	}
 
 	/**
@@ -151,14 +115,28 @@ public class ComputerDAO {
 	 * @throws DaoException
 	 */
 	public List<Computer> getPage(PageRequest pageRequest) {
-		// QueryBuilder queryBuilder = new QueryBuilder();
-		// String sql = queryBuilder.createGetPageQuery(pageRequest);
-		// LOG.info(sql);
-		// jdbcTemplate = new JdbcTemplate(dataSource);
-		// List<Computer> computers = new ArrayList<>();
-		// computers = jdbcTemplate.query(sql, new ComputerRowMapper());
-		// return computers;
-		return null;
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Computer> criteriaQuery = criteriaBuilder.createQuery(Computer.class);
+		Root<Computer> root = criteriaQuery.from(Computer.class);
+		criteriaQuery.select(root);
+		if (!StringUtils.isNullOrEmpty(pageRequest.getSearch())) {
+			Predicate likePredicate = criteriaBuilder.like(root.get("name"), pageRequest.getSearch() + "%");
+			criteriaQuery.where(likePredicate);
+		}
+		if (!StringUtils.isNullOrEmpty(pageRequest.getSort())) {
+			if (!StringUtils.isNullOrEmpty(pageRequest.getOrder())) {
+				if (pageRequest.getOrder().equals("ASC")) {
+					// criteriaQuery.orderBy(criteriaBuilder.asc(root.get(pageRequest.getSort())));
+					criteriaQuery.orderBy(criteriaBuilder.asc(root.get("computerCompany").get("name")));
+				} else if (pageRequest.getOrder().equals("DESC")) {
+					// criteriaQuery.orderBy(criteriaBuilder.desc(root.get(pageRequest.getSort())));
+					criteriaQuery.orderBy(criteriaBuilder.desc(root.get("computerCompany").get("name")));
+				}
+			}
+		}
+		TypedQuery<Computer> query = entityManager.createQuery(criteriaQuery);
+		query.setFirstResult(pageRequest.getOffset()).setMaxResults(pageRequest.getLimit());
+		return query.getResultList();
 	}
 
 	/**
@@ -172,13 +150,15 @@ public class ComputerDAO {
 	 * @throws DaoException
 	 */
 	public int getCountElements(PageRequest pageRequest) {
-		// QueryBuilder queryBuilder = new QueryBuilder();
-		// String sql = queryBuilder.createGetCountQuery(pageRequest);
-		// jdbcTemplate = new JdbcTemplate(dataSource);
-		// int count = jdbcTemplate.queryForObject(sql, Integer.class);
-		// return count;
-		return 0;
-
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+		Root<Computer> root = criteriaQuery.from(Computer.class);
+		criteriaQuery.select((criteriaBuilder.countDistinct(root)));
+		if (!StringUtils.isNullOrEmpty(pageRequest.getSearch())) {
+			Predicate likePredicate = criteriaBuilder.like(root.get("name"), pageRequest.getSearch() + "%");
+			criteriaQuery.where(likePredicate);
+		}
+		return entityManager.createQuery(criteriaQuery).getSingleResult().intValue();
 	}
 
 	/**
@@ -191,8 +171,15 @@ public class ComputerDAO {
 	 * @throws DaoException
 	 */
 	public void deleteByCompany(Long companyId) {
-		// String sql = "DELETE FROM computer where company_id = ?";
-		// jdbcTemplate.update(sql);
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Computer> criteriaQuery = criteriaBuilder.createQuery(Computer.class);
+		Root<Computer> root = criteriaQuery.from(Computer.class);
+		criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("company_id"), companyId));
+		TypedQuery<Computer> query = entityManager.createQuery(criteriaQuery);
+		List<Computer> computers = query.getResultList();
+		for (Computer computer : computers) {
+			entityManager.remove(computer);
+		}
 	}
 
 	/**
@@ -202,13 +189,11 @@ public class ComputerDAO {
 	 * @throws DaoException
 	 */
 	public int count() {
-		// if (cache.getCount() != null) {
-		// LOG.info("Accessing cache count");
-		// return cache.getCount();
-		// }
-		// String sql = "SELECT COUNT( id )FROM computer";
-		// int count = jdbcTemplate.queryForObject(sql, Integer.class);
-		// return count;
-		return 0;
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+		Root<Computer> root = criteriaQuery.from(Computer.class);
+		criteriaQuery.select((criteriaBuilder.count(root)));
+		int count = entityManager.createQuery(criteriaQuery).getSingleResult().intValue();
+		return count;
 	}
 }

@@ -30,8 +30,10 @@ public class ComputerMapper {
 			computerDTO.setName(toConvert.getName());
 			computerDTO.setIntroduced(DateUtils.localDateToString(toConvert.getIntroduced()));
 			computerDTO.setDiscontinued(DateUtils.localDateToString(toConvert.getDiscontinued()));
-			computerDTO.setCompanyId(Long.toString(toConvert.getComputerCompany().getId()));
-			computerDTO.setCompanyName(toConvert.getComputerCompany().getName());
+			if (toConvert.getComputerCompany() != null) {
+				computerDTO.setCompanyId(Long.toString(toConvert.getComputerCompany().getId()));
+				computerDTO.setCompanyName(toConvert.getComputerCompany().getName());
+			}
 		}
 		return computerDTO;
 	}
