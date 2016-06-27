@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	version="3.1">
+	<error-page>
+		<!-- Forbidden directory listing -->
+		<error-code>403</error-code>
+		<location>/WEB-INF/403.jsp</location>
+	</error-page>
+	<error-page>
+		<!-- Missing resource -->
+		<error-code>404</error-code>
+		<location>/WEB-INF/404.jsp</location>
+	</error-page>
+	<error-page>
+		<!-- Uncaught exception -->
+		<error-code>500</error-code>
+		<location>/WEB-INF/500.jsp</location>
+	</error-page>
+	<servlet>
+		<servlet-name>computerDatabaseServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>
+			WEB-INF/config/servlet-config.xml
+			classpath:/applicationContext.xml
+			</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>computerDatabaseServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	<display-name>computer-database</display-name>
+	<context-param>
+		<param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
+		<param-value>true</param-value>
+	</context-param>
+</web-app>

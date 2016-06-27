@@ -3,10 +3,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.excilys.formation</groupId>
 	<artifactId>computer-database</artifactId>
-	<packaging>war</packaging>
+	<packaging>pom</packaging>
 	<version>0.6</version>
 	<name>computer-database</name>
 	<url>https://github.com/Neoware/computer-database</url>
+	<modules>
+		<module>core</module>
+		<module>util</module>
+		<module>console</module>
+		<module>service</module>
+		<module>persistence</module>
+		<module>webapp</module>
+	</modules>
 	<properties>
 		<!-- Setting source and target to Java 8 -->
 		<maven.compiler.source>1.8</maven.compiler.source>
