@@ -7,6 +7,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.exception.DaoException;
 import com.excilys.formation.service.Cache;
@@ -118,6 +121,7 @@ public class ComputerDAO {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Computer> criteriaQuery = criteriaBuilder.createQuery(Computer.class);
 		Root<Computer> root = criteriaQuery.from(Computer.class);
+		Join<Company, Computer> join = root.join("computerCompany", JoinType.LEFT);
 		criteriaQuery.select(root);
 		if (!StringUtils.isNullOrEmpty(pageRequest.getSearch())) {
 			Predicate likePredicate = criteriaBuilder.like(root.get("name"), pageRequest.getSearch() + "%");
@@ -126,11 +130,17 @@ public class ComputerDAO {
 		if (!StringUtils.isNullOrEmpty(pageRequest.getSort())) {
 			if (!StringUtils.isNullOrEmpty(pageRequest.getOrder())) {
 				if (pageRequest.getOrder().equals("ASC")) {
-					// criteriaQuery.orderBy(criteriaBuilder.asc(root.get(pageRequest.getSort())));
-					criteriaQuery.orderBy(criteriaBuilder.asc(root.get("computerCompany").get("name")));
+					if (!pageRequest.getSort().equals("companyName")) {
+						criteriaQuery.orderBy(criteriaBuilder.asc(root.get(pageRequest.getSort())));
+					} else {
+						criteriaQuery.orderBy(criteriaBuilder.asc(join.get("name")));
+					}
 				} else if (pageRequest.getOrder().equals("DESC")) {
-					// criteriaQuery.orderBy(criteriaBuilder.desc(root.get(pageRequest.getSort())));
-					criteriaQuery.orderBy(criteriaBuilder.desc(root.get("computerCompany").get("name")));
+					if (!pageRequest.getSort().equals("companyName")) {
+						criteriaQuery.orderBy(criteriaBuilder.desc(root.get(pageRequest.getSort())));
+					} else {
+						criteriaQuery.orderBy(criteriaBuilder.desc(join.get("name")));
+					}
 				}
 			}
 		}
