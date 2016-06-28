@@ -10,7 +10,6 @@
 		/WEB-INF/config/security.xml
 		</param-value>
 	</context-param>
-
 	<error-page>
 		<!-- Forbidden directory listing -->
 		<error-code>403</error-code>

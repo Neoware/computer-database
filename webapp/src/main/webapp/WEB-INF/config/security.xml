@@ -4,20 +4,35 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
-	<http auto-config='true' use-expressions="true">
-		<form-login default-target-url="/dashboard" />
+	<b:bean id="digestFilter"
+		class="org.springframework.security.web.authentication.www.DigestAuthenticationFilter">
+		<b:property name="authenticationEntryPoint" ref="digestEntryPoint" />
+		<b:property name="userDetailsService" ref="userService" />
+	</b:bean>
+	<b:bean id="digestEntryPoint"
+		class="org.springframework.security.web.authentication.www.DigestAuthenticationEntryPoint">
+		<b:property name="realmName" value="Contacts Realm via Digest Authentication" />
+		<b:property name="key" value="acegi" />
+	</b:bean>
+
+	<http use-expressions="true" entry-point-ref="digestEntryPoint">
 		<intercept-url pattern="/dashboard"
 			access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" />
 		<intercept-url pattern="/addcomputer" access="hasRole('ROLE_ADMIN')" />
 		<intercept-url pattern="/editcomputer" access="hasRole('ROLE_ADMIN')" />
+		<custom-filter ref="digestFilter" after="BASIC_AUTH_FILTER" />
 	</http>
+
 
 	<authentication-manager>
 		<authentication-provider>
-			<jdbc-user-service data-source-ref="dataSource"
+			<jdbc-user-service id="userService"
+				data-source-ref="dataSource"
 				users-by-username-query="select username,password,enabled from user where username=?"
 				authorities-by-username-query="select username,role from user where username =?" />
 		</authentication-provider>
 	</authentication-manager>
+
+
 
 </b:beans>
