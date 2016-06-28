@@ -1,4 +1,4 @@
-package com.excilys.formation.util;
+package com.excilys.formation.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import com.excilys.formation.dto.ComputerDTO;
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
+import com.excilys.formation.util.DateUtils;
 
 /**
  * Mapper for the computer Objects.

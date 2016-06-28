@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.excilys.formation.dto.ComputerDTO;
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
+import com.excilys.formation.mapper.ComputerMapper;
 import com.excilys.formation.service.CompanyService;
 import com.excilys.formation.service.ComputerService;
-import com.excilys.formation.util.ComputerMapper;
 
 /**
  * Controller corresponding to the addComputer page

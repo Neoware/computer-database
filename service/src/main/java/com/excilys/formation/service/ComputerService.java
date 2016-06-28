@@ -12,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.excilys.formation.dto.ComputerDTO;
 import com.excilys.formation.entity.Computer;
 import com.excilys.formation.exception.DaoException;
+import com.excilys.formation.mapper.ComputerMapper;
 import com.excilys.formation.persistence.Cache;
 import com.excilys.formation.persistence.ComputerDAO;
 import com.excilys.formation.persistence.PageRequest;
-import com.excilys.formation.util.ComputerMapper;
 import com.excilys.formation.util.StringUtils;
 
 /**

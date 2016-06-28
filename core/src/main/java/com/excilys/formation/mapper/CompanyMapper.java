@@ -1,4 +1,4 @@
-package com.excilys.formation.util;
+package com.excilys.formation.mapper;
 
 import com.excilys.formation.dto.CompanyDTO;
 import com.excilys.formation.entity.Company;

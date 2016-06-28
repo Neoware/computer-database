@@ -18,10 +18,10 @@ import com.excilys.formation.dto.CompanyDTO;
 import com.excilys.formation.dto.ComputerDTO;
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.entity.Computer;
+import com.excilys.formation.mapper.CompanyMapper;
+import com.excilys.formation.mapper.ComputerMapper;
 import com.excilys.formation.service.CompanyService;
 import com.excilys.formation.service.ComputerService;
-import com.excilys.formation.util.CompanyMapper;
-import com.excilys.formation.util.ComputerMapper;
 
 /**
  * Controller corresponding to the edit computer page.

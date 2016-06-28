@@ -9,10 +9,11 @@
                            http://www.springframework.org/schema/context/spring-context-4.3.xsd
                            http://www.springframework.org/schema/tx
                            http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
-                           
+
+
 	<context:annotation-config />
 
-	<context:component-scan base-package="com.excilys.formation" />
+	<context:component-scan base-package="com.excilys.formation.persistence" />
 
 	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
 		<property name="dataSourceClassName"
@@ -36,9 +37,6 @@
 		<constructor-arg ref="hikariConfig" />
 	</bean>
 
-
-	<tx:annotation-driven />
-
 	<bean id="myEmf"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
@@ -53,9 +51,5 @@
 			</props>
 		</property>
 		<property name="packagesToScan" value="com.excilys.formation.entity" />
-	</bean>
-
-	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="myEmf" />
 	</bean>
 </beans>

@@ -20,6 +20,8 @@
 		<div class="container">
 			<a class="navbar-brand" href="dashboard"> Application - Computer
 				Database </a>
+			<c:url var="logoutUrl" value="/login?logout" />
+			<a class="navbar-brand pull-right" href="${logoutUrl}"> Logout </a>
 		</div>
 	</header>
 
