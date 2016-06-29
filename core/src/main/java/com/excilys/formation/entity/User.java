@@ -1,8 +1,13 @@
 package com.excilys.formation.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -14,7 +19,9 @@ public class User {
 	@Column(name = "password")
 	private String password;
 	@Column(name = "enabled")
-	private Boolean enabled;
+	private boolean enabled;
+	@OneToMany(mappedBy = "username", fetch = FetchType.EAGER)
+	private List<UserRole> userRoles;
 
 	public String getUsername() {
 		return username;
@@ -40,50 +47,20 @@ public class User {
 		this.enabled = enabled;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((enabled == null) ? 0 : enabled.hashCode());
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
-		return result;
+	public List<UserRole> getUserRoles() {
+		return userRoles;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
+	public void setUserRoles(List<UserRole> userRoles) {
+		this.userRoles = userRoles;
+	}
+
+	public String[] getUserRolesString() {
+		List<String> roles = new ArrayList<>();
+		for (UserRole userRole : userRoles) {
+			roles.add(userRole.getRole());
 		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		User other = (User) obj;
-		if (enabled == null) {
-			if (other.enabled != null) {
-				return false;
-			}
-		} else if (!enabled.equals(other.enabled)) {
-			return false;
-		}
-		if (password == null) {
-			if (other.password != null) {
-				return false;
-			}
-		} else if (!password.equals(other.password)) {
-			return false;
-		}
-		if (username == null) {
-			if (other.username != null) {
-				return false;
-			}
-		} else if (!username.equals(other.username)) {
-			return false;
-		}
-		return true;
+		return roles.toArray(new String[0]);
 	}
 
 	@Override

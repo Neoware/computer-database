@@ -20,17 +20,13 @@
 			access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" />
 		<intercept-url pattern="/addcomputer" access="hasRole('ROLE_ADMIN')" />
 		<intercept-url pattern="/editcomputer" access="hasRole('ROLE_ADMIN')" />
-		<custom-filter ref="digestFilter" after="BASIC_AUTH_FILTER" />
+		<custom-filter ref="digestFilter" after="DIGEST_AUTH_FILTER" />
 	</http>
 
+	<b:bean id="myUserDetailService" class="com.excilys.formation.service.UserService"></b:bean>
 
 	<authentication-manager>
-		<authentication-provider>
-			<jdbc-user-service id="userService"
-				data-source-ref="dataSource"
-				users-by-username-query="select username,password,enabled from user where username=?"
-				authorities-by-username-query="select username,role from user where username =?" />
-		</authentication-provider>
+		<authentication-provider user-service-ref="myUserDetailService" />
 	</authentication-manager>
 
 
