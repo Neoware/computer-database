@@ -92,13 +92,22 @@ public class CompanyDAO {
 	 *         offset and limit.
 	 * @throws DaoException
 	 */
-	public List<Company> getLimited(int offset, int limit) {
+	public List<Company> getPage(PageRequest pageRequest) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Company> criteriaQuery = criteriaBuilder.createQuery(Company.class);
 		Root<Company> root = criteriaQuery.from(Company.class);
 		criteriaQuery.select(root);
 		TypedQuery<Company> query = entityManager.createQuery(criteriaQuery);
-		query.setFirstResult(offset).setMaxResults(limit);
+		query.setFirstResult(pageRequest.getOffset()).setMaxResults(pageRequest.getLimit());
 		return query.getResultList();
+	}
+
+	public int count() {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
+		Root<Company> root = criteriaQuery.from(Company.class);
+		criteriaQuery.select((criteriaBuilder.count(root)));
+		int count = entityManager.createQuery(criteriaQuery).getSingleResult().intValue();
+		return count;
 	}
 }

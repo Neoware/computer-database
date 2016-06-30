@@ -1,5 +1,8 @@
 package com.excilys.formation.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.excilys.formation.dto.CompanyDTO;
 import com.excilys.formation.entity.Company;
 
@@ -18,7 +21,7 @@ public class CompanyMapper {
 	 *            The entity that need to be converted.
 	 * @return The DTO generated from the entity.
 	 */
-	public static CompanyDTO FromEntityToDto(Company toConvert) {
+	public static CompanyDTO fromEntityToDto(Company toConvert) {
 		CompanyDTO companyDTO = null;
 		if (toConvert.getName() != null) {
 			companyDTO = new CompanyDTO();
@@ -35,11 +38,19 @@ public class CompanyMapper {
 	 *            the DTO that need to be converted.
 	 * @return The entity generated from the DTO.
 	 */
-	public static Company FromDtoToEntity(CompanyDTO toConvert) {
+	public static Company fromDtoToEntity(CompanyDTO toConvert) {
 		Company company = null;
 		if (toConvert.getName() != null) {
 			company = new Company(Long.parseLong(toConvert.getId()), toConvert.getName());
 		}
 		return company;
+	}
+
+	public static List<CompanyDTO> fromEntitiesToDtos(List<Company> companies) {
+		List<CompanyDTO> companyDTOs = new ArrayList<>();
+		for (Company company : companies) {
+			companyDTOs.add(fromEntityToDto(company));
+		}
+		return companyDTOs;
 	}
 }

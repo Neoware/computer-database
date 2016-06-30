@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.excilys.formation.dto.CompanyDTO;
 import com.excilys.formation.entity.Company;
 import com.excilys.formation.exception.DaoException;
+import com.excilys.formation.mapper.CompanyMapper;
 import com.excilys.formation.persistence.Cache;
 import com.excilys.formation.persistence.CompanyDAO;
 import com.excilys.formation.persistence.ComputerDAO;
@@ -72,9 +74,14 @@ public class CompanyService {
 		return 0;
 	}
 
-	public Page<Company> getPage(PageRequest pageRequest) {
-		// TODO getPage company
-		return null;
+	public Page<CompanyDTO> getPage(PageRequest pageRequest) {
+		List<Company> companyList = companyDAO.getPage(pageRequest);
+		int count;
+		count = companyDAO.count();
+		LOG.info("" + count);
+		List<CompanyDTO> companyDTOs = CompanyMapper.fromEntitiesToDtos(companyList);
+		Page<CompanyDTO> companyPage = new Page<>(companyDTOs, pageRequest, count);
+		return companyPage;
 	}
 
 	/**

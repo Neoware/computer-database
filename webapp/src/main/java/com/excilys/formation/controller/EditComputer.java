@@ -53,7 +53,7 @@ public class EditComputer {
 			List<Company> companies = companyService.getAll();
 			List<CompanyDTO> companyDTOs = new ArrayList<>();
 			for (Company company : companies) {
-				companyDTOs.add(CompanyMapper.FromEntityToDto(company));
+				companyDTOs.add(CompanyMapper.fromEntityToDto(company));
 			}
 			model.addAttribute("companies", companyDTOs);
 			model.addAttribute("computerDTO", computerDTO);
@@ -87,7 +87,7 @@ public class EditComputer {
 		List<Company> companies = companyService.getAll();
 		List<CompanyDTO> companyDTOs = new ArrayList<>();
 		for (Company company : companies) {
-			companyDTOs.add(CompanyMapper.FromEntityToDto(company));
+			companyDTOs.add(CompanyMapper.fromEntityToDto(company));
 		}
 		model.addAttribute("companies", companyDTOs);
 		return "editComputer";

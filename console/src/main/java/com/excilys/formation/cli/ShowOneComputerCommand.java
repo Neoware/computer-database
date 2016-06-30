@@ -2,11 +2,11 @@ package com.excilys.formation.cli;
 
 import java.util.Scanner;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
 
-import com.excilys.formation.entity.Computer;
-import com.excilys.formation.service.ComputerService;
+import org.springframework.stereotype.Component;
 
 /**
  * Command to show information about one computer by providing its id.
@@ -16,9 +16,6 @@ import com.excilys.formation.service.ComputerService;
  */
 @Component
 public class ShowOneComputerCommand implements Command {
-
-	@Autowired
-	private ComputerService computerService;
 
 	public ShowOneComputerCommand() {
 	}
@@ -36,7 +33,8 @@ public class ShowOneComputerCommand implements Command {
 				System.out.print("> ");
 			}
 			Long id = scanner.nextLong();
-			Computer temp = computerService.getById(id);
+			Client client = ClientBuilder.newClient();
+			WebTarget target = client.target("http://localhost:").path("resource");
 			if (temp != null) {
 				System.out.println(temp);
 				finished = true;
