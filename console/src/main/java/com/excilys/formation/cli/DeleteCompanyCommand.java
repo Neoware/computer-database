@@ -2,11 +2,9 @@ package com.excilys.formation.cli;
 
 import java.util.Scanner;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.excilys.formation.entity.Company;
-import com.excilys.formation.service.CompanyService;
+import com.excilys.formation.rest.RestClient;
 
 /**
  * Command to delete a company by submitting its id. All computers that have
@@ -17,8 +15,6 @@ import com.excilys.formation.service.CompanyService;
  */
 @Component
 public class DeleteCompanyCommand implements Command {
-	@Autowired
-	private CompanyService companyService;
 
 	public DeleteCompanyCommand() {
 	}
@@ -30,14 +26,9 @@ public class DeleteCompanyCommand implements Command {
 		if (scanner.hasNextLong()) {
 			Long id = scanner.nextLong();
 			scanner.nextLine();
-			Company temp = companyService.getById(id);
-			if (temp != null) {
-				System.out.println("Deleting " + temp + " ...");
-				companyService.delete(temp.getId());
-				System.out.println("Success");
-			} else {
-				System.out.println("Company with this id doesn\'t exist");
-			}
+			System.out.println("Requesting delete for " + id + " ...");
+			String result = RestClient.deleteCompany(id);
+			System.out.println(result);
 		} else {
 			System.out.println("An integer need to be submitted");
 			scanner.nextLine();

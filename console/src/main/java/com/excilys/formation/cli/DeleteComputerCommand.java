@@ -2,11 +2,9 @@ package com.excilys.formation.cli;
 
 import java.util.Scanner;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.excilys.formation.entity.Computer;
-import com.excilys.formation.service.ComputerService;
+import com.excilys.formation.rest.RestClient;
 
 /**
  * Command to delete a computer by giving its id.
@@ -16,9 +14,6 @@ import com.excilys.formation.service.ComputerService;
  */
 @Component
 public class DeleteComputerCommand implements Command {
-
-	@Autowired
-	private ComputerService computerService;
 
 	public DeleteComputerCommand() {
 	}
@@ -31,14 +26,9 @@ public class DeleteComputerCommand implements Command {
 		if (scanner.hasNextLong()) {
 			Long id = scanner.nextLong();
 			scanner.nextLine();
-			Computer temp = computerService.getById(id);
-			if (temp != null) {
-				System.out.println("Deleting " + temp + " ...");
-				computerService.delete(temp.getId());
-				System.out.println("Success");
-			} else {
-				System.out.println("Computer with this id doesn\'t exist");
-			}
+			System.out.println("Requesting delete for " + id + " ...");
+			String result = RestClient.deleteComputer(id);
+			System.out.println(result);
 		} else {
 			System.out.println("An integer need to be submitted");
 			scanner.nextLine();

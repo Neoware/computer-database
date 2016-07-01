@@ -20,7 +20,9 @@
 			access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')" />
 		<intercept-url pattern="/addcomputer" access="hasRole('ROLE_ADMIN')" />
 		<intercept-url pattern="/editcomputer" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/api/**" access="permitAll" />
 		<custom-filter ref="digestFilter" after="DIGEST_AUTH_FILTER" />
+		<csrf disabled="true" />
 	</http>
 
 	<b:bean id="myUserDetailService" class="com.excilys.formation.service.UserService"></b:bean>

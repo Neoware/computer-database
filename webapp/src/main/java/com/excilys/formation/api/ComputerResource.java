@@ -69,6 +69,9 @@ public class ComputerResource {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateComputer(@Valid ComputerDTO computerDTO) {
 		Computer computer = ComputerMapper.fromDtoToEntity(computerDTO);
+		System.out.println("LOLOLOLOLOLOL");
+		System.out.println(computerDTO);
+		System.out.println("LOLOLOLOLOLOL");
 		computerService.update(computer);
 		return "success";
 	}

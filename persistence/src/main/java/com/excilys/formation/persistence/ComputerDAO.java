@@ -182,7 +182,7 @@ public class ComputerDAO {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Computer> criteriaQuery = criteriaBuilder.createQuery(Computer.class);
 		Root<Computer> root = criteriaQuery.from(Computer.class);
-		criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("company_id"), companyId));
+		criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("computerCompany").get("id"), companyId));
 		TypedQuery<Computer> query = entityManager.createQuery(criteriaQuery);
 		List<Computer> computers = query.getResultList();
 		for (Computer computer : computers) {

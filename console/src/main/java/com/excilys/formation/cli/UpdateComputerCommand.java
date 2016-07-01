@@ -3,13 +3,10 @@ package com.excilys.formation.cli;
 import java.sql.Timestamp;
 import java.util.Scanner;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.excilys.formation.entity.Company;
-import com.excilys.formation.entity.Computer;
-import com.excilys.formation.service.CompanyService;
-import com.excilys.formation.service.ComputerService;
+import com.excilys.formation.dto.ComputerDTO;
+import com.excilys.formation.rest.RestClient;
 import com.excilys.formation.util.DateUtils;
 
 /**
@@ -21,11 +18,6 @@ import com.excilys.formation.util.DateUtils;
  */
 @Component
 public class UpdateComputerCommand implements Command {
-
-	@Autowired
-	private ComputerService computerService;
-	@Autowired
-	private CompanyService companyService;
 
 	public UpdateComputerCommand() {
 	}
@@ -42,7 +34,8 @@ public class UpdateComputerCommand implements Command {
 		}
 		Long id = scanner.nextLong();
 		scanner.nextLine();
-		Computer toUpdate = computerService.getById(id);
+		ComputerDTO toUpdate = new ComputerDTO();
+		toUpdate.setId(id.toString());
 		if (toUpdate != null) {
 			System.out.println("Change the name of the computer ? (current: " + toUpdate.getName() + ")");
 			if (scanner.hasNext()) {
@@ -54,7 +47,7 @@ public class UpdateComputerCommand implements Command {
 				String introduced = scanner.nextLine();
 				Timestamp introducedTimestamp = DateUtils.getTimestampFromString(introduced);
 				if (introducedTimestamp != null) {
-					toUpdate.setIntroduced(DateUtils.getLocalDateFromTimestamp(introducedTimestamp));
+					toUpdate.setIntroduced(introducedTimestamp.toString());
 				} else {
 					System.out.println("Bad timestamp");
 				}
@@ -65,27 +58,19 @@ public class UpdateComputerCommand implements Command {
 				String discontinued = scanner.nextLine();
 				Timestamp discontinuedTimestamp = DateUtils.getTimestampFromString(discontinued);
 				if (discontinuedTimestamp != null) {
-					toUpdate.setDiscontinued(DateUtils.getLocalDateFromTimestamp(discontinuedTimestamp));
+					toUpdate.setDiscontinued(discontinuedTimestamp.toString());
 				} else {
 					System.out.println("Bad timestamp");
 				}
 			}
-			System.out.println(
-					"Change the company id of the computer ? (current: " + toUpdate.getComputerCompany().getId() + ")");
+			System.out.println("Change the company id of the computer ? (current: " + toUpdate.getCompanyId() + ")");
 			if (scanner.hasNextLong()) {
 				Long companyId = scanner.nextLong();
 				System.out.println(companyId);
-				Company company = companyService.getById(companyId);
-				if (company != null) {
-					toUpdate.setComputerCompany(company);
-				} else {
-					System.out.println("No such company");
-				}
+				toUpdate.setCompanyId(companyId.toString());
 			}
-			computerService.update(toUpdate);
-			System.out.println("Success");
-		} else {
-			System.out.println("Computer with this id doesn\'t exist");
+			String result = RestClient.updateComputer(toUpdate);
+			System.out.println(result);
 		}
 		return true;
 	}

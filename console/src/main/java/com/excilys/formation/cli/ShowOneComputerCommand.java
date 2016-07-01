@@ -2,11 +2,10 @@ package com.excilys.formation.cli;
 
 import java.util.Scanner;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-
 import org.springframework.stereotype.Component;
+
+import com.excilys.formation.dto.ComputerDTO;
+import com.excilys.formation.rest.RestClient;
 
 /**
  * Command to show information about one computer by providing its id.
@@ -33,10 +32,9 @@ public class ShowOneComputerCommand implements Command {
 				System.out.print("> ");
 			}
 			Long id = scanner.nextLong();
-			Client client = ClientBuilder.newClient();
-			WebTarget target = client.target("http://localhost:").path("resource");
-			if (temp != null) {
-				System.out.println(temp);
+			ComputerDTO computer = RestClient.getComputer(id);
+			if (computer != null) {
+				System.out.println(computer);
 				finished = true;
 			} else {
 				System.out.println("Computer with this id doesn\'t exist");
