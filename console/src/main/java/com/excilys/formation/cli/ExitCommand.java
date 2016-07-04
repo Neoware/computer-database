@@ -1,5 +1,7 @@
 package com.excilys.formation.cli;
 
+import java.util.Scanner;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,7 +20,7 @@ public class ExitCommand implements Command {
 	 * return false in order to stop the CLI loop
 	 */
 	@Override
-	public boolean execute() {
+	public boolean execute(Scanner scanner) {
 		System.out.println("Exiting computer-database CLI, bye!");
 		return false;
 	}

@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.excilys.formation.dto.ComputerDTO;
+import com.excilys.formation.persistence.PageRequest;
 import com.excilys.formation.service.ComputerService;
 import com.excilys.formation.service.Page;
-import com.excilys.formation.persistence.PageRequest;
-import com.excilys.formation.util.ReturnInformation;
 
 /**
  * Controller corresponding to the dashboard page.
@@ -36,12 +35,10 @@ public class Dashboard {
 	 */
 	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
 	protected String displayTab(@ModelAttribute("pageRequest") PageRequest pageRequest, Model model) {
-		ReturnInformation returnInformation = new ReturnInformation();
+		LOG.debug("Requesting GET for /dashboard");
 		pageRequest.init();
-		if (returnInformation.isSuccess()) {
-			Page<ComputerDTO> page = computerService.getPage(pageRequest);
-			model.addAttribute("page", page);
-		}
+		Page<ComputerDTO> page = computerService.getPage(pageRequest);
+		model.addAttribute("page", page);
 		return "dashboard";
 	}
 
@@ -56,6 +53,7 @@ public class Dashboard {
 	 */
 	@RequestMapping(value = "/dashboard", method = RequestMethod.POST)
 	protected void deleteComputers(@ModelAttribute("selection") String selection, Model model) {
+		LOG.debug("Request POST for /dashboard (deletion)");
 		String[] toDeletes = selection.split(",");
 		computerService.deleteList(toDeletes);
 		displayTab(new PageRequest(), model);

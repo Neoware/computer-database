@@ -29,8 +29,7 @@ public class CreateComputerCommand implements Command {
 	}
 
 	@Override
-	public boolean execute() {
-		Scanner scanner = new Scanner(System.in);
+	public boolean execute(Scanner scanner) {
 		String name;
 		do {
 			System.out.println("Choose a name for your computer (mandatory)");

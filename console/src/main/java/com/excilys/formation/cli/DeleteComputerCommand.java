@@ -19,9 +19,7 @@ public class DeleteComputerCommand implements Command {
 	}
 
 	@Override
-	public boolean execute() {
-
-		Scanner scanner = new Scanner(System.in);
+	public boolean execute(Scanner scanner) {
 		System.out.print("What is the id of the computer you want to delete ?");
 		if (scanner.hasNextLong()) {
 			Long id = scanner.nextLong();

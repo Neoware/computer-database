@@ -45,6 +45,7 @@ public class Page<T> {
 	 *            The total count of elements that are in the database
 	 */
 	public Page(List<T> elements, PageRequest pageRequest, int count) {
+		LOG.debug("Creating a new page");
 		this.currentPageElements = elements;
 		this.limit = pageRequest.getLimit();
 		this.current = pageRequest.getPage();

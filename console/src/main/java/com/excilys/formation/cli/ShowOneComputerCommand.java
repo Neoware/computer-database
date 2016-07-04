@@ -20,8 +20,7 @@ public class ShowOneComputerCommand implements Command {
 	}
 
 	@Override
-	public boolean execute() {
-		Scanner scanner = new Scanner(System.in);
+	public boolean execute(Scanner scanner) {
 		System.out.println("What is the id of the computer you want details about ?");
 		System.out.print("> ");
 		Boolean finished = false;

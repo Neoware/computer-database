@@ -2,6 +2,7 @@ package com.excilys.formation.cli;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +37,6 @@ public class CommandManager {
 	@Autowired
 	private CreateComputerCommand createComputerCommand;
 
-	/**
-	 * The constructor populate the map associating a keyword with a command.
-	 */
 	public CommandManager() {
 
 	}
@@ -76,12 +74,12 @@ public class CommandManager {
 	 *            command map.
 	 * @return true if the cli should continue, false otherwise.
 	 */
-	public boolean launchCommand(String commandName) {
+	public boolean launchCommand(String commandName, Scanner scanner) {
 		Command command = commands.get(commandName);
 		boolean shouldContinue = true;
 		if (command != null) {
 			LOG.info("Excecuting command : " + commandName);
-			shouldContinue = command.execute();
+			shouldContinue = command.execute(scanner);
 		} else {
 			System.out.println("The command " + commandName + " doesn't exist.");
 			LOG.info("Invalid command : " + commandName);

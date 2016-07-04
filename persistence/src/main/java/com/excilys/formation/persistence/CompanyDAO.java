@@ -41,6 +41,7 @@ public class CompanyDAO {
 	 * @throws DaoException
 	 */
 	public Company find(Long id) {
+		LOG.debug("Looking for company with id : " + id);
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Company> criteriaQuery = criteriaBuilder.createQuery(Company.class);
 		Root<Company> root = criteriaQuery.from(Company.class);
@@ -59,6 +60,7 @@ public class CompanyDAO {
 	 * @throws DaoException
 	 */
 	public void delete(Long id) {
+		LOG.debug("Deleting company with id " + id);
 		Company company = find(id);
 		if (company != null) {
 			entityManager.remove(company);
@@ -73,6 +75,7 @@ public class CompanyDAO {
 	 * @throws DaoException
 	 */
 	public List<Company> getAll() {
+		LOG.debug("Getting all company");
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Company> criteriaQuery = criteriaBuilder.createQuery(Company.class);
 		Root<Company> root = criteriaQuery.from(Company.class);
@@ -93,6 +96,7 @@ public class CompanyDAO {
 	 * @throws DaoException
 	 */
 	public List<Company> getPage(PageRequest pageRequest) {
+		LOG.debug("Getting a page of company");
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Company> criteriaQuery = criteriaBuilder.createQuery(Company.class);
 		Root<Company> root = criteriaQuery.from(Company.class);
@@ -103,6 +107,7 @@ public class CompanyDAO {
 	}
 
 	public int count() {
+		LOG.debug("Getting the total number of companies");
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
 		Root<Company> root = criteriaQuery.from(Company.class);

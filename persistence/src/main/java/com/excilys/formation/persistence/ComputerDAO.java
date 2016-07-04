@@ -14,7 +14,6 @@ import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.formation.entity.Company;
@@ -32,8 +31,6 @@ import com.excilys.formation.util.StringUtils;
 public class ComputerDAO {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ComputerDAO.class);
-	@Autowired
-	private Cache cache;
 	@PersistenceContext
 	EntityManager entityManager;
 
@@ -49,6 +46,7 @@ public class ComputerDAO {
 	 * @throws DaoException
 	 */
 	public Computer find(Long id) {
+		LOG.debug("Looking for computer with id : " + id);
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Computer> criteriaQuery = criteriaBuilder.createQuery(Computer.class);
 		Root<Computer> root = criteriaQuery.from(Computer.class);
@@ -68,6 +66,7 @@ public class ComputerDAO {
 	 * @throws DaoException
 	 */
 	public Computer create(Computer toCreate) {
+		LOG.debug("Creatin computer " + toCreate);
 		entityManager.persist(toCreate);
 		return toCreate;
 	}
@@ -81,6 +80,7 @@ public class ComputerDAO {
 	 * @throws DaoException
 	 */
 	public void update(Computer toUpdate) {
+		LOG.debug("Updating computer to " + toUpdate);
 		Computer computer = find(toUpdate.getId());
 		if (computer != null) {
 			computer.setName(toUpdate.getName());
@@ -98,6 +98,7 @@ public class ComputerDAO {
 	 * @throws DaoException
 	 */
 	public void delete(Long id) {
+		LOG.debug("Deleting computer with id : " + id);
 		Computer computer = find(id);
 		if (computer != null) {
 			entityManager.remove(computer);
@@ -116,6 +117,7 @@ public class ComputerDAO {
 	 * @throws DaoException
 	 */
 	public List<Computer> getPage(PageRequest pageRequest) {
+		LOG.debug("Requestin a page of computers");
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Computer> criteriaQuery = criteriaBuilder.createQuery(Computer.class);
 		Root<Computer> root = criteriaQuery.from(Computer.class);
@@ -158,6 +160,7 @@ public class ComputerDAO {
 	 * @throws DaoException
 	 */
 	public int getCountElements(PageRequest pageRequest) {
+		LOG.debug("Requesting a count of computers for a specific search");
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
 		Root<Computer> root = criteriaQuery.from(Computer.class);
@@ -179,6 +182,7 @@ public class ComputerDAO {
 	 * @throws DaoException
 	 */
 	public void deleteByCompany(Long companyId) {
+		LOG.debug("Deleting all computer with company id : " + companyId);
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Computer> criteriaQuery = criteriaBuilder.createQuery(Computer.class);
 		Root<Computer> root = criteriaQuery.from(Computer.class);
@@ -197,6 +201,7 @@ public class ComputerDAO {
 	 * @throws DaoException
 	 */
 	public int count() {
+		LOG.debug("Getting the total number of computers");
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
 		Root<Computer> root = criteriaQuery.from(Computer.class);

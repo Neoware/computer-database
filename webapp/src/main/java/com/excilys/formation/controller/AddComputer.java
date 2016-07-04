@@ -41,6 +41,7 @@ public class AddComputer {
 	 */
 	@RequestMapping(value = "/addcomputer", method = RequestMethod.GET)
 	protected String displayAddComputerPage(Model model) {
+		LOG.debug("Requesting GET on addcomputer page");
 		List<Company> companies = companyService.getAll();
 		model.addAttribute("companies", companies);
 		model.addAttribute("computerDTO", new ComputerDTO());
@@ -63,10 +64,14 @@ public class AddComputer {
 	@RequestMapping(value = "/addcomputer", method = RequestMethod.POST)
 	protected String addNewComputer(@Valid @ModelAttribute(value = "computerDTO") ComputerDTO computerDTO,
 			BindingResult bindingResult, Model model) {
+		LOG.debug("Requesting POST on addcomputer page with " + computerDTO.toString());
 		if (!bindingResult.hasErrors()) {
+			LOG.debug("Computer to add is valid");
 			Computer toAdd = ComputerMapper.fromDtoToEntity(computerDTO);
 			computerService.create(toAdd);
 			model.addAttribute("successMessage", "Computer successfully added");
+		} else {
+			LOG.debug("Computer to add get errors");
 		}
 		List<Company> companies = companyService.getAll();
 		model.addAttribute("companies", companies);

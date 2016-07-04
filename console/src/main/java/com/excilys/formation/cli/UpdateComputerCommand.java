@@ -23,8 +23,7 @@ public class UpdateComputerCommand implements Command {
 	}
 
 	@Override
-	public boolean execute() {
-		Scanner scanner = new Scanner(System.in);
+	public boolean execute(Scanner scanner) {
 		System.out.print("What is the id of the computer you want to update ?");
 		while (!scanner.hasNextLong()) {
 			if (scanner.next() != "") {

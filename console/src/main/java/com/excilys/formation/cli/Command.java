@@ -1,5 +1,7 @@
 package com.excilys.formation.cli;
 
+import java.util.Scanner;
+
 /**
  * 
  * Command with an execute method corresponding to the action of the command.
@@ -13,5 +15,5 @@ public interface Command {
 	 * 
 	 * @return true if the cli should continue, or false otherwise.
 	 */
-	public boolean execute();
+	public boolean execute(Scanner scanner);
 }
