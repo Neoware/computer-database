@@ -17,7 +17,7 @@ public class RestClient {
 
 	private static final String API_BASE_URL = "http://localhost:8080/cdb-webapp/api";
 
-	public static ComputerDTO getComputer(long id) {
+	public ComputerDTO getComputer(long id) {
 		Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(API_BASE_URL).path("/computer/" + id);
 		Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
@@ -26,7 +26,7 @@ public class RestClient {
 		return computer;
 	}
 
-	public static String deleteComputer(long id) {
+	public String deleteComputer(long id) {
 		Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(API_BASE_URL).path("/computer/delete/" + id);
 		Invocation.Builder invocationBuilder = target.request(MediaType.TEXT_PLAIN);
@@ -34,7 +34,7 @@ public class RestClient {
 		return response.readEntity(String.class);
 	}
 
-	public static String updateComputer(ComputerDTO computerDTO) {
+	public String updateComputer(ComputerDTO computerDTO) {
 		Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(API_BASE_URL).path("/computer/update");
 		Invocation.Builder invocationBuilder = target.request(MediaType.TEXT_PLAIN);
@@ -42,7 +42,7 @@ public class RestClient {
 		return response.readEntity(String.class);
 	}
 
-	public static String deleteCompany(long id) {
+	public String deleteCompany(long id) {
 		Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(API_BASE_URL).path("/company/delete/" + id);
 		Invocation.Builder invocationBuilder = target.request(MediaType.TEXT_PLAIN);
@@ -50,7 +50,7 @@ public class RestClient {
 		return response.readEntity(String.class);
 	}
 
-	public static Page<ComputerDTO> getComputerPage(int page, int pagesize) {
+	public Page<ComputerDTO> getComputerPage(int page, int pagesize) {
 		Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(API_BASE_URL).path("/computer/list/" + page + "/" + pagesize);
 		Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
@@ -59,7 +59,7 @@ public class RestClient {
 		});
 	}
 
-	public static Page<CompanyDTO> getCompanyPage(int page, int pagesize) {
+	public Page<CompanyDTO> getCompanyPage(int page, int pagesize) {
 		Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(API_BASE_URL).path("/company/list/" + page + "/" + pagesize);
 		Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);

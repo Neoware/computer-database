@@ -3,6 +3,7 @@ package com.excilys.formation.cli;
 import java.sql.Timestamp;
 import java.util.Scanner;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.excilys.formation.dto.ComputerDTO;
@@ -18,6 +19,9 @@ import com.excilys.formation.util.DateUtils;
  */
 @Component
 public class UpdateComputerCommand implements Command {
+
+	@Autowired
+	RestClient restClient;
 
 	public UpdateComputerCommand() {
 	}
@@ -68,7 +72,7 @@ public class UpdateComputerCommand implements Command {
 				System.out.println(companyId);
 				toUpdate.setCompanyId(companyId.toString());
 			}
-			String result = RestClient.updateComputer(toUpdate);
+			String result = restClient.updateComputer(toUpdate);
 			System.out.println(result);
 		}
 		return true;

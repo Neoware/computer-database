@@ -11,10 +11,18 @@
 <spring:url value="/resources/css/bootstrap.min.css" var="bootstrapCss" />
 <spring:url value="/resources/css/font-awesome.css" var="fontCss" />
 <spring:url value="/resources/css/main.css" var="mainCss" />
+<spring:url value="/resources/css/jquery-ui.min.css" var="jqueryUiCss" />
+<spring:url value="/resources/css/jquery-ui.theme.min.css"
+	var="jqueryUiThemeCss" />
+<spring:url value="/resources/css/jquery-ui.structure.min.css"
+	var="jqueryUiStructureCss" />
 
 <link href="${bootstrapCss}" rel="stylesheet" />
 <link href="${fontCss}" rel="stylesheet" />
 <link href="${mainCss}" rel="stylesheet" />
+<link href="${jqueryUiCss}" rel="stylesheet" />
+<link href="${jqueryUiThemeCss}" rel="stylesheet" />
+<link href="${jqueryUiStructureCss}" rel="stylesheet" />
 </head>
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
@@ -53,7 +61,7 @@
 							<div class="form-group">
 								<spring:message code="label.introduced" var="labelIntroduced" />
 								<label for="introduced">${labelIntroduced}</label>
-								<form:input type="date" class="form-control" id="introduced"
+								<form:input class="form-control datepicker" id="introduced"
 									placeholder="${labelIntroduced}" path="introduced"
 									name="introduced" />
 								<form:errors cssClass="error" path="introduced" />
@@ -62,7 +70,7 @@
 								<spring:message code="label.discontinued"
 									var="labelDiscontinued" />
 								<label for="discontinued">${labelDiscontinued}</label>
-								<form:input type="date" class="form-control" id="discontinued"
+								<form:input class="form-control datepicker" id="discontinued"
 									placeholder="${labelDiscontinued}" path="discontinued"
 									name="discontinued" />
 								<form:errors cssClass="error" path="discontinued" />
@@ -91,7 +99,7 @@
 						</fieldset>
 						<div class="actions pull-right">
 							<spring:message code="button.edit" var="editButton" />
-							<input type="submit" value="${editButton}"
+							<input type="submit" value="${editButton}" id="submitButton"
 								class="btn btn-primary"> or <a href="dashboard"
 								class="btn btn-default"><spring:message code="button.cancel" /></a>
 						</div>
@@ -102,10 +110,11 @@
 	</section>
 	<spring:url value="/resources/js/jquery.min.js" var="jqueryJs" />
 	<spring:url value="/resources/js/bootstrap.min.js" var="bootstrapJs" />
-	<spring:url value="/resources/js/addComputer.js" var="addComputerJs" />
 	<spring:url value="/resources/js/jquery-ui.min.js" var="jqueryUiJs" />
+	<spring:url value="/resources/js/computerValidator.js"
+		var="computerValidatorJs" />
 	<script src="${jqueryJs}"></script>
-	<script src="${addComputerJs}"></script>
+	<script src="${computerValidatorJs}"></script>
 	<script src="${bootstrapJs}"></script>
 	<script src="${jqueryUiJs}"></script>
 </body>

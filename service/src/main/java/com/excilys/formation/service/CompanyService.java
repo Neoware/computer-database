@@ -96,11 +96,4 @@ public class CompanyService {
 		computerDAO.deleteByCompany(id);
 		companyDAO.delete(id);
 	}
-
-	/*
-	 * @Override public List<Company> getPage(PageRequest pageRequest) { int
-	 * offset = pageRequest.getLimit() * pageRequest.getPage(); List<Company>
-	 * companies = companyDAO.getLimited(offset, pageRequest.getLimit()); return
-	 * companies; }
-	 */
 }

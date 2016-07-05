@@ -68,6 +68,9 @@ public class AddComputer {
 		if (!bindingResult.hasErrors()) {
 			LOG.debug("Computer to add is valid");
 			Computer toAdd = ComputerMapper.fromDtoToEntity(computerDTO);
+			System.out.println("BLBLBLLBLB");
+			System.out.println(toAdd);
+			System.out.println("BLBLBLLBLB");
 			computerService.create(toAdd);
 			model.addAttribute("successMessage", "Computer successfully added");
 		} else {

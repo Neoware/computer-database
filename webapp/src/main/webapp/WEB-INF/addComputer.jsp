@@ -100,10 +100,11 @@
 	</section>
 	<spring:url value="/resources/js/jquery.min.js" var="jqueryJs" />
 	<spring:url value="/resources/js/bootstrap.min.js" var="bootstrapJs" />
-	<spring:url value="/resources/js/addComputer.js" var="addComputerJs" />
+	<spring:url value="/resources/js/computerValidator.js"
+		var="computerValidatorJs" />
 	<spring:url value="/resources/js/jquery-ui.min.js" var="jqueryUiJs" />
 	<script src="${jqueryJs}"></script>
-	<script src="${addComputerJs}"></script>
+	<script src="${computerValidatorJs}"></script>
 	<script src="${bootstrapJs}"></script>
 	<script src="${jqueryUiJs}"></script>
 </body>

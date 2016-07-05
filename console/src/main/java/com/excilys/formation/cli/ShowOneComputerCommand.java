@@ -2,6 +2,7 @@ package com.excilys.formation.cli;
 
 import java.util.Scanner;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.excilys.formation.dto.ComputerDTO;
@@ -15,6 +16,9 @@ import com.excilys.formation.rest.RestClient;
  */
 @Component
 public class ShowOneComputerCommand implements Command {
+
+	@Autowired
+	RestClient restClient;
 
 	public ShowOneComputerCommand() {
 	}
@@ -31,7 +35,7 @@ public class ShowOneComputerCommand implements Command {
 				System.out.print("> ");
 			}
 			Long id = scanner.nextLong();
-			ComputerDTO computer = RestClient.getComputer(id);
+			ComputerDTO computer = restClient.getComputer(id);
 			if (computer != null) {
 				System.out.println(computer);
 				finished = true;

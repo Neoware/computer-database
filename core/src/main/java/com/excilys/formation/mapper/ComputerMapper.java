@@ -51,7 +51,7 @@ public class ComputerMapper {
 		Company company = null;
 		if (toConvert.getName() != null) {
 			if (toConvert.getCompanyId() == null) {
-				company = new Company(null, toConvert.getCompanyName());
+				company = null;
 			} else {
 				company = new Company(Long.parseLong(toConvert.getCompanyId()), toConvert.getCompanyName());
 			}

@@ -2,6 +2,7 @@ package com.excilys.formation.cli;
 
 import java.util.Scanner;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.excilys.formation.dto.CompanyDTO;
@@ -17,6 +18,9 @@ import com.excilys.formation.service.Page;
 @Component
 public class ListCompaniesCommand implements Command {
 
+	@Autowired
+	RestClient restClient;
+
 	public ListCompaniesCommand() {
 	}
 
@@ -30,7 +34,7 @@ public class ListCompaniesCommand implements Command {
 		Page<CompanyDTO> companies = null;
 		while (shouldContinue == true) {
 			if (refresh == true) {
-				companies = RestClient.getCompanyPage(page, pageSize);
+				companies = restClient.getCompanyPage(page, pageSize);
 				for (CompanyDTO company : companies.getCurrentPageElements()) {
 					System.out.println(company);
 				}

@@ -2,6 +2,7 @@ package com.excilys.formation.cli;
 
 import java.util.Scanner;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.excilys.formation.rest.RestClient;
@@ -16,6 +17,9 @@ import com.excilys.formation.rest.RestClient;
 @Component
 public class DeleteCompanyCommand implements Command {
 
+	@Autowired
+	RestClient restClient;
+
 	public DeleteCompanyCommand() {
 	}
 
@@ -26,7 +30,7 @@ public class DeleteCompanyCommand implements Command {
 			Long id = scanner.nextLong();
 			scanner.nextLine();
 			System.out.println("Requesting delete for " + id + " ...");
-			String result = RestClient.deleteCompany(id);
+			String result = restClient.deleteCompany(id);
 			System.out.println(result);
 		} else {
 			System.out.println("An integer need to be submitted");
