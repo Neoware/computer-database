@@ -19,7 +19,7 @@ public class DateUtils {
 	 * 
 	 * @param timestamp
 	 *            the timestamp that need to be converted.
-	 * @return The generated LocalDate or null if the submitted timestamp wasn't
+	 * @return The generated timestamp or null if the submitted localdate wasn't
 	 *         correct.
 	 */
 	public static LocalDate timestampToLocalDate(Timestamp timestamp) {

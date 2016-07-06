@@ -3,17 +3,11 @@ package com.excilys.formation.cli;
 import java.sql.Timestamp;
 import java.util.Scanner;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.excilys.formation.dto.ComputerDTO;
+import com.excilys.formation.rest.RestClient;
 import com.excilys.formation.util.DateUtils;
 
 /**
@@ -25,6 +19,10 @@ import com.excilys.formation.util.DateUtils;
  */
 @Component
 public class CreateComputerCommand implements Command {
+
+	@Autowired
+	RestClient restClient;
+
 	public CreateComputerCommand() {
 	}
 
@@ -58,12 +56,9 @@ public class CreateComputerCommand implements Command {
 		if (scanner.hasNextLong()) {
 			Long companyId = scanner.nextLong();
 			computerDTO.setCompanyId(companyId.toString());
-			System.out.println(computerDTO);
-			Client client = ClientBuilder.newClient();
-			WebTarget target = client.target("http://localhost:8080/cdb-webapp/api").path("/computer/create");
-			Invocation.Builder invocationBuilder = target.request(MediaType.TEXT_PLAIN);
-			Response response = invocationBuilder.post(Entity.entity(computerDTO, MediaType.APPLICATION_JSON));
-			System.out.println(response.readEntity(String.class));
+			System.out.println("Requesting creation...");
+			String result = restClient.createComputer(computerDTO);
+			System.out.println(result);
 		}
 		return true;
 	}

@@ -17,6 +17,14 @@ public class RestClient {
 
 	private static final String API_BASE_URL = "http://localhost:8080/cdb-webapp/api";
 
+	public String createComputer(ComputerDTO computerDTO) {
+		Client client = ClientBuilder.newClient();
+		WebTarget target = client.target(API_BASE_URL).path("/computer/create");
+		Invocation.Builder invocationBuilder = target.request(MediaType.TEXT_PLAIN);
+		Response response = invocationBuilder.post(Entity.entity(computerDTO, MediaType.APPLICATION_JSON));
+		return response.readEntity(String.class);
+	}
+
 	public ComputerDTO getComputer(long id) {
 		Client client = ClientBuilder.newClient();
 		WebTarget target = client.target(API_BASE_URL).path("/computer/" + id);

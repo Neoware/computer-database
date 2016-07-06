@@ -11,9 +11,10 @@ public class DateUtilsTest {
 
 	@Test
 	public void testTimestampToLocalDateWithACorrectTimestamp() {
-		Timestamp timestamp = new Timestamp(1482537600);
+		Timestamp timestamp = new Timestamp(1482537600000L);
 		LocalDate localDate = LocalDate.of(2016, 12, 24);
 		LocalDate localDateCreated = DateUtils.getLocalDateFromTimestamp(timestamp);
+		localDateCreated.toString();
 		assertEquals(localDate, localDateCreated);
 	}
 }

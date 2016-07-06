@@ -16,6 +16,7 @@ import com.excilys.formation.mapper.ComputerMapper;
 import com.excilys.formation.persistence.Cache;
 import com.excilys.formation.persistence.ComputerDAO;
 import com.excilys.formation.persistence.PageRequest;
+import com.excilys.formation.service.interfaces.ComputerService;
 import com.excilys.formation.util.StringUtils;
 
 /**
@@ -24,17 +25,17 @@ import com.excilys.formation.util.StringUtils;
  * @author Neoware
  *
  */
-@Service
+@Service("ComputerService")
 @Transactional(rollbackFor = DaoException.class, propagation = Propagation.REQUIRES_NEW)
-public class ComputerService {
+public class ComputerServiceImpl implements ComputerService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ComputerService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ComputerServiceImpl.class);
 	@Autowired
 	private ComputerDAO computerDAO;
 	@Autowired
 	private Cache cache;
 
-	public ComputerService() {
+	public ComputerServiceImpl() {
 	}
 
 	/**
@@ -45,6 +46,7 @@ public class ComputerService {
 	 * @return a page of computer containing elements and metadata for view
 	 *         purpose
 	 */
+	@Override
 	public Page<ComputerDTO> getPage(PageRequest pageRequest) {
 		List<Computer> computerList = computerDAO.getPage(pageRequest);
 		int count;
@@ -66,6 +68,7 @@ public class ComputerService {
 	 *            the id of the computer that we are looking for
 	 * @return the computer is found, null otherwise
 	 */
+	@Override
 	public Computer getById(Long id) {
 		Computer computer = computerDAO.find(id);
 		return computer;
@@ -78,6 +81,7 @@ public class ComputerService {
 	 *            the computer that is going to be created
 	 * @return toCreate with the id set is the add is successful
 	 */
+	@Override
 	public Computer create(Computer toCreate) {
 		computerDAO.create(toCreate);
 		return toCreate;
@@ -90,6 +94,7 @@ public class ComputerService {
 	 *            the computer with the right id that will be updated
 	 * @return the updated computer //TODO useless
 	 */
+	@Override
 	public Computer update(Computer toUpdate) {
 		computerDAO.update(toUpdate);
 		return toUpdate;
@@ -101,6 +106,7 @@ public class ComputerService {
 	 * @param id
 	 *            the id of the computer that is going to be deleted
 	 */
+	@Override
 	public void delete(Long id) {
 		computerDAO.delete(id);
 	}
@@ -113,6 +119,7 @@ public class ComputerService {
 	 *            delete one by one
 	 * 
 	 */
+	@Override
 	public void deleteList(String[] lists) {
 		for (int i = 0; i < lists.length; i++) {
 			computerDAO.delete(Long.parseLong(lists[i]));
@@ -125,6 +132,7 @@ public class ComputerService {
 	 * 
 	 * @return count the number of computers in database
 	 */
+	@Override
 	public int count() {
 		int result = computerDAO.count();
 		if (cache.getCount() == null) {

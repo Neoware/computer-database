@@ -17,6 +17,7 @@ import com.excilys.formation.persistence.Cache;
 import com.excilys.formation.persistence.CompanyDAO;
 import com.excilys.formation.persistence.ComputerDAO;
 import com.excilys.formation.persistence.PageRequest;
+import com.excilys.formation.service.interfaces.CompanyService;
 
 /**
  * Singleton service layer for company manipulations.
@@ -26,8 +27,8 @@ import com.excilys.formation.persistence.PageRequest;
  */
 @Service
 @Transactional(rollbackFor = DaoException.class, propagation = Propagation.REQUIRES_NEW)
-public class CompanyService {
-	private static final Logger LOG = LoggerFactory.getLogger(CompanyService.class);
+public class CompanyServiceImpl implements CompanyService {
+	private static final Logger LOG = LoggerFactory.getLogger(CompanyServiceImpl.class);
 	@Autowired
 	private CompanyDAO companyDAO;
 	@Autowired
@@ -35,26 +36,16 @@ public class CompanyService {
 	@Autowired
 	private Cache cache;
 
-	public CompanyService() {
+	public CompanyServiceImpl() {
 	}
 
-	/**
-	 * Retrieve a company entity by id.
-	 * 
-	 * @param id
-	 *            The id of the company that will be retrieved.
-	 * @return the company entity if the id exists, null otherwise.
-	 */
+	@Override
 	public Company getById(Long id) {
 		Company company = companyDAO.find(id);
 		return company;
 	}
 
-	/**
-	 * Retrieve a list of all company entities
-	 * 
-	 * @return The list of companies.
-	 */
+	@Override
 	public List<Company> getAll() {
 		List<Company> companies = companyDAO.getAll();
 		if (cache.getCompany() == null) {
@@ -63,17 +54,13 @@ public class CompanyService {
 		return companies;
 	}
 
-	/**
-	 * Get the count of companies in database.
-	 * 
-	 * @return the count of companies.
-	 */
-
+	@Override
 	public int count() {
 		// TODO count company
 		return 0;
 	}
 
+	@Override
 	public Page<CompanyDTO> getPage(PageRequest pageRequest) {
 		List<Company> companyList = companyDAO.getPage(pageRequest);
 		int count;
@@ -84,14 +71,7 @@ public class CompanyService {
 		return companyPage;
 	}
 
-	/**
-	 * Delete a company and all computers that have this company as company_id.
-	 * This operation is done inside a transaction.
-	 * 
-	 * @param id
-	 *            the id of the company that will be deleted
-	 */
-
+	@Override
 	public void delete(Long id) {
 		computerDAO.deleteByCompany(id);
 		companyDAO.delete(id);

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.excilys.formation.dto.ComputerDTO;
 import com.excilys.formation.persistence.PageRequest;
-import com.excilys.formation.service.ComputerService;
 import com.excilys.formation.service.Page;
+import com.excilys.formation.service.interfaces.ComputerService;
 
 /**
  * Controller corresponding to the dashboard page.

@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 
 import com.excilys.formation.dto.CompanyDTO;
 import com.excilys.formation.persistence.PageRequest;
-import com.excilys.formation.service.CompanyService;
 import com.excilys.formation.service.Page;
+import com.excilys.formation.service.interfaces.CompanyService;
 
 @Path("company")
 @Component
